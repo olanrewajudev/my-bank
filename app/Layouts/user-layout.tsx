@@ -1,14 +1,12 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import Footer from '~/component/general/footer'
-import Header from '~/component/general/header'
+import UserHeader from '~/component/user/user-header'
 
 export default function UserLayout() {
     return (
         <div>
-            <Header />
+            <UserHeader />
             <Outlet />
-            <Footer />
         </div>
     )
 }

@@ -2,34 +2,33 @@ import React from 'react'
 
 import { BiChevronDown, BiLock } from "react-icons/bi";
 import { BsInfo } from "react-icons/bs";
+import { Link } from 'react-router';
 
 export default function Header() {
     return (
         <div>
             {/* Navbar */}
-            <nav className="border-b">
-                <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-8">
-                    {/* Logo */}
-                    <div>
-                        <h1 className="text-4xl font-bold text-slate-800">Marcus<span className="text-blue-500">.</span></h1>
-                        <p className="-mt-1 text-sm text-slate-600">by Goldman Sachs</p>
-                    </div>
+            <nav className="border-b border-gray-200">
+                <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
+                    <div className="flex items-center gap-20">
+                        {/* Logo */}
+                       <Link to='/'> <img src="/Public/logo_blue.svg" alt="" className="size-28" /></Link>
 
-                    {/* Links */}
-                    <div className="hidden gap-10 lg:flex">
-                        <button className="flex items-center gap-1 text-gray-700 hover:text-black">Savings <BiChevronDown size={16} /></button>
-                        <button className="flex items-center gap-1 text-gray-700 hover:text-black">CDs <BiChevronDown size={16} /></button>
-                        <button className="flex items-center gap-1 text-gray-700 hover:text-black">Tools & Resources<BiChevronDown size={16} /></button>
+                        {/* Links */}
+                        <div className="hidden gap-10 lg:flex">
+                            <button className="flex text-sm items-center gap-1 text-gray-700 hover:text-black">Savings <BiChevronDown size={16} /></button>
+                            <button className="flex text-sm items-center gap-1 text-gray-700 hover:text-black">CDs <BiChevronDown size={16} /></button>
+                            <button className="flex text-sm items-center gap-1 text-gray-700 hover:text-black">Tools & Resources<BiChevronDown size={16} /></button>
+                        </div>
                     </div>
 
                     {/* Right */}
                     <div className="flex items-center gap-8">
                         <a href="#" className="text-gray-700 hover:text-black">Compare savings products</a>
-                        <button className="flex items-center gap-2"><BiLock size={18} />Log in</button>
+                        <Link to='' className="flex items-center gap-2"><BiLock size={18} />Log in</Link>
                     </div>
                 </div>
             </nav>
-
         </div>
     )
 }
