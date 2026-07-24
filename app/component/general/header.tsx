@@ -25,7 +25,7 @@ export default function Header() {
                     {/* Right */}
                     <div className="flex items-center gap-8">
                         <a href="#" className="text-gray-700 hover:text-black">Compare savings products</a>
-                        <Link to='' className="flex items-center gap-2"><BiLock size={18} />Log in</Link>
+                        <Link to='/login' className="flex items-center gap-2"><BiLock size={18} />Log in</Link>
                     </div>
                 </div>
             </nav>

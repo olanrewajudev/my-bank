@@ -21,3 +21,33 @@ body {
   margin: 0;
   padding: 0;
 }
+.no-scrolls {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrolls::-webkit-scrollbar {
+  display: none;
+}
+
+.scrolls::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrolls::-webkit-scrollbar-thumb {
+  width: 4px;
+
+  border-radius: 10px;
+  background: lightgrey;
+}
+
+.scrollsdown::-webkit-scrollbar {
+  height: 4px;
+}
+
+.scrollsdown::-webkit-scrollbar-thumb {
+  height: 4px;
+
+  border-radius: 10px;
+  background: lightgrey;
+}

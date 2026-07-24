@@ -1,7 +1,7 @@
 import { BiChevronDown, BiTime } from "react-icons/bi";
 import { BsInfo } from "react-icons/bs";
 import { products, resources } from "~/component/general/constant";
-
+import {Link} from 'react-router'
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
@@ -28,7 +28,7 @@ export default function Home() {
               Terms apply.
             </p>
 
-            <button className="mt-10 rounded-md bg-blue px-20 py-4 text-lg font-light text-white hover:bg-blue-700">Learn More</button>
+          <div className="mt-10">  <Link to='savings/referrals' className=" rounded-md bg-blue px-20 py-4 text-lg font-light text-white hover:bg-blue-700">Learn More</Link></div>
 
             <div className="mt-12 max-w-lg flex items-center gap-2">
               <h3 className="font-bold text-lg text-blue-950">FDIC</h3>

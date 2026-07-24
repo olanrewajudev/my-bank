@@ -11,7 +11,10 @@ export default [
     index("./routes/home.tsx"),
 
   ]),
-            route("login", "routes/user/login.tsx"),
+  route("login", "routes/user/login.tsx"),
+  route("savings/new/account-creation", "routes/user/signup.tsx"),
+  route("savings/referrals", "routes/learn-more.tsx"),
+
   layout("./Layouts/user-layout.tsx", [
     ...prefix("user", [
       route("dashboard", "routes/user/dashboard.tsx"),
