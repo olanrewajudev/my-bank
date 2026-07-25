@@ -41,7 +41,7 @@ export default function Login() {
             </div>
 
             {/* Login */}
-            <section className="w-[50%] mx-auto mt-8">
+            <section className="lg:w-[50%] px-5 mx-auto mt-8">
                 <div className="mb-8 px-3 bg-[#EEF4FA] flex items-center justify-between ">
                     <div className="">  <img src="/qr_banner_image.png" alt="" className="h-28" /></div>
                     <div className="">
@@ -81,7 +81,7 @@ export default function Login() {
             </section>
             <div className="border-b pt-36 border-gray"></div>
             {/* Help Section */}
-            <section className="py-10 w-[40%] mx-auto">
+            <section className="py-10 lg;w-[40%] mx-auto">
                 <div className="mx-auto max-w-4xl px-8">
                     <h2 className="mb-12 text-3xl font-light">Help and support</h2>
 

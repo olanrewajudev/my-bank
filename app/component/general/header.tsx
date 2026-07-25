@@ -2,6 +2,7 @@ import React from 'react'
 
 import { BiChevronDown, BiLock } from "react-icons/bi";
 import { BsInfo } from "react-icons/bs";
+import { SlMenu } from 'react-icons/sl';
 import { Link } from 'react-router';
 
 export default function Header() {
@@ -23,10 +24,11 @@ export default function Header() {
                     </div>
 
                     {/* Right */}
-                    <div className="flex items-center gap-8">
+                    <div className="lg:flex items-center gap-8 hidden">
                         <a href="#" className="text-gray-700 hover:text-black">Compare savings products</a>
                         <Link to='/login' className="flex items-center gap-2"><BiLock size={18} />Log in</Link>
                     </div>
+                    <div className="lg:hidden "><SlMenu /></div>
                 </div>
             </nav>
         </div>

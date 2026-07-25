@@ -101,7 +101,7 @@ export default function Signup() {
                     })}
                 </div>
             </section>
-            <section className="py-5 w-[55%] mx-auto">
+            <section className="py-5 lg:w-[55%] mx-auto">
 
                 {/* Step content */}
                 <section className="mx-auto max-w-3xl px-8 py-20">
