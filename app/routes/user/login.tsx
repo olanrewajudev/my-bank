@@ -25,7 +25,7 @@ export default function Login() {
                 {/* Navbar */}
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
-                        <Link to='/'> <img src="/Public/logo_blue.svg" alt="" className="size-28" /></Link>
+                        <Link to='/'> <img src="/logo_blue.svg" alt="" className="size-28" /></Link>
                     </div>
                 </nav>
             </div>
@@ -43,12 +43,12 @@ export default function Login() {
             {/* Login */}
             <section className="w-[50%] mx-auto mt-8">
                 <div className="mb-8 px-3 bg-[#EEF4FA] flex items-center justify-between ">
-                    <div className="">  <img src="/Public/qr_banner_image.png" alt="" className="h-28" /></div>
+                    <div className="">  <img src="/qr_banner_image.png" alt="" className="h-28" /></div>
                     <div className="">
                         <h2 className="text-lg text-slate-800 leading-9" >Get the Marcus app</h2>
                         <p className="mt- text-sm text-slate-500">Scan to download or open the app</p>
                     </div>
-                    <div className=""><img src="/Public/codeqr.png" alt="" className="h-24" /></div>
+                    <div className=""><img src="/codeqr.png" alt="" className="h-24" /></div>
                 </div>
 
                 <div className="">

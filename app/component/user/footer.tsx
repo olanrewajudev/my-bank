@@ -13,7 +13,7 @@ export default function UserFooter() {
                         {/* Left Section */}
                         <div className="max-w-3xl">
                             {/* Logo */}
-                            <img src="/Public/logo_white.svg" alt="Marcus" className="h-10 object-contain mb-12" />
+                            <img src="/logo_white.svg" alt="Marcus" className="h-10 object-contain mb-12" />
 
                             {/* Links */}
                             <div className="flex flex-wrap gap-7 text-sm mb-14">
@@ -34,8 +34,8 @@ export default function UserFooter() {
                             </div>
 
                             <div className="flex gap-10 mt-12">
-                                <img src="/Public/norton_secure_seal.svg" alt="Norton" className="h-20 object-contain" />
-                                <img src="/Public/equal.svg" alt="Equal Housing" className="h-20 object-contain" />
+                                <img src="/norton_secure_seal.svg" alt="Norton" className="h-20 object-contain" />
+                                <img src="/equal.svg" alt="Equal Housing" className="h-20 object-contain" />
                             </div>
                         </div>
 

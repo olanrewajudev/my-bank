@@ -29,7 +29,7 @@ export const resources = [
       "When choosing between these accounts, it's important to consider your timeline, goals, and risk tolerance.",
     readTime: "3 min read",
     bg: "bg-slate-100",
-    image: '/Public/cd1.jpeg',
+    image: '/cd1.jpeg',
   },
   {
     title: "What Is a No-Penalty CD and How Does It Work?",
@@ -37,7 +37,7 @@ export const resources = [
       "A no-penalty CD offers a simple way to earn interest on your savings with some added flexibility.",
     readTime: "",
     bg: "bg-blue-50",
-    image: '/Public/image.jpg',
+    image: '/image.jpg',
   },
   {
     title: "Why Is the Cost of Living Going Up? 5 Tips for Consumers",
@@ -45,7 +45,7 @@ export const resources = [
       "Sticky inflation and weak job growth are straining consumer wallets.",
     readTime: "3 min read",
     bg: "bg-slate-100",
-    image: '/Public/cd3.png',
+    image: '/cd3.png',
   },
 ];
 

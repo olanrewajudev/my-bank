@@ -8,7 +8,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative h-[42rem] overflow-hidden">
         {/* Background Image */}
-        <img src="/Public/FinalHomepageReferral.png" alt="Referral Banner" className="absolute inset-0 h-full w-full object-cover" />
+        <img src="/FinalHomepageReferral.png" alt="Referral Banner" className="absolute inset-0 h-full w-full object-cover" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto flex h-[40rem] max-w-7xl items-center px-8">
@@ -86,7 +86,7 @@ export default function Home() {
           <button className="bg-blue text-white px-16 py-4 mt-10 rounded hover:bg-blue">Learn more</button>
         </div>
 
-        <img src="/Public/shield.png" alt="" className="" />
+        <img src="/shield.png" alt="" className="" />
       </section>
 
       {/* Mobile App */}
@@ -96,11 +96,11 @@ export default function Home() {
           <h1 className="text-3xl font-normal leading-tight mb-5">We're here to help you make the most of your money</h1>
           <p className="text-xl text-slate-700">Download the Marcus app today and keep your money at your fingertips.</p>
           <div className="flex -mt-5 gap-5">
-            <img src="/Public/app-download-appstore-b.png" alt="" className="size-[12rem] object-contain" />
-            <img src="/Public/app-download-playstore-b.png" alt="" className="size-[12rem] object-contain" />
+            <img src="/app-download-appstore-b.png" alt="" className="size-[12rem] object-contain" />
+            <img src="/app-download-playstore-b.png" alt="" className="size-[12rem] object-contain" />
           </div>
         </div>
-        <div className=""> <img src="/Public/app-icon.png" alt="" className="size-[25rem] object-contain" /></div>
+        <div className=""> <img src="/app-icon.png" alt="" className="size-[25rem] object-contain" /></div>
 
       </div>
       </section>

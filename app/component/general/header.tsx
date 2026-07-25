@@ -12,7 +12,7 @@ export default function Header() {
                 <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
                     <div className="flex items-center gap-20">
                         {/* Logo */}
-                       <Link to='/'> <img src="/Public/logo_blue.svg" alt="" className="size-28" /></Link>
+                       <Link to='/'> <img src="/logo_blue.svg" alt="" className="size-28" /></Link>
 
                         {/* Links */}
                         <div className="hidden gap-10 lg:flex">
