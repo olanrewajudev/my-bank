@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-export const BaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7100/api"
+export const BaseUrl = import.meta.env.VITE_API_URL 
 
 export const CookieName = 'UserToken'
 
@@ -9,16 +9,17 @@ type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface RequestOptions {
     endpoint: string;
-    method?: string;
-    data?: string;
+    method?: Method;
+    data?: any;
     type?: string;
     auth?: string;
     idpKey?: string;
 }
 
-export const request = async ({ endpoint, method, data, type, auth, idpKey }: RequestOptions) => {
+export const request = async ({ endpoint, method = "GET", data, type, auth, idpKey }: RequestOptions) => {
     const token = Cookies.get(CookieName)
     const headers: Record<string, string> = {}
+
     if (type === 'JSON') {
         headers["Content-type"] = 'application/json';
     }
@@ -27,7 +28,7 @@ export const request = async ({ endpoint, method, data, type, auth, idpKey }: Re
         headers.authorization = `Bearer ${token}`
     }
 
-    if (auth) {
+    if (auth && method !== "GET") {
         headers["idp-key"] = idpKey || GenerateIdempotencyKey();
     }
 
@@ -41,15 +42,26 @@ export const request = async ({ endpoint, method, data, type, auth, idpKey }: Re
 
     const text = await response.text()
 
-    const result = text.length > 0 ? JSON.parse(text) : {};
-
-    if (!response.ok) {
-        throw new Error(result.message || result.msg || 'Request Failed')
+    let result: any = {};
+    if (text.length > 0) {
+        try {
+            result = JSON.parse(text);
+        } catch {
+            throw new Error(`Invalid response from server (status ${response.status})`);
+        }
     }
 
     if (response.status === 401) {
         Cookies.remove(CookieName);
         window.location.href = "/login";
+        return {
+            data: result,
+            status: response.status
+        }
+    }
+
+    if (!response.ok) {
+        throw new Error(result.message || result.msg || 'Request Failed')
     }
 
     return {

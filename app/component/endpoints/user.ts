@@ -22,7 +22,7 @@ export const User_urls = {
 
     profile() {
         return request({
-            endpoint: "users/profile",
+            endpoint: "user/profile",
             auth: 'true'
         });
     }
