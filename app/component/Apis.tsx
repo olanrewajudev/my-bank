@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-export const BaseUrl = import.meta.env.VITE_API_URL 
+export const BaseUrl = import.meta.env.VITE_API_URL || 'https://backend.beacongoldcrest.com/api'
 
 export const CookieName = 'UserToken'
 
