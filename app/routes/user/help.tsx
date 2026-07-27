@@ -243,37 +243,6 @@ export default function Help() {
           )}
         </button>
 
-        {contactOpen && (
-          <div className="mt-2 space-y-2 rounded-xl bg-white px-5 py-4 shadow-sm">
-            
-              href="tel:18005551234"
-              className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50"
-            >
-              <HiOutlinePhone className="text-lg text-blue-700" />
-              <div>
-                <p className="text-sm text-slate-800">Call 1-800-555-1234</p>
-                <p className="text-xs text-slate-500">Toll-free customer support</p>
-              </div>
-            </a>
-            
-              href="mailto:support@beacongoldcrest.example.com"
-              className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50"
-            >
-              <HiOutlineEnvelope className="text-lg text-blue-700" />
-              <div>
-                <p className="text-sm text-slate-800">Email support</p>
-                <p className="text-xs text-slate-500">support@beacongoldcrest.example.com</p>
-              </div>
-            </a>
-            <div className="flex items-center gap-3 px-2 py-3">
-              <HiOutlineClock className="text-lg text-slate-500" />
-              <div>
-                <p className="text-sm text-slate-800">Support hours</p>
-                <p className="text-xs text-slate-500">Mon-Fri, 8am-9pm ET, Sat, 9am-5pm ET</p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {chatOpen && (
