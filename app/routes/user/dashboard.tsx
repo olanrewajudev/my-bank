@@ -74,7 +74,7 @@ export default function Dashboard() {
       {/* Disclosures */}
       <div className="mt-8 space-y-4 px-6 text-xs leading-relaxed text-slate-500">
         <p>
-          Marcus by Goldman Sachs® is a brand of Goldman Sachs Bank USA. All deposit products
+          Beacon Gold Crest by Goldman Sachs® is a brand of Goldman Sachs Bank USA. All deposit products
           are provided or issued by Goldman Sachs Bank USA, Salt Lake City Branch. Member FDIC.
         </p>
         <p>

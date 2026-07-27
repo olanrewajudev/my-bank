@@ -3,41 +3,19 @@ import React, { useMemo, useState } from 'react'
 import { BiCheckCircle, BiChevronDown, BiChevronUp, BiLock } from 'react-icons/bi'
 import { Link } from 'react-router'
 import Footer from '~/component/general/footer'
+import { REFERRAL_STEPS } from '~/component/utils'
 
-/* ----------------------------- Referring steps ---------------------------- */
 
-const REFERRAL_STEPS = [
-    {
-        number: '1',
-        title: 'Open',
-        body: 'Open a Marcus Online Savings Account and start earning our everyday high-yield rate.',
-    },
-    {
-        number: '2',
-        title: 'Share',
-        body: "Share your unique referral link with friends who don't have a Marcus Online Savings Account or CD.",
-    },
-    {
-        number: '3',
-        title: 'Earn',
-        body: "When your friend opens an Online Savings Account, you both earn a 1.00% APY rate boost for 3 months (on accounts on which you're the primary owner).",
-    },
-    {
-        number: '4',
-        title: 'Repeat',
-        body: 'Spread the high-yield love: you can refer up to 5 friends for rate boosts.',
-    },
-]
 
 function ReferringSteps() {
     return (
         <section className="bg-white px-10 py-20">
-            <div className="mx-auto max-w-[1600px]">
+            <div className="">
                 <h2 className="text-center text-[38px] font-normal text-[#101d3d]">
-                    Referring friends to Marcus is easy!
+                    Referring friends to Beacon Gold Crest is easy!
                 </h2>
 
-                <div className="mt-16 grid grid-cols-2 gap-x-10 gap-y-14 md:grid-cols-4">
+                <div className="mt-16 grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 items-center justify-center">
                     {REFERRAL_STEPS.map((step) => (
                         <div key={step.number}>
                             <div className="text-[64px] font-light leading-none text-[#2f9e6f]">
@@ -67,17 +45,16 @@ function ReferringSteps() {
     )
 }
 
-/* ------------------------------- Calculator ------------------------------- */
 
 type Bank = {
     id: string
     name: string
     apy: number // percentage, e.g. 3.4
-    isMarcus?: boolean
+    isBeacon?: boolean
 }
 
 const ALL_BANKS: Bank[] = [
-    { id: 'marcus', name: 'Marcus', apy: 3.4, isMarcus: true },
+    { id: 'marcus', name: 'Beacon Gold Crest', apy: 3.4, isBeacon: true },
     { id: 'national-average', name: 'National Average', apy: 0.4 },
     { id: 'ally', name: 'Ally Bank', apy: 3.0 },
     { id: 'amex', name: 'American Express', apy: 3.0 },
@@ -120,7 +97,7 @@ function SavingsCalculator() {
     const periodsPerYear = PERIOD_OPTIONS.find((p) => p.label === periodLabel)?.periodsPerYear ?? 12
 
     const rows = useMemo(() => {
-        const banks = ALL_BANKS.filter((b) => b.isMarcus || selectedIds.includes(b.id))
+        const banks = ALL_BANKS.filter((b) => b.isBeacon || selectedIds.includes(b.id))
         const withInterest = banks.map((b) => ({
             ...b,
             interest: calcInterest(b.apy, initialDeposit, recurringDeposit, periodsPerYear, years),
@@ -133,8 +110,8 @@ function SavingsCalculator() {
         setSelectedIds((prev) => {
             const isSelected = prev.includes(id)
             if (isSelected) return prev.filter((x) => x !== id)
-            const nonMarcusCount = prev.filter((x) => x !== 'marcus').length
-            if (nonMarcusCount >= 4) return prev
+            const nonBeaconCount = prev.filter((x) => x !== 'marcus').length
+            if (nonBeaconCount >= 4) return prev
             return [...prev, id]
         })
     }
@@ -143,7 +120,7 @@ function SavingsCalculator() {
         <section className="bg-white px-10 py-20">
             <div className="mx-auto max-w-[1600px]">
                 <h2 className="text-center text-[34px] font-normal text-[#101d3d]">
-                    Marcus Online Savings Account potential interest vs. other banks
+                    Beacon Gold Crest Online Savings Account potential interest vs. other banks
                 </h2>
                 <p className="mt-3 text-center text-[18px] text-slate-600">
                     Choose up to 4 banks to compare
@@ -249,7 +226,7 @@ function SavingsCalculator() {
 
                         {pickerOpen && (
                             <div className="mt-4 grid grid-cols-2 gap-3 rounded-sm bg-[#182548] p-5 sm:grid-cols-3">
-                                {ALL_BANKS.filter((b) => !b.isMarcus).map((b) => (
+                                {ALL_BANKS.filter((b) => !b.isBeacon).map((b) => (
                                     <label key={b.id} className="flex items-center gap-2 text-[14px] text-slate-200">
                                         <input
                                             type="checkbox"
@@ -267,10 +244,10 @@ function SavingsCalculator() {
                             {rows.map((bank) => (
                                 <div key={bank.id} className="flex items-center gap-6">
                                     <div className="w-44 flex-none">
-                                        {bank.isMarcus ? (
+                                        {bank.isBeacon ? (
                                             <div className="leading-tight">
                                                 <div className="flex items-baseline text-[22px] font-semibold text-white">
-                                                    Marcus<span className="text-[#5b8def]">:</span>
+                                                    Beacon Gold Crest<span className="text-[#5b8def]">:</span>
                                                 </div>
                                                 <div className="-mt-1 text-[9px] font-semibold tracking-wide text-white">
                                                     by Goldman Sachs<sup className="text-[7px]">®</sup>
@@ -323,7 +300,6 @@ function SavingsCalculator() {
         </section>
     )
 }
-/* ------------------------- High-yield benefits ------------------------- */
 
 const HIGH_YIELD_BENEFITS = [
     'Everyday high-yield rate—currently 3.40% APY.',
@@ -386,15 +362,15 @@ function HighYieldBenefits() {
                 </div>
 
                 <div>
-                    <h2 className="text-[38px] font-normal leading-tight text-[#101d3d]">
-                        Marcus high-yield savings gives you more than just a rate boost
+                    <h2 className="text-[33px] font-normal leading-tight text-[#101d3d]">
+                        Beacon Gold Crest high-yield savings gives you more than just a rate boost
                     </h2>
 
                     <ul className="mt-10 space-y-6">
                         {HIGH_YIELD_BENEFITS.map((benefit) => (
                             <li key={benefit} className="flex items-start gap-4">
-                                <BiCheckCircle className="mt-0.5 h-6 w-6 flex-none text-[#101d3d]" />
-                                <span className="text-[19px] text-[#101d3d]">{benefit}</span>
+                                <BiCheckCircle className="mt-0.5 h-5 w-5 flex-none text-[#101d3d]" />
+                                <span className="text-[15px] text-[#101d3d]">{benefit}</span>
                             </li>
                         ))}
                     </ul>
@@ -410,38 +386,37 @@ function HighYieldBenefits() {
         </section>
     )
 }
-/* -------------------------------- FAQs --------------------------------- */
 
 const REFERRAL_FAQS: { question: string; answer: React.ReactNode }[] = [
     {
-        question: 'What is Marcus Referred?',
+        question: 'What is Beacon Gold Crest Referred?',
         answer: (
             <>
-                Marcus customers earn a 1.00% APY Rate Boost ("Marcus Referred Rate Boost") on
-                their Marcus Online Savings Account(s) on which they're the primary owner when
-                they refer a customer who is new to Marcus. The new customer earns a rate
+                Beacon Gold Crest customers earn a 1.00% APY Rate Boost ("Beacon Gold Crest Referred Rate Boost") on
+                their Beacon Gold Crest Online Savings Account(s) on which they're the primary owner when
+                they refer a customer who is new to Beacon Gold Crest. The new customer earns a rate
                 boost, too.{' '}
                 <Link to="/terms" className="text-[#3f6fcf] underline underline-offset-2">
                     Click here
                 </Link>{' '}
-                for the current Marcus Referred program details and terms.
+                for the current Beacon Gold Crest Referred program details and terms.
             </>
         ),
     },
     {
-        question: 'How will the Marcus Referred Rate Boost be paid out?',
+        question: 'How will the Beacon Gold Crest Referred Rate Boost be paid out?',
         answer: 'Add the payout details here.',
     },
     {
-        question: 'What kind of accounts can earn a Marcus Referred Bonus?',
+        question: 'What kind of accounts can earn a Beacon Gold Crest Referred Bonus?',
         answer: 'Add eligible account types here.',
     },
     {
-        question: 'When will my Marcus Referred Rate Boost take effect?',
+        question: 'When will my Beacon Gold Crest Referred Rate Boost take effect?',
         answer: 'Add activation timing here.',
     },
     {
-        question: 'Can I refer more than one friend, and how many Marcus Referred Rate Boosts can I earn?',
+        question: 'Can I refer more than one friend, and how many Beacon Gold Crest Referred Rate Boosts can I earn?',
         answer: 'Add referral limit details here.',
     },
 ]
@@ -478,7 +453,7 @@ function FAQItem({
 function ReferralFAQs() {
     return (
         <section className="bg-white px-10 py-20">
-            <div className="mx-auto max-w-[1600px]">
+            <div className="">
                 <h2 className="text-center text-[38px] font-normal text-[#101d3d]">
                     Have questions? We have answers.
                 </h2>
@@ -486,7 +461,7 @@ function ReferralFAQs() {
                 <div className="mt-16">
                     <h3 className="text-[28px] text-[#101d3d]">Frequently Asked Questions</h3>
                     <Link to="/faqs" className="mt-2 inline-block text-[16px] text-[#3f6fcf] underline underline-offset-2">
-                        See all Marcus FAQs &gt;
+                        See all Beacon Gold Crest FAQs &gt;
                     </Link>
 
                     <h4 className="mt-14 text-[24px] text-[#101d3d]">
@@ -558,18 +533,17 @@ export default function LearnMore() {
                 </div>
 
                 {/* Nav */}
-                <nav className="relative z-10 mx-auto flex max-w-[1600px] items-center justify-between px-10 py-6">
+                <nav className="relative z-10 mx-auto flex max-w-[1600px] items-center justify-between px-7 py-6">
                     <div className="flex items-center gap-14">
                         <div className="leading-tight">
                             <div className="flex items-baseline text-[28px] font-semibold text-white">
-                                Marcus<span className="text-[#5b8def]">:</span>
+                                Beacon<span className="text-[#ffe524]">:</span>
                             </div>
                             <div className="-mt-1 text-[11px] font-semibold tracking-wide text-white">
-                                by Goldman Sachs<sup className="text-[8px]">®</sup>
                             </div>
                         </div>
 
-                        <div className="hidden items-center gap-10 text-[15px] text-slate-200 md:flex">
+                        <div className="hidden items-center gap-10 text-sm text-slate-200 md:flex">
                             <button className="flex items-center gap-1 border-b-2 border-white pb-6 pt-6 text-white">
                                 Savings <BiChevronDown className="h-4 w-4" />
                             </button>
@@ -595,53 +569,36 @@ export default function LearnMore() {
 
                 {/* Content */}
                 <div className="relative z-10 mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-10 pb-24 pt-6 lg:grid-cols-[1.05fr_0.95fr]">
-                    {/* Left column */}
                     <div className="max-w-xl">
-                        <h1 className="text-[56px] font-normal leading-[1.05] text-white">
-                            Give your savings a boost
-                        </h1>
-
-                        <p className="mt-8 text-[19px] leading-relaxed text-slate-200">
+                        <h1 className="text-[3rem] font-normal leading-[1.05] text-white">Give your savings a boost     </h1>
+                        <p className="mt-8 text-[15px] leading-relaxed text-slate-200">
                             It's simple: When you open an Online Savings Account and refer a
-                            friend who's new to Marcus, you both could earn an extra{' '}
+                            friend who's new to Beacon Gold Crest, you both could earn an extra{' '}
                             <span className="text-[#7fd6b0]">1.00% APY</span> for 3 months.
                         </p>
 
-                        <div className="mt-8 text-[18px] text-white">
+                        <div className="mt-8 text-base text-white">
                             <p>Already a customer?</p>
-                            <p>
-                                <Link to="/login" className="text-[#7fb2f0] underline underline-offset-2">
-                                    Log in
-                                </Link>{' '}
-                                to refer friends.
-                            </p>
+                            <p><Link to="/login" className="text-[#7fb2f0] underline underline-offset-2">Log in</Link>{' '}to refer friends.</p>
                         </div>
 
-                        <div className="mt-6 text-[18px] text-white">
-                            <p>Received a link from a Marcus customer?</p>
+                        <div className="mt-6 text-base text-white">
+                            <p>Received a link from a Beacon Gold Crest customer?</p>
                             <p>You must use that link to earn a referral rate boost.</p>
                         </div>
 
                         <div className="mt-9 flex flex-wrap items-center gap-8">
-                            <Link
-                                to="/savings/new/account-creation"
-                                className="rounded-sm border-2 border-[#5b8def] bg-[#3f6fcf] px-10 py-4 text-[18px] text-white transition hover:bg-[#4a7ddb]"
-                            >
+                            <Link to="/savings/new/account-creation" className="rounded-sm border-2 border-[#5b8def] bg-[#3f6fcf] px-10 py-4 text- text-white transition hover:bg-[#4a7ddb]">
                                 Open an Account
                             </Link>
-                            <Link to="/terms" className="text-[17px] text-[#7fb2f0] underline underline-offset-2">
-                                See full terms
-                            </Link>
+                            <Link to="/terms" className="text-sm text-[#7fb2f0] underline underline-offset-2">See full terms</Link>
                         </div>
 
                         <div className="mt-14 flex items-start gap-4">
                             <div className="mt-1 flex h-9 w-14 flex-none items-center justify-center rounded-sm bg-white text-[13px] font-bold tracking-tight text-[#101d3d]">
                                 FDIC
                             </div>
-                            <p className="text-[14px] italic leading-snug text-slate-300">
-                                FDIC-Insured – Backed by the full faith and credit of the U.S.
-                                Government. Goldman Sachs Bank USA, Salt Lake City Branch.
-                            </p>
+                            <p className="text-[14px] italic leading-snug text-slate-300">FDIC-Insured – Backed by the full faith and credit of the U.S.Government. Goldman Sachs Bank USA, Salt Lake City Branch.</p>
                         </div>
                     </div>
 
@@ -671,13 +628,13 @@ export default function LearnMore() {
                             </p>
 
                             <p className="mt-5 text-[15px] leading-relaxed text-slate-600">
-                                The Marcus Referred Rate Boost is a promotional Annual
+                                The Beacon Gold Crest Referred Rate Boost is a promotional Annual
                                 Percentage Yield (APY) increase of 1.00%, on top of the stated
                                 Online Savings Account APY available at marcus.com (currently
                                 3.40% APY), for a period of 3 months. Upon expiration of the
                                 3-month Promotional Rate Period, the Online Savings Account
                                 will revert to earning the Online Savings Account APY available
-                                at that time; an account that earned one Marcus Referred Rate
+                                at that time; an account that earned one Beacon Gold Crest Referred Rate
                                 Boost would earn a combined APY of 3.65%, assuming the Online
                                 Savings Account APY remained the same for the remaining 9
                                 months.{' '}
@@ -697,7 +654,7 @@ export default function LearnMore() {
 
             <ReferralFAQs />
             {/* high yield */}
-<Footer />
+            <Footer />
         </div>
     )
 }

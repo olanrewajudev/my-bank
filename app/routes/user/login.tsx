@@ -1,24 +1,56 @@
 import React, { useState } from "react";
-import { BiLock, } from "react-icons/bi";
+import { BiLock } from "react-icons/bi";
 import { IoChevronDownSharp, IoChevronForward } from "react-icons/io5";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FAQs } from "~/component/general/constant";
-import Footer from "~/component/general/footer";
-import {
-    FaFacebook,
-    FaInstagram,
-    FaYoutube,
-    FaLinkedin,
-} from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import UserFooter from "~/component/user/footer";
+import { User_urls } from "~/component/endpoints/user";
+import Cookies from 'js-cookie'
+import { CookieName } from "~/component/Apis";
+
 export default function Login() {
+    const navigate = useNavigate()
     const [active, setActive] = useState(0)
+
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
     function handleActive(value: number) {
         if (active !== value) return setActive(value)
         return setActive(0)
     }
+
+    const loginValid =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+        password.trim() !== ""
+
+    const handleLogin = async () => {
+        setError("")
+        if (!loginValid) {
+            setError("Enter a valid email and password.")
+            return
+        }
+        setLoading(true)
+        try {
+            const res = await User_urls.login({ email, password })
+            if (res.data?.token) {
+                Cookies.set(CookieName, res.data.token)
+
+            }
+            // navigate("/user/dashboard")
+        } catch (err: any) {
+            setError(err.message || "Something went wrong")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    function handleKeyDown(e: React.KeyboardEvent) {
+        if (e.key === "Enter") handleLogin()
+    }
+
     return (
         <div className="min-h-screen  bg-white">
             <div>
@@ -45,7 +77,7 @@ export default function Login() {
                 <div className="mb-8 px-3 bg-[#EEF4FA] flex items-center justify-between ">
                     <div className="">  <img src="/qr_banner_image.png" alt="" className="h-28" /></div>
                     <div className="">
-                        <h2 className="text-lg text-slate-800 leading-9" >Get the Marcus app</h2>
+                        <h2 className="text-lg text-slate-800 leading-9" >Get the Beacon Gold Crest app</h2>
                         <p className="mt- text-sm text-slate-500">Scan to download or open the app</p>
                     </div>
                     <div className=""><img src="/codeqr.png" alt="" className="h-24" /></div>
@@ -54,21 +86,43 @@ export default function Login() {
                 <div className="">
                     <h1 className="mb-14 text-[2.7rem] font-light text-[#23284A]">Secure login</h1>
 
+                    {error && (
+                        <p className="mb-6 rounded-sm bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
+                    )}
+
                     {/* Email */}
                     <div className="mb-7">
                         <label className="mb-3 block text-base text-slate-700">Email address</label>
-                        <input type="email" className="h-14 w-full border border-slate-300 px-5 text-xl outline-none focus:border-blue focus:border-2" />
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            className="h-14 w-full border border-slate-300 px-5 text-xl outline-none focus:border-blue focus:border-2"
+                        />
                     </div>
 
                     {/* Password */}
                     <div>
                         <label className="mb-3 block text-base text-slate-700">Password</label>
-                        <input type="password" className="h-14 w-full border border-slate-300 px-5 text-xl outline-none focus:border-blue focus:border-2" />
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            className="h-14 w-full border border-slate-300 px-5 text-xl outline-none focus:border-blue focus:border-2"
+                        />
                     </div>
 
                     {/* Buttons */}
                     <div className="mt-12 flex items-center gap-8">
-                        <button className="rounded bg-blue px-10 text-base py-4 text-white hover:bg-[#005FB8]">Continue</button>
+                        <button
+                            onClick={handleLogin}
+                            disabled={loading}
+                            className="rounded bg-blue px-10 text-base py-4 text-white hover:bg-[#005FB8] disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {loading ? "Signing in..." : "Continue"}
+                        </button>
                         <a href="#" className="text-base text-blue font-light underline underline-offset-4">Create or reset password</a>
                     </div>
 

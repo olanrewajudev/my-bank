@@ -72,17 +72,17 @@ export default function formatPhone(raw: string) {
 }
 export const FAQs = [
   {
-    q: "How secure is Marcus?",
+    q: "How secure is Beacon Gold Crest?",
     a: (
       <ul className="list-disc pl-6 space-y-4">
         <li>
-          At Marcus, we make it a priority to protect your privacy and
+          At Beacon Gold Crest, we make it a priority to protect your privacy and
           safeguard your account information. We've implemented a variety of
           services, features, and policies to keep your account secure.
         </li>
 
         <li>
-          Marcus uses multi-factor authentication to help verify your
+          Beacon Gold Crest uses multi-factor authentication to help verify your
           identity. Multi-factor authentication ensures that only you have
           access to your account.
         </li>

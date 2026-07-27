@@ -41,9 +41,9 @@ export default function Profile() {
       {/* Referral banner */}
       <div className="mt-4 px-6">
         <div className="relative overflow-hidden rounded-xl bg-white px-6 py-6 shadow-sm">
-          <p className="text-slate-500">Marcus Referred</p>
+          <p className="text-slate-500">Beacon Gold Crest Referred</p>
           <p className="mt-2 max-w-[65%] text-slate-800">
-            Invite a friend to Marcus: Earn a rate boost
+            Invite a friend to Beacon Gold Crest: Earn a rate boost
           </p>
           <button className="mt-3 text-blue-700">Refer a friend &gt;</button>
           <svg className="pointer-events-none absolute right-0 bottom-0 h-24 w-32" viewBox="0 0 140 100">

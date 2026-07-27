@@ -2,10 +2,10 @@ import React from 'react'
 import { HiOutlineChevronRight, HiOutlinePhone, HiOutlineBookOpen } from 'react-icons/hi2'
 
 const topics = [
-  'Security at Marcus',
+  'Security at Beacon Gold Crest',
   'Deposits & Withdrawals',
   'About Deposit Accounts',
-  'Marcus Referred',
+  'Beacon Gold Crest Referred',
   'Beneficiaries',
 ]
 

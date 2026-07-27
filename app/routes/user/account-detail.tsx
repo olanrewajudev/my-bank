@@ -87,7 +87,7 @@ export default function AccountDetail() {
 
       {/* Disclosure */}
       <p className="px-6 pt-6 text-xs leading-relaxed text-slate-500">
-        Marcus by Goldman Sachs® is a brand of Goldman Sachs Bank USA, Salt Lake City Branch.
+        Beacon Gold Crest by Goldman Sachs® is a brand of Goldman Sachs Bank USA, Salt Lake City Branch.
         Member FDIC.
       </p>
 

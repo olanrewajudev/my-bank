@@ -16,9 +16,9 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-10">
             <div>
-              <h4 className="text-slate-400 mb-5">Marcus</h4>
+              <h4 className="text-slate-400 mb-5">Beacon Gold Crest</h4>
               <ul className="space-y-4">
-                <li><a href="#" className="hover:text-slate-300">About Marcus</a></li>
+                <li><a href="#" className="hover:text-slate-300">About Beacon Gold Crest</a></li>
                 <li><a href="#" className="hover:text-slate-300">Security Center</a></li>
                 <li><a href="#" className="hover:text-slate-300">Careers</a></li>
               </ul>
@@ -63,8 +63,8 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex -mt-5 gap-5">
-            <img src="/app-download-appstore-b.png" alt="" className="size-[12rem] object-contain" />
-            <img src="/app-download-playstore-b.png" alt="" className="size-[12rem] object-contain" />
+            <img src="/app-download-appstore-b.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
+            <img src="/app-download-playstore-b.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
           </div>
 
           <hr className="border-slate-700 mt-12" />
