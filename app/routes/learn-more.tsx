@@ -598,7 +598,7 @@ export default function LearnMore() {
                             <div className="mt-1 flex h-9 w-14 flex-none items-center justify-center rounded-sm bg-white text-[13px] font-bold tracking-tight text-[#101d3d]">
                                 FDIC
                             </div>
-                            <p className="text-[14px] italic leading-snug text-slate-300">FDIC-Insured – Backed by the full faith and credit of the U.S.Government. Goldman Sachs Bank USA, Salt Lake City Branch.</p>
+                            <p className="text-[14px] italic leading-snug text-slate-300">FDIC-Insured – Backed by the full faith and credit of the U.S.Government. Beacon Gold Crest Bank USA, Salt Lake City Branch.</p>
                         </div>
                     </div>
 

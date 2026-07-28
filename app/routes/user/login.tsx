@@ -57,7 +57,8 @@ export default function Login() {
                 {/* Navbar */}
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
-                        <Link to='/'> <img src="/logo_blue.svg" alt="" className="size-28" /></Link>
+                        <Link to='/'> <img src="/beacon1.jpg" alt="" className="size-32 object-contain" /></Link>
+
                     </div>
                 </nav>
             </div>
@@ -67,24 +68,17 @@ export default function Login() {
                     <h2 className="text-2xl font-extrabold text-[#143B63]">FDIC</h2>
                     <p className="text-xs italic text-slate-700">
                         FDIC-Insured - Backed by the full faith and credit of the U.S.
-                        Government. Goldman Sachs Bank USA, Salt Lake City Branch.
+                        Government. Beacon Gold Crest Bank USA, Salt Lake City Branch.
                     </p>
                 </div>
             </div>
 
             {/* Login */}
             <section className="lg:w-[50%] px-5 mx-auto mt-8">
-                <div className="mb-8 px-3 bg-[#EEF4FA] flex items-center justify-between ">
-                    <div className="">  <img src="/qr_banner_image.png" alt="" className="h-28" /></div>
-                    <div className="">
-                        <h2 className="text-lg text-slate-800 leading-9" >Get the Beacon Gold Crest app</h2>
-                        <p className="mt- text-sm text-slate-500">Scan to download or open the app</p>
-                    </div>
-                    <div className=""><img src="/codeqr.png" alt="" className="h-24" /></div>
-                </div>
+                
 
                 <div className="">
-                    <h1 className="mb-14 text-[2.7rem] font-light text-[#23284A]">Secure login</h1>
+                    <h1 className="lg:mb-14 mb-7 lg:text-[2.7rem] text-[1.5rem] font-light text-[#23284A]">Secure login</h1>
 
                     {error && (
                         <p className="mb-6 rounded-sm bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
@@ -98,7 +92,7 @@ export default function Login() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="h-14 w-full border border-slate-300 px-5 text-xl outline-none focus:border-blue focus:border-2"
+                            className="h-14 w-full border border-slate-300 px-5 outline-none focus:border-blue focus:border-2"
                         />
                     </div>
 
@@ -110,7 +104,7 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="h-14 w-full border border-slate-300 px-5 text-xl outline-none focus:border-blue focus:border-2"
+                            className="h-14 w-full border border-slate-300 px-5 outline-none focus:border-blue focus:border-2"
                         />
                     </div>
 
@@ -119,11 +113,11 @@ export default function Login() {
                         <button
                             onClick={handleLogin}
                             disabled={loading}
-                            className="rounded bg-blue px-10 text-base py-4 text-white hover:bg-[#005FB8] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="rounded bg-blue px-5 lg:px-10 text-base py-3.5 text-white hover:bg-[#005FB8] disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {loading ? "Signing in..." : "Continue"}
                         </button>
-                        <a href="#" className="text-base text-blue font-light underline underline-offset-4">Create or reset password</a>
+                        <a href="#" className="lg:text- text-sm text-blue font-light underline underline-offset-4">Create or reset password</a>
                     </div>
 
                     {/* SSL */}
@@ -133,7 +127,7 @@ export default function Login() {
                     </div>
                 </div>
             </section>
-            <div className="border-b pt-36 border-gray"></div>
+            <div className="border-b lg:pt-36 pt-10 border-gray"></div>
             {/* Help Section */}
             <section className="py-10 lg;w-[40%] mx-auto">
                 <div className="mx-auto max-w-4xl px-8">

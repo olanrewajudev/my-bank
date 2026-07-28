@@ -33,14 +33,13 @@ type VerifyIdentity = {
     countryOfCitizenship: string
     alternatePhone: string
     dob: string
-    ssn: string
     confirmSsn: string
     // Employment
     employmentStatus: string
 }
 
 export default function Signup() {
-     const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const [active, setActive] = useState(0)
     const [step, setStep] = useState(0) // index into SIGNUP_STEPS
@@ -66,7 +65,6 @@ export default function Signup() {
         countryOfCitizenship: "United States",
         alternatePhone: "",
         dob: "",
-        ssn: "",
         confirmSsn: "",
         employmentStatus: "",
     })
@@ -104,7 +102,7 @@ export default function Signup() {
         return `${yyyy}-${mm}-${dd}`
     }
 
-    function toUsername(email: string) {
+    function tofirstname(email: string) {
         return email.split("@")[0]
     }
 
@@ -129,8 +127,7 @@ export default function Signup() {
         /^\d{5}$/.test(verifyIdentity.zip) &&
         verifyIdentity.countryOfCitizenship.trim() !== "" &&
         /^\d{2}\/\d{2}\/\d{4}$/.test(verifyIdentity.dob) &&
-        verifyIdentity.ssn.replace(/\D/g, "").length === 9 &&
-        verifyIdentity.ssn === verifyIdentity.confirmSsn &&
+
         verifyIdentity.employmentStatus.trim() !== ""
 
     function goToStep(index: number) {
@@ -145,7 +142,6 @@ export default function Signup() {
                 firstname: personalInfo.firstName,
                 lastname: personalInfo.lastName,
                 mi: personalInfo.mi,
-                username: toUsername(personalInfo.email),
                 phone: personalInfo.phone.replace(/\D/g, ""),
                 email: personalInfo.email,
                 password: personalInfo.password,
@@ -157,11 +153,10 @@ export default function Signup() {
                 state: verifyIdentity.state,
                 zipcode: verifyIdentity.zip,
                 dob: toApiDob(verifyIdentity.dob),
-                ssn: verifyIdentity.ssn,
             }
 
             const res = await User_urls.register(payload)
-              if (res.data?.token) {
+            if (res.data?.token) {
                 Cookies.set(CookieName, res.data.token)
 
             }
@@ -179,9 +174,8 @@ export default function Signup() {
                 {/* Navbar */}
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
-                        <Link to='/'>
-                            <img src="/logo_blue.svg" alt="" className="size-28" />
-                        </Link>
+                        <Link to='/'> <img src="/beacon1.jpg" alt="" className="size-32 object-contain" /></Link>
+
                         <div className="flex items-center gap-8 text-[#143B63]">
                             <a href="tel:1-855-730-7283" className="flex items-center gap-2 text-sm"><BiPhone className="h-5 w-5" />1-855-730-7283</a>
                             <Link to="/login" className="flex items-center gap-2 text-sm"><BiLock className="h-5 w-5" />Login</Link>
@@ -195,14 +189,14 @@ export default function Signup() {
                     <h2 className="text-2xl font-extrabold text-[#143B63]">FDIC</h2>
                     <p className="text-xs italic text-slate-700">
                         FDIC-Insured - Backed by the full faith and credit of the U.S.
-                        Government. Goldman Sachs Bank USA, Salt Lake City Branch.
+                        Government. Beacon Gold Crest Bank USA, Salt Lake City Branch.
                     </p>
                 </div>
             </div>
 
             {/* Step Indicator */}
-            <section className="mx-auto max-w-3xl px-20 pt-12">
-                <div className="flex items-center justify-between">
+            <section className="mx-auto max-w-3xl lg:px-20 pt-12">
+                <div className="flex items-center justify-center flex-col gap-4">
                     {SIGNUP_STEPS.map((label, index) => {
                         const isDone = index < step
                         const isCurrent = index === step
@@ -226,11 +220,11 @@ export default function Signup() {
             <section className="py-5 lg:w-[55%] mx-auto">
 
                 {/* Step content */}
-                <section className="mx-auto max-w-3xl px-8 py-20">
+                <section className="mx-auto max-w-3xl px-8 py-10 lg:py-20">
                     {step === 0 && (
                         <div>
-                            <h1 className="text-5xl font-light text-[#101d3d]">Let's get started</h1>
-                            <p className="mt-2 text-base text-[#101d3d]">
+                            <h1 className="lg:text-5xl text-3xl font-light text-[#101d3d]">Let's get started</h1>
+                            <p className="mt-2 text-sm lg:text-base text-[#101d3d]">
                                 Already a customer? Please{" "}
                                 <Link to="/login" className="text-blue underline underline-offset-4">log in.</Link>{" "}
                                 We'll pre-fill your info to save time.
@@ -258,7 +252,7 @@ export default function Signup() {
 
                             <div className="mt-10 border-t border-slate-200" />
 
-                            <button className="mt-10 flex items-center gap-3 text-lg text-blue"><IoAddCircleOutline className="h-6 w-6" />Open multiple accounts at the same time</button>
+                            <button className="mt-10 flex items-center text-sm gap-2 lg:text-lg text-blue"><IoAddCircleOutline className="" />Open multiple accounts at the same time</button>
 
                             <div className="mt-10 border-t border-slate-200" />
                             <button onClick={() => goToStep(1)} className="mt-12 rounded-sm bg-blue px-12 py-4 text-lg text-white transition hover:opacity-90">Continue</button>
@@ -267,9 +261,9 @@ export default function Signup() {
 
                     {step === 1 && (
                         <div>
-                            <h1 className="text-4xl text-[#101d3d]">Personal Information</h1>
-                            <p className="mt-4 text-lg text-slate-700">This should be your legal full name as it appears on your government ID</p>
-                            <div className="mt-10 grid grid-cols-[1fr_100px_1fr] gap-6">
+                            <h1 className="lg:text-4xl text-2xl text-[#101d3d]">Personal Information</h1>
+                            <p className="mt-4 lg:text-lg text-slate-700">This should be your legal full name as it appears on your government ID</p>
+                            <div className="mt-10 grid lg:grid-cols-3 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="mb-2 block text-base text-[#101d3d]">First name</label>
                                     <input type="text" placeholder="First name" value={personalInfo.firstName} onChange={(e) => updatePersonalInfo("firstName", e.target.value)}
@@ -367,7 +361,7 @@ export default function Signup() {
                                     onChange={(e) => updatePersonalInfo("agreed", e.target.checked)}
                                     className="mt-1 h-5 w-5 accent-blue"
                                 />
-                                <span className="text-lg leading-relaxed text-[#101d3d]">
+                                <span className="lg:text-lg leading-relaxed text-[#101d3d]">
                                     By checking this box, you agree to and acknowledge the receipt of: (i){" "}
                                     <Link to="/esign" className="text-blue underline underline-offset-4">
                                         eSign Agreement
@@ -405,8 +399,8 @@ export default function Signup() {
 
                     {step === 2 && (
                         <div>
-                            <h1 className="text-5xl font-light text-[#101d3d]">Tell us about yourself</h1>
-                            <p className="mt-4 text-lg">
+                            <h1 className="lg:text-5xl text-3xl font-light text-[#101d3d]">Tell us about yourself</h1>
+                            <p className="mt-4 lg:text-lg">
                                 <a href="#" className="text-blue underline underline-offset-4">
                                     Learn how we keep your data secure.
                                 </a>
@@ -422,7 +416,7 @@ export default function Signup() {
                                     Enter your home address. It cannot be a PO box or business address.
                                 </p>
 
-                                <div className="mt-6 grid grid-cols-[1fr_260px] gap-6">
+                                <div className="mt-6 grid lg:grid-cols-3 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="mb-2 block text-base text-[#101d3d]">Primary address</label>
                                         <textarea
@@ -528,29 +522,7 @@ export default function Signup() {
                                     className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
                                 />
 
-                                <label className="mt-6 mb-2 block text-base text-[#101d3d]">Social Security Number</label>
-                                <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    placeholder="XXX-XX-XXXX"
-                                    value={verifyIdentity.ssn}
-                                    onChange={(e) => updateVerifyIdentity("ssn", formatSSN(e.target.value))}
-                                    className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
-                                />
 
-                                <label className="mt-6 mb-2 block text-base text-[#101d3d]">Confirm Social Security Number</label>
-                                <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    placeholder="XXX-XX-XXXX"
-                                    value={verifyIdentity.confirmSsn}
-                                    onChange={(e) => updateVerifyIdentity("confirmSsn", formatSSN(e.target.value))}
-                                    className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
-                                />
-
-                                <a href="#" className="mt-4 inline-block text-base text-blue underline underline-offset-4">
-                                    Why do we need your SSN?
-                                </a>
                             </div>
 
                             <div className="mt-12 border-t border-slate-200" />

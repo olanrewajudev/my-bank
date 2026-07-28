@@ -13,8 +13,8 @@ export default function UserFooter() {
                         {/* Left Section */}
                         <div className="max-w-3xl">
                             {/* Logo */}
-                            <img src="/logo_white.svg" alt="Beacon Gold Crest" className="h-10 object-contain mb-12" />
-
+                            {/* <img src="/logo_white.svg" alt="Beacon Gold Crest" className="h-10 object-contain mb-12" /> */}
+                       <Link to='/'> <img src="/beacon1.jpg" alt="" className="size-32 object-contain" /></Link>
                             {/* Links */}
                             <div className="flex flex-wrap gap-7 text-sm mb-14">
                                 <Link to='' className="hover:underline">Site Terms</Link>
@@ -24,8 +24,8 @@ export default function UserFooter() {
 
                             {/* Legal Text */}
                             <div className="space-y-8 text-xs leading text-gray-300">
-                                <p>Beacon Gold Crest by Goldman Sachs® is a brand of Goldman Sachs Bank USA. All loans, deposit products, and credit cards are provided or issued by Goldman Sachs Bank USA, Salt Lake City Branch. Member FDIC.</p>
-                                <p>All loans, deposit products, and credit cards are provided or issued by Goldman Sachs Bank USA, Salt Lake City Branch. Member FDIC.</p>
+                                <p>Beacon Gold Crest® is a brand of Beacon Gold Crest Bank USA. All loans, deposit products, and credit cards are provided or issued by Beacon Gold Crest Bank USA, Salt Lake City Branch. Member FDIC.</p>
+                                <p>All loans, deposit products, and credit cards are provided or issued by Beacon Gold Crest Bank USA, Salt Lake City Branch. Member FDIC.</p>
                                 <p>Important information about procedures for opening a new account: To help the government fight the funding of terrorism and money laundering activities, federal law requires all financial institutions to obtain, verify, and record information that identifies each person who opens an account.</p>
                                 <p>What this means for you: When you open an account, we will ask for your name, address, date of birth and other information that will allow us to identify you.</p>
                                 <p>NMLS ID: 208156. NMLS Consumer Access Website:
