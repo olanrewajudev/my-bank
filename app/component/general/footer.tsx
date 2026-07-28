@@ -63,8 +63,8 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex -mt-5 gap-5">
-            <img src="/app-download.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
-            <img src="app-download-b.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
+            <img src="/apple.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
+            <img src="/playstore.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
           </div>
 
           <hr className="border-slate-700 mt-12" />

@@ -174,7 +174,7 @@ export default function Signup() {
                 {/* Navbar */}
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
-                        <Link to='/'> <img src="/beacon1.jpg" alt="" className="size-32 object-contain" /></Link>
+                        <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
 
                         <div className="flex items-center gap-8 text-[#143B63]">
                             <a href="tel:1-855-730-7283" className="flex items-center gap-2 text-sm"><BiPhone className="h-5 w-5" />1-855-730-7283</a>

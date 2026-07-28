@@ -8,7 +8,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative lg:h-[42rem] overflow-hidden">
         {/* Background Image */}
-        <img src="/Final.png" alt="Referral Banner" className="absolute inset-0 h-full md:w-full object-cover" />
+        <img src="/banner.png" alt="Referral Banner" className="absolute inset-0 h-full md:w-full object-cover" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto flex h-[30rem] lg:h-[40rem] max-w-7xl items-center px-8">
@@ -94,8 +94,8 @@ export default function Home() {
             <h1 className="text-3xl font-normal leading-tight mb-5">We're here to help you make the most of your money</h1>
             <p className="text-xl text-slate-700">Download the Beacon Gold Crest app today and keep your money at your fingertips.</p>
             <div className="flex -mt-5 md:gap-5 gap-1">
-              <img src="/app-download-b.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
-              <img src="app-download-b.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
+              <img src="/apple.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
+              <img src="/playstore.png" alt="" className="md:size-[12rem] size-[9rem] object-contain" />
             </div>
           </div>
           <div className=""> <img src="/beacon-gold.svg" alt="" className="lg:size-[26rem] object-contain" /></div>

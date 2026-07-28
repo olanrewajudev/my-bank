@@ -7,14 +7,14 @@ export default function UserFooter() {
     return (
         <div>
 
-            <footer className="bg-[#242844] text-white py-20">
+            <footer className="bg-[#242844] text-white lg:py-20">
                 <div className="max-w-7xl mx-auto px-8">
                     <div className="flex flex-col lg:flex-row justify-between gap-20">
                         {/* Left Section */}
                         <div className="max-w-3xl">
                             {/* Logo */}
                             {/* <img src="/logo_white.svg" alt="Beacon Gold Crest" className="h-10 object-contain mb-12" /> */}
-                       <Link to='/'> <img src="/beacon1.jpg" alt="" className="size-32 object-contain" /></Link>
+                       <Link to='/'> <img src="/logo_whire.png" alt="" className="size-32 object-contain" /></Link>
                             {/* Links */}
                             <div className="flex flex-wrap gap-7 text-sm mb-14">
                                 <Link to='' className="hover:underline">Site Terms</Link>
@@ -41,14 +41,14 @@ export default function UserFooter() {
 
                         {/* Right Section */}
                         <div className="">
-                            <div className="flex gap-3 mb-20">
+                            <div className="flex gap-3 mb-10 lg:mb-20">
                                 <button className="bg-white text-[#242844] px-10 py-2 rounded-md font-medium hover:bg-gray-200 transition">FAQs</button>
                                 <button className="border border-white px-10 py-2 rounded-md hover:bg-white hover:text-[#242844] transition">Contact Us</button>
                             </div>
 
                             <div className="text-gray-300 mb-8 text-sm">Connect with us</div>
 
-                            <div className="flex gap-5 text-2xl">
+                            <div className="flex gap-5 text-2xl pb-5">
                                 <FaFacebook className="cursor-pointer hover:text-gray-300" />
                                 <FaInstagram className="cursor-pointer hover:text-gray-300" />
                                 <FaYoutube className="cursor-pointer hover:text-gray-300" />

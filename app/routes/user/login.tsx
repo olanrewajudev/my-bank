@@ -57,7 +57,7 @@ export default function Login() {
                 {/* Navbar */}
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
-                        <Link to='/'> <img src="/beacon1.jpg" alt="" className="size-32 object-contain" /></Link>
+                        <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
 
                     </div>
                 </nav>
