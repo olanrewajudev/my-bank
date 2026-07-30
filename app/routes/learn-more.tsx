@@ -250,7 +250,7 @@ function SavingsCalculator() {
                                                     Beacon Gold Crest<span className="text-[#5b8def]">:</span>
                                                 </div>
                                                 <div className="-mt-1 text-[9px] font-semibold tracking-wide text-white">
-                                                    by Goldman Sachs<sup className="text-[7px]">®</sup>
+                                                    by Beacon Gold Crest<sup className="text-[7px]">®</sup>
                                                 </div>
                                             </div>
                                         ) : (
@@ -305,7 +305,7 @@ const HIGH_YIELD_BENEFITS = [
     'Everyday high-yield rate—currently 3.40% APY.',
     'Unlimited access to funds.',
     'No fees. No minimum deposit.',
-    'Backed by the financial expertise of Goldman Sachs.',
+    'Backed by the financial expertise of Beacon Gold Crest.',
 ]
 
 function HighYieldBenefits() {

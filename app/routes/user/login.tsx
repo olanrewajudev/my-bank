@@ -7,11 +7,13 @@ import UserFooter from "~/component/user/footer";
 import { User_urls } from "~/component/endpoints/user";
 import Cookies from 'js-cookie'
 import { CookieName } from "~/component/Apis";
+import { useDispatch } from "react-redux";
+import { dispatchToken } from "~/lib/reducer";
 
 export default function Login() {
     const navigate = useNavigate()
     const [active, setActive] = useState(0)
-
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
@@ -37,9 +39,9 @@ export default function Login() {
             const res = await User_urls.login({ email, password })
             if (res.data?.token) {
                 Cookies.set(CookieName, res.data.token)
-
+                dispatch(dispatchToken(res.data.token))
             }
-            // navigate("/user/dashboard")
+            navigate("/user/dashboard")
         } catch (err: any) {
             setError(err.message || "Something went wrong")
         } finally {
@@ -75,7 +77,7 @@ export default function Login() {
 
             {/* Login */}
             <section className="lg:w-[50%] px-5 mx-auto mt-8">
-                
+
 
                 <div className="">
                     <h1 className="lg:mb-14 mb-7 lg:text-[2.7rem] text-[1.5rem] font-light text-[#23284A]">Secure login</h1>

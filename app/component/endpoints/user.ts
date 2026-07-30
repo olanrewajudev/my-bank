@@ -23,7 +23,8 @@ export const User_urls = {
     profile() {
         return request({
             endpoint: "user/profile",
-            auth: 'true'
+            auth: 'true',
+            method: "GET"
         });
     }
 

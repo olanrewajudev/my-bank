@@ -1,6 +1,8 @@
 import React from 'react'
 import { HiOutlinePlus, HiOutlineArrowRight } from 'react-icons/hi2'
+import { useSelector } from 'react-redux'
 import UserHeader from '~/component/user/user-header'
+import type { RootState } from '~/lib/store'
 
 const discoverCards = [
   { tag: 'Refer a friend', title: 'Earn a rate boost', bg: 'bg-emerald-700', text: 'text-white' },
@@ -9,6 +11,8 @@ const discoverCards = [
 ]
 
 export default function Dashboard() {
+  const {user} = useSelector((state: RootState) => state.data)
+  console.log(user?.firstname)
   return (
     <div className="min-h-screen bg-[#eef1f3] pb-24">
       {/* Logo + welcome banner */}
@@ -16,7 +20,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold text-slate-800">
           M<span className="text-blue-500">:</span>
         </h1>
-        <p className="mt-10 text-3xl font-medium text-slate-800">Welcome, sheila</p>
+        <p className="mt-10 text-3xl font-medium text-slate-800">Welcome, {user?.firstname}</p>
 
         {/* decorative mountain motif */}
         <svg
@@ -33,8 +37,7 @@ export default function Dashboard() {
       <div className="bg-[#dde3e7] px-6 py-5">
         <p className="text-sm italic text-slate-700">
           <span className="mr-2 font-bold not-italic text-blue-900">FDIC</span>
-          FDIC-Insured – Backed by the full faith and credit of the U.S. Government. Goldman
-          Sachs Bank USA, Salt Lake City Branch.
+          FDIC-Insured – Backed by the full faith and credit of the U.S. Government. Beacon Gold Crest Bank USA, Salt Lake City Branch.
         </p>
       </div>
 
@@ -48,8 +51,8 @@ export default function Dashboard() {
         </div>
 
         <div className="mt-4 rounded-xl bg-white p-5 shadow-sm">
-          <p className="text-slate-600">Online Savings – 8057</p>
-          <p className="mt-2 text-3xl font-medium text-emerald-700">$32,890.00</p>
+          <p className="text-slate-600">Online Savings – {user?.phone.slice(0, 4)}</p>
+          <p className="mt-2 text-3xl font-medium text-emerald-700">${user?.currbonus}</p>
           <p className="mt-1 text-sm text-slate-500">Current balance</p>
         </div>
       </div>
@@ -74,7 +77,7 @@ export default function Dashboard() {
       {/* Disclosures */}
       <div className="mt-8 space-y-4 px-6 text-xs leading-relaxed text-slate-500">
         <p>
-          Beacon Gold Crest by Goldman Sachs® is a brand of Beacon Gold Crest Bank USA. All deposit products
+          Beacon Gold Crest by Beacon Gold Crest® is a brand of Beacon Gold Crest Bank USA. All deposit products
           are provided or issued by Beacon Gold Crest Bank USA, Salt Lake City Branch. Member FDIC.
         </p>
         <p>

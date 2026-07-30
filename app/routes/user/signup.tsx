@@ -8,39 +8,16 @@ import { EMPLOYMENT_STATUSES, US_STATES } from "~/component/utils";
 import { User_urls } from "~/component/endpoints/user";
 import { CookieName } from "~/component/Apis";
 import Cookies from 'js-cookie'
+import { dispatchToken } from "~/lib/reducer";
+import type { PersonalInfo, VerifyIdentity } from "../../../global";
+import { useDispatch } from "react-redux";
 
 const SIGNUP_STEPS = ["Get started", "Personal info", "Verify identity", "Open account"]
 
-type PersonalInfo = {
-    firstName: string
-    mi: string
-    lastName: string
-    email: string
-    phone: string
-    password: string
-    confirmPassword: string
-    agreed: boolean
-}
-
-type VerifyIdentity = {
-    // Residential address
-    primaryAddress: string
-    aptSuite: string
-    city: string
-    state: string
-    zip: string
-    // Identity
-    countryOfCitizenship: string
-    alternatePhone: string
-    dob: string
-    confirmSsn: string
-    // Employment
-    employmentStatus: string
-}
 
 export default function Signup() {
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     const [active, setActive] = useState(0)
     const [step, setStep] = useState(0) // index into SIGNUP_STEPS
     const [accountType, setAccountType] = useState("Online Savings Account")
@@ -158,6 +135,7 @@ export default function Signup() {
             const res = await User_urls.register(payload)
             if (res.data?.token) {
                 Cookies.set(CookieName, res.data.token)
+                dispatch(dispatchToken(res.data.token))
 
             }
             navigate("/user/dashboard")

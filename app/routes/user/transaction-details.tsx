@@ -42,7 +42,7 @@ export default function TransactionDetails() {
       </div>
 
       <p className="px-6 pt-6 text-xs leading-relaxed text-slate-500">
-        Beacon Gold Crest by Goldman Sachs® is a brand of Beacon Gold Crest Bank USA, Salt Lake City Branch.
+        Beacon Gold Crest by Beacon Gold Crest® is a brand of Beacon Gold Crest Bank USA, Salt Lake City Branch.
         Member FDIC. References to FDIC insurance on this page relate to Beacon Gold Crest Bank USA
         and do not reflect FDIC insurance availability at other financial institutions.
       </p>
