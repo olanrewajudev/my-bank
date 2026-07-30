@@ -1,27 +1,30 @@
 import { Button, Menu, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { useQueryClient } from '@tanstack/react-query'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { data, useParams } from 'react-router'
+import { Admin_urls } from '~/component/endpoints/admin'
 import { ErrorAlert, HotAlert } from '~/component/utils'
+import type { RootState } from '~/lib/store'
 
 export default function Singleuser() {
     const [declineOpened, { open: openDecline, close: closeDecline }] = useDisclosure(false)
     const [note, setNote] = React.useState('')
     const { id } = useParams()
-  
+    const {user  } = useSelector((state: RootState) => state.data)
+  const queryClient = useQueryClient()
     const [opened, { open, close }] = useDisclosure(false)
     const deleteKyc = async () => {
         try {
             const payload = {
                 'userid': id
             }
-            const res = await 
+            const res = await Admin_urls.updateKycStatus(payload)
             if (res.status === 200) {
                 HotAlert(res.data.msg)
                 close()
-                queryClient.invalidateQueries({
-                    queryKey: ['users']
-                })
+                queryClient.invalidateQueries({queryKey: ['users']})
             }
         } catch (error) {
             ErrorAlert((error as Error).message)
@@ -35,10 +38,10 @@ export default function Singleuser() {
                 tag: 'verified',
             }
 
-            const res = await Put(Apis.admins.adminupdatekycstatus, payload)
+            const res = await Admin_urls.updateKycStatus(payload)
 
             if (res.status === 200) {
-                HotAlert(res.msg)
+                HotAlert(res.data.msg)
                 queryClient.invalidateQueries({ queryKey: ['users'] })
             }
 
@@ -56,10 +59,10 @@ export default function Singleuser() {
                 note: note,
             }
 
-            const res = await Put(Apis.admins.adminupdatekycstatus, payload)
+            const res = await Admin_urls.updateKycStatus(payload)
 
             if (res.status === 200) {
-                HotAlert(res.msg)
+                HotAlert(res.data.msg)
                 setNote('')
                 closeDecline()
                 queryClient.invalidateQueries({ queryKey: ['users'] })
@@ -117,7 +120,7 @@ export default function Singleuser() {
                 </div>
             </Modal>
             <div className="flex items-center justify-between">
-                <div className="text-[2rem]  w-full font-semibold">{user?.firstName} {user?.lastName}</div>
+                <div className="text-[2rem]  w-full font-semibold">{user?.firstname} {user?.lastname}</div>
                 <div className="flex items-center gap-5 w-full">
 
                     <Menu>
@@ -130,21 +133,8 @@ export default function Singleuser() {
                     <div onClick={open} className="bg-error w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Delete Kyc</div>
                 </div>
             </div>
-            <div className="my-5 border-2 border-primary-dark p-5 rounded-xl">
-                <div className="bg-linear-to-r from-yellow-dark to-primary-dark p-3 rounded-xl">
-                    <div className=" flex items-end justify-end "><div className="bg-white font-bold text-sm px-2 py-1 rounded-full">WALLET</div></div>
-                    <div className="text-[1.5rem] font-bold text-white">Account Balance</div>
-                    <div className="flex text-white text-lg mt-3 items-center justify-between">
-                        <div className="font-bold">Main Wallet</div>
-                        <div className="tont-bold">${user?.wallets?.currbal ?? 0}</div>
-                    </div>
-                </div>
-                <div className="flex items-center justify-between gap-3 mt-4">
-                    <div className="bg-error w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Decrement wallet balance</div>
-                    <div className="bg-bg w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Increment wallet balance</div>
-                </div>
-            </div>
-            {user?.submitted == 'false' ? (
+          
+            {/* {user?.submitted == 'false' ? (
                 <div className="font-semibold text-2xl">User has not submitted his or her KYC documents.</div>
             ) : user?.verified === 'verified' ? (
                 <div className="bg-lime-light border border-discount p-5 rounded-xl">
@@ -158,16 +148,16 @@ export default function Singleuser() {
                     <div className="flex items-center w-full gap-10">
                         <div className="text-[1.2rem] font-semibold">
                             <div>Front Image</div>
-                            <Image className='h-[20rem] w-full object-cover' src={`${offlineServer}/documents/${user?.frontphoto}`} />
+                            <img className='h-[20rem] w-full object-cover' src={`${offlineServer}/documents/${user?.frontphoto}`} />
                         </div>
 
                         <div className="text-[1.2rem] font-semibold">
                             <div>Back Image</div>
-                            <Image className='h-[20rem] w-full object-cover' src={`${offlineServer}/documents/${user?.backphoto}`} />
+                            <img className='h-[20rem] w-full object-cover' src={`${offlineServer}/documents/${user?.backphoto}`} />
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     )
 }

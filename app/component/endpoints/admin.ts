@@ -4,7 +4,7 @@ export const Admin_urls = {
 
     getAllUser() {
         return request({
-            endpoint: "admin/all",
+            endpoint: "user/all",
             method: "GET",
             auth:'true'
         });

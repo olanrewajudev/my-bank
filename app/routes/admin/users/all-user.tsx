@@ -20,6 +20,7 @@ export default function AllUser() {
             return res.data.msg
         },
     })
+    console.log(user)
   return (
     <div>
       <div className="m-5">
@@ -43,7 +44,7 @@ export default function AllUser() {
                       <Td>{item.role}</Td>
                       <Td>{item.currbal}</Td>
                       <Td>{item.verified}</Td>
-                      <Link className='text-primary-dark font-semibold' to={`${'/admin/customer/single'}/${item.id}`}><Td>View</Td></Link>
+                      <Link className='text-primary-dark font-semibold' to={`${'/admin/all-user'}/${item.id}`}><Td>View</Td></Link>
                     </Tr>
                   ))}
                 </Tbody>

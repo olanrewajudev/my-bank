@@ -33,6 +33,7 @@ export default [
       route("withdraw", "routes/admin/withdraw/all-withdraw.tsx"),
       route("transaction", "routes/admin/transaction/all-transact.tsx"),
       route("all-user", "routes/admin/users/all-user.tsx"),
+      route("all-user/:id", "routes/admin/users/single-user.tsx"),
       route("all-user-kyc", "routes/admin/kyc/all-kyc.tsx"),
 
     ])
