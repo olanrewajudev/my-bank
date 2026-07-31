@@ -65,8 +65,8 @@ export default function Header() {
                             <p className="">You’ll need to sign in again to continue.</p>
                         </div>
                         <div className="flex items-center justify-between gap-3 mt-4">
-                            <div onClick={closeLogout} className="bg-lightest w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Cancel</div>
-                            <div onClick={Logout} className="bg-error w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Logout</div>
+                            <div onClick={closeLogout} className="bg-darkgray w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Cancel</div>
+                            <div onClick={Logout} className="bg-red-800 w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Logout</div>
                         </div>
                     </div>
                 </div>

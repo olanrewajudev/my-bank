@@ -4,7 +4,7 @@ import { IoChevronDownSharp, IoChevronForward, IoAddCircleOutline, IoInformation
 import { Link, useNavigate } from "react-router";
 import formatPhone, { FAQs } from "~/component/general/constant";
 import UserFooter from "~/component/user/footer";
-import { EMPLOYMENT_STATUSES, US_STATES } from "~/component/utils";
+import { EMPLOYMENT_STATUSES, ErrorAlert, HotAlert, US_STATES } from "~/component/utils";
 import { User_urls } from "~/component/endpoints/user";
 import { CookieName } from "~/component/Apis";
 import Cookies from 'js-cookie'
@@ -60,13 +60,6 @@ export default function Signup() {
     function updateVerifyIdentity<K extends keyof VerifyIdentity>(key: K, value: VerifyIdentity[K]) {
         setVerifyIdentity((prev) => ({ ...prev, [key]: value }))
     }
-
-    function formatSSN(value: string) {
-        const digits = value.replace(/\D/g, "").slice(0, 9)
-        const parts = [digits.slice(0, 3), digits.slice(3, 5), digits.slice(5, 9)]
-        return parts.filter(Boolean).join("-")
-    }
-
     function formatDOB(value: string) {
         const digits = value.replace(/\D/g, "").slice(0, 8)
         const parts = [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4, 8)]
@@ -77,10 +70,6 @@ export default function Signup() {
         // form stores "MM/DD/YYYY", API wants "YYYY-MM-DD"
         const [mm, dd, yyyy] = mmddyyyy.split("/")
         return `${yyyy}-${mm}-${dd}`
-    }
-
-    function tofirstname(email: string) {
-        return email.split("@")[0]
     }
 
     const passwordValid =
@@ -133,12 +122,16 @@ export default function Signup() {
             }
 
             const res = await User_urls.register(payload)
-            if (res.data?.token) {
-                Cookies.set(CookieName, res.data.token)
-                dispatch(dispatchToken(res.data.token))
-
+            if (res.status === 200) {
+                if (res.data?.token) {
+                    Cookies.set(CookieName, res.data.token)
+                    dispatch(dispatchToken(res.data.token))
+                    navigate("/user/dashboard")
+                    HotAlert(res.data.msg)
+                }
+            }else {
+                ErrorAlert(res.data.msg)
             }
-            navigate("/user/dashboard")
         } catch (err: any) {
             setError(err.message || "Something went wrong")
         } finally {

@@ -22,7 +22,7 @@ export default function SingleDeposit() {
 
     const copyText = async (text: string) => { navigator.clipboard.writeText(text) }
 
-    // const statusColor = deposit?.status === 'approved' ? 'bg-primary-dark text-white' : deposit?.status === 'rejected' ? 'bg-error text-white' : 'bg-yellow-dark '
+    // const statusColor = deposit?.status === 'approved' ? 'bg-primary-dark text-white' : deposit?.status === 'rejected' ? 'bg-red-800 text-white' : 'bg-yellow-dark '
 
     return (
         <div className="w-full p-4 md:p-8">

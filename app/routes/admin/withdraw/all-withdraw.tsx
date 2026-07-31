@@ -74,8 +74,8 @@ export default function Withdraw() {
                         <textarea className="w-full border rounded-lg p-3 mt-2 outline-none" placeholder="Enter reason..." value={note} onChange={(e) => setNote(e.target.value)} />
                     </div>
                     <div className="flex gap-3 mt-4">
-                        <button onClick={closeDecline} className="w-full py-2.5 rounded-full bg-lightest font-semibold">Cancel</button>
-                        <button onClick={() => declineWithdrawal(selectedDeposit)} className="w-full py-2.5 rounded-full bg-error text-white font-semibold">Submit</button>
+                        <button onClick={closeDecline} className="w-full py-2.5 rounded-full bg-darkgray font-semibold">Cancel</button>
+                        <button onClick={() => declineWithdrawal(selectedDeposit)} className="w-full py-2.5 rounded-full bg-red-800 text-white font-semibold">Submit</button>
                     </div>
                 </div>
             </Modal>
@@ -99,7 +99,7 @@ export default function Withdraw() {
                                                     <Td>{item.title}</Td>
                                                     <Td>{item.tags?.firstName} {item.tags?.lastName}</Td>
                                                     <Td>${item.amount}</Td>
-                                                    <Td><span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow' : item.status === 'successful' ? 'bg-primary-dark text-white' : 'bg-error text-white'}`}> {item.status}</span></Td>
+                                                    <Td><span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow' : item.status === 'successful' ? 'bg-primary-dark text-white' : 'bg-red-800 text-white'}`}> {item.status}</span></Td>
                                                     <Td className="truncate max-w-[120px]">{item.txid}</Td>
                                                     <Td>{formatDate(item.date)}</Td>
                                                     <Td>

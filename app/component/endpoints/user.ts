@@ -10,6 +10,25 @@ export const User_urls = {
             type: 'JSON',
         });
     },
+    updatePassword(data: any) {
+        return request({
+            endpoint: "user/update-password",
+            method: "POST",
+            data,
+            type: 'JSON',
+            auth: 'true'
+        });
+    },
+    uploadKyc(data: FormData) {
+        return request({
+            endpoint: "user/upload-kyc",
+            method: "POST",
+            data,
+            type: 'FILE',
+            auth: 'true'
+        });
+    },
+
 
     register(data: any) {
         return request({

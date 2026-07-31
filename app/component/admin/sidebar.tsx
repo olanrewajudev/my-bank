@@ -31,8 +31,8 @@ export default function AdminSidebar() {
                             <p className="">You’ll need to sign in again to continue.</p>
                         </div>
                         <div className="flex items-center justify-between gap-3 mt-4">
-                            <div onClick={close} className="bg-lightest w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Cancel</div>
-                            <div onClick={Logout} className="bg-error w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Logout</div>
+                            <div onClick={close} className="bg-darkgray w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Cancel</div>
+                            <div onClick={Logout} className="bg-red-800 w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Logout</div>
                         </div>
                     </div>
                 </div>

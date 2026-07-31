@@ -49,7 +49,7 @@ export default function AllDeposit() {
                         <Td>{item.title}</Td>
                         <Td>{item.tag?.firstName} {item.tag?.lastName}</Td>
                         <Td>${item.amount}</Td>
-                        <Td><span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow' : item.status === 'successful' ? 'bg-primary-dark text-white' : 'bg-error text-white'}`}> {item.status}</span></Td>
+                        <Td><span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow' : item.status === 'successful' ? 'bg-primary-dark text-white' : 'bg-red-800 text-white'}`}> {item.status}</span></Td>
                         <Td className="truncate max-w-[120px]">{item.txid}</Td>
                          <Td>{formatDate(item.date)}</Td> 
                         <Td>

@@ -89,14 +89,14 @@ export default function Singleuser() {
                     <div className="flex gap-3 mt-4">
                         <button
                             onClick={closeDecline}
-                            className="w-full py-2.5 rounded-full bg-lightest font-semibold"
+                            className="w-full py-2.5 rounded-full bg-darkgray font-semibold"
                         >
                             Cancel
                         </button>
 
                         <button
                             onClick={DeclineKyc}
-                            className="w-full py-2.5 rounded-full bg-error text-white font-semibold"
+                            className="w-full py-2.5 rounded-full bg-red-800 text-white font-semibold"
                         >
                             Submit
                         </button>
@@ -112,8 +112,8 @@ export default function Singleuser() {
                             <p className="">This action cannot be undone.</p>
                         </div>
                         <div className="flex items-center justify-between gap-3 mt-4">
-                            <div onClick={close} className="bg-lightest w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Cancel</div>
-                            <div onClick={deleteKyc} className="bg-error w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Delete</div>
+                            <div onClick={close} className="bg-darkgray w-full rounded-full py-2.5 font-semibold text-center cursor-pointer ">Cancel</div>
+                            <div onClick={deleteKyc} className="bg-red-800 w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Delete</div>
                         </div>
 
                     </div>
@@ -130,7 +130,7 @@ export default function Singleuser() {
                             <Menu.Item onClick={openDecline}>Decline</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-                    <div onClick={open} className="bg-error w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Delete Kyc</div>
+                    <div onClick={open} className="bg-red-800 w-full rounded-full py-2.5 font-semibold text-center cursor-pointer text-white">Delete Kyc</div>
                 </div>
             </div>
           
