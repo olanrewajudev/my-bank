@@ -10,9 +10,9 @@ export const Admin_urls = {
         });
     },
 
-    getSingleUser() {
+    getSingleUser(id: string) {
         return request({
-            endpoint: "user/single",
+            endpoint: `user/single/${id}`,
             method: "GET",
             auth:'true'
         });
@@ -22,7 +22,7 @@ export const Admin_urls = {
         return request({
             endpoint: "user/update-kyc",
             auth: 'true',
-            method: "POST",
+            method: "PUT",
             data,
             type: 'JSON'
         });
@@ -31,7 +31,9 @@ export const Admin_urls = {
         return request({
             endpoint: "user/delete-kyc",
             auth: 'true',
-            method: "GET"
+            method: "POST",
+            data,
+            type: 'JSON'
         });
     },
     login(data: any) {
@@ -40,7 +42,6 @@ export const Admin_urls = {
             method: "POST",
             data,
             type: 'JSON'
-
         });
     },
     allDeposit() {

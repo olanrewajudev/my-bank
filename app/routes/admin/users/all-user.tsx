@@ -9,7 +9,7 @@ import Td from '~/component/table/Td'
 import Thead from '~/component/table/Thead'
 import Tr from '~/component/table/Tr'
 
-const Headers = ["Name", "Email", "Password", "Last Login", 'Phone', 'Role', "Balance", 'Verified', '', '']
+const Headers = ["Name", "Email", "Last Login", 'Phone', 'Role', "Balance", 'Verified', '', '']
 
 export default function AllUser() {
 
@@ -36,9 +36,8 @@ export default function AllUser() {
                 <Tbody>
                   {user.map((item: any, index: React.Key) => (
                     <Tr className='my-4' key={index} last={index === user.length - 1}>
-                      <Td>{item.firstName} {item.lastName}</Td>
+                      <Td>{item.firstname} {item.lastname}</Td>
                       <Td>{item.email}</Td>
-                      <Td>{item.passwordText}</Td>
                       <Td>{item.lastlogin}</Td>
                       <Td>{item.phone}</Td>
                       <Td>{item.role}</Td>
