@@ -126,3 +126,11 @@ export interface phoneSelectorSetup {
   dial_code?: string
   abbreviation?: string
 }
+
+
+export interface CardItem {
+  id: string
+  number: string
+  cvv: string
+  expire: string
+}

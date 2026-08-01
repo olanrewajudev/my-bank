@@ -3,7 +3,7 @@
 import { Modal } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import {
   HiOutlineArrowRightOnRectangle,
@@ -32,7 +32,8 @@ import Forminput from '~/component/general/form-input'
 import { ErrorAlert, HotAlert } from '~/component/utils'
 import type { RootState } from '~/lib/store'
 import { User_urls } from '~/component/endpoints/user'
-
+import { Card_urls } from '~/component/endpoints/card'
+import type { CardItem } from '../../../global'
 type MenuKey =
   | 'security'
   | 'feedback'
@@ -57,7 +58,9 @@ export default function Profile() {
   const [openedLogout, { open: openLogout, close: closeLogout, },] = useDisclosure(false)
   const [openedKyc, { open: openKyc, close: closeKyc, },] = useDisclosure(false)
   const [openedDelete, { open: openDelete, close: closeDelete, },] = useDisclosure(false)
-
+  const [linkedCards, setLinkedCards] = useState<any[]>([])
+  const [loadingCards, setLoadingCards] = useState(false)
+  const [visibleCards, setVisibleCards] = useState<number[]>([])
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword,] = useState(false)
@@ -74,42 +77,15 @@ export default function Profile() {
 
   const [feedbackSent, setFeedbackSent] = useState(false)
 
-  const [linkedAccounts, setLinkedAccounts,] = useState([
-    {
-      id: 1,
-      name: 'Chase Total Checking',
-      mask: '••••4821',
-      bank: 'Chase Bank',
-      type: 'Checking',
-    },
-    {
-      id: 2,
-      name: 'Bank of America Advantage',
-      mask: '••••1190',
-      bank: 'Bank of America',
-      type: 'Savings',
-    },
-  ])
+ // State Management
+  const [cards, setCards] = useState<CardItem[]>([])
+  const [editingCard, setEditingCard] = useState<CardItem | null>(null)
+  const [addCardOpen, setAddCardOpen] = useState(false)
 
-  const removeAccount = (id: number) => {
-    setLinkedAccounts((previous) => previous.filter((account) => account.id !== id)
-    )
-  }
-
-  const addAccount = () => {
-    const id = Date.now()
-    setLinkedAccounts((previous) => [
-      ...previous,
-      {
-        id,
-        name: 'New Linked Account',
-        mask: '••••0000',
-        bank: 'Pending bank',
-        type: 'Checking',
-      },
-    ])
-  }
-
+  const [number, setNumber] = useState('')
+  const [cvv, setCvv] = useState('')
+  const [expire, setExpire] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -176,7 +152,7 @@ export default function Profile() {
       } else if (res.status === 404) {
         ErrorAlert(res.data.msg)
       } else {
-ErrorAlert(res.data.msg)
+        ErrorAlert(res.data.msg)
       }
 
     } catch (error) {
@@ -229,6 +205,140 @@ ErrorAlert(res.data.msg)
     { key: 'policy', label: 'Privacy & Legal', icon: HiOutlineLink, },
     { key: 'delete', label: 'Delete Account', icon: HiOutlineExclamationTriangle, },
   ]
+
+  const getCards = async () => {
+    try {
+      setLoadingCards(true)
+
+      const res = await Card_urls.getAll()
+
+      if (res.status === 200) {
+        setLinkedCards(res.data.data)
+      } else {
+        ErrorAlert(res.data.msg)
+      }
+    } catch (error: any) {
+      ErrorAlert(error.response?.data?.msg || error.message)
+    } finally {
+      setLoadingCards(false)
+    }
+
+  }
+
+  useEffect(() => {
+    getCards()
+  }, [])
+
+  const toggleCard = (id: number) => {
+    setVisibleCards((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id]
+    )
+  }
+  const deleteCard = async (id: number) => {
+    try {
+      const res = await Card_urls.delete(String(id))
+
+      if (res.status === 200) {
+        HotAlert(res.data.msg)
+
+        setLinkedCards((prev) =>
+          prev.filter((card) => card.id !== id)
+        )
+      } else {
+        ErrorAlert(res.data.msg)
+      }
+    } catch (error: any) {
+      ErrorAlert(error.response?.data?.msg || error.message)
+    }
+  }
+
+   const openAddCardModal = () => {
+    setEditingCard(null)
+    setNumber('')
+    setCvv('')
+    setExpire('')
+    setAddCardOpen(true)
+  }
+
+  const closeCardModal = () => {
+    if (loading) return
+    setEditingCard(null)
+    setAddCardOpen(false)
+  }
+
+  // Formatters
+  const formatCardNumber = (value: string) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 16)
+    return numbers.replace(/(\d{4})(?=\d)/g, '$1 ')
+  }
+
+  const formatExpiry = (value: string) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 4)
+    if (numbers.length < 3) return numbers
+    return `${numbers.slice(0, 2)}/${numbers.slice(2)}`
+  }
+
+  // Form Submission (Create or Update)
+  const handleSaveCard = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const cleanCardNumber = number.replace(/\s/g, '')
+
+    if (cleanCardNumber.length < 13 || cleanCardNumber.length > 19) {
+      ErrorAlert('Enter a valid card number')
+      return
+    }
+
+    if (cvv.length < 3) {
+      ErrorAlert('Enter a valid CVV')
+      return
+    }
+
+    if (expire.length !== 5) {
+      ErrorAlert('Enter the expiry date as MM/YY')
+      return
+    }
+
+    try {
+      setLoading(true)
+      let response
+
+      if (editingCard) {
+        // Update Card API Call
+        response = await Card_urls.update(editingCard.id, {
+          number: cleanCardNumber,
+          cvv,
+          expire,
+        })
+      } else {
+        // Create Card API Call
+        response = await Card_urls.create({
+          number: cleanCardNumber,
+          cvv,
+          expire,
+        })
+      }
+
+      HotAlert(
+        response?.data?.msg ||
+          (editingCard
+            ? 'Card updated successfully'
+            : 'Card added successfully')
+      )
+
+      await getCards()
+      closeCardModal()
+    } catch (error) {
+      ErrorAlert(
+        (error as Error).message ||
+          (editingCard ? 'Unable to update card' : 'Unable to add card')
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <>
@@ -424,32 +534,10 @@ ErrorAlert(res.data.msg)
               return (
                 <div key={key}>
                   <button type="button" onClick={() => {
-                    if (
-                      key === 'kyc'
-                    ) {
-                      openKyc()
-                      return
-                    }
-
-
-                    if (
-                      key === 'delete'
-                    ) {
-                      openDelete()
-                      return
-                    }
-                    toggleItem(key)
-                  }}
-                    className="flex w-full items-center justify-between px-6 py-6">
-                    <div className="flex items-center gap-4">
-                      <Icon className="text-xl text-slate-700" /><span className="text-slate-800">{label}</span>
-                    </div>
-
-                    {isOpen ? (
-                      <HiOutlineChevronDown className="text-slate-400" />
-                    ) : (
-                      <HiOutlineChevronRight className="text-slate-400" />
-                    )}
+                    if (key === 'kyc') { openKyc(); return }
+                    if (key === 'delete') { openDelete(); return } toggleItem(key)
+                  }} className="flex w-full items-center justify-between px-6 py-6"> <div className="flex items-center gap-4">   <Icon className="text-xl text-slate-700" /><span className="text-slate-800">{label}</span> </div>
+                    {isOpen ? (<HiOutlineChevronDown className="text-slate-400" />) : (<HiOutlineChevronRight className="text-slate-400" />)}
                   </button>
 
                   {isOpen && (
@@ -485,30 +573,78 @@ ErrorAlert(res.data.msg)
 
                       {/* LINKED ACCOUNTS */}
 
-                      {key ===
-                        'linked' && (
-                          <div> {linkedAccounts.length === 0 && (<p className="py-3 text-sm text-slate-500">       No linked accounts.     </p>)}
+                      {key === 'linked' && (
+                        <div>
+                          {linkedCards.length === 0 ? (
+                            <p className="py-3 text-sm text-slate-500">
+                              No linked cards.
+                            </p>
+                          ) : (
+                            linkedCards.map((card) => (
+                              <div
+                                key={card.id}
+                                className="mb-4 rounded-lg border bg-white p-4"
+                              >
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                    <p className="font-semibold">
+                                      {card.brand || "Bank Card"}
+                                    </p>
 
-                            {linkedAccounts.map((account) => (<div key={account.id} className="flex items-center justify-between border-b py-4">
-                              <div>
-                                <p className="font-medium">{account.name}</p>
-                                <p className="text-xs text-slate-500">
-                                  {account.bank}{' '}·{' '}
-                                  {account.type}{' '}
-                                  {account.mask}
-                                </p>
+                                    <p className="text-sm text-slate-600">
+                                      <span className="font-medium">Number:</span>{" "}
+                                      {visibleCards.includes(card.id)
+                                        ? card.number
+                                        : `**** **** **** ${card.number.slice(-4)}`}
+                                    </p>
+                                    <p className="text-sm text-slate-600 mt-1">
+                                      <span className="font-medium">Expiry:</span>{" "}
+                                      {card.expire}
+                                    </p>
+                                    <p className="text-sm text-slate-600 mt-1">
+                                      <span className="font-medium">CVV:</span>{" "}
+                                      {visibleCards.includes(card.id)
+                                        ? card.cvv
+                                        : "***"}
+                                    </p>
+
+
+                                  </div>
+
+                                  <div className="flex gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => toggleCard(card.id)}
+                                      className="rounded-full p-2 text-blue-600"
+                                    >
+                                      {visibleCards.includes(card.id)
+                                        ? <FaEyeSlash />
+                                        : <FaEye />}
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      onClick={() => deleteCard(card.id)}
+                                      className="rounded-full p-2 text-red-600"
+                                    >
+                                      <HiOutlineTrash />
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
+                            ))
+                          )}
 
-                              <button type="button" onClick={() => removeAccount(account.id)} className="rounded-full p-2 text-red-600"><HiOutlineTrash /></button>
-                            </div>
-                            ))}
-
-                            <button type="button" onClick={addAccount} className="mt-4 flex items-center gap-2 text-sm font-semibold text-blue-700">
-                              <HiOutlinePlusCircle />Link another account
-                            </button>
-                          </div>
-                        )}
-
+                          <button
+                            type="button"
+                            className="mt-4 flex items-center gap-2 text-sm font-semibold text-blue-700"
+                            onClick={openAddCardModal}
+                          >
+                            <HiOutlinePlusCircle />
+                            Link New Card
+                          </button>
+                        </div>
+                      )}
                       {/* LEGAL */}
 
                       {key ===
@@ -553,6 +689,117 @@ ErrorAlert(res.data.msg)
             }
           )}
         </div>
+
+          {/* Add / Update Card Modal */}
+              {addCardOpen && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
+                  <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-slate-800">
+                          {editingCard ? 'Update card' : 'Add a card'}
+                        </h2>
+        
+                        <p className="mt-1 text-sm text-slate-500">
+                          {editingCard
+                            ? 'Modify your card details below'
+                            : 'Enter your card details below'}
+                        </p>
+                      </div>
+        
+                      <button
+                        type="button"
+                        onClick={closeCardModal}
+                        disabled={loading}
+                        aria-label="Close modal"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      >
+                        <HiOutlineXMark className="text-2xl" />
+                      </button>
+                    </div>
+        
+                    <form onSubmit={handleSaveCard} className="mt-6 space-y-5">
+                      {/* Card number */}
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          Card number
+                        </label>
+        
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="cc-number"
+                          value={number}
+                          onChange={(event) =>
+                            setNumber(formatCardNumber(event.target.value))
+                          }
+                          placeholder="1234 5678 9012 3456"
+                          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                          required
+                        />
+                      </div>
+        
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Expiry */}
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-slate-700">
+                            Expiry date
+                          </label>
+        
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            autoComplete="cc-exp"
+                            value={expire}
+                            onChange={(event) =>
+                              setExpire(formatExpiry(event.target.value))
+                            }
+                            placeholder="MM/YY"
+                            maxLength={5}
+                            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            required
+                          />
+                        </div>
+        
+                        {/* CVV */}
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-slate-700">
+                            CVV
+                          </label>
+        
+                          <input
+                            type="password"
+                            inputMode="numeric"
+                            autoComplete="cc-csc"
+                            value={cvv}
+                            onChange={(event) =>
+                              setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))
+                            }
+                            placeholder="123"
+                            maxLength={4}
+                            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            required
+                          />
+                        </div>
+                      </div>
+        
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full rounded-full bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {loading
+                          ? editingCard
+                            ? 'Updating card...'
+                            : 'Adding card...'
+                          : editingCard
+                          ? 'Update card'
+                          : 'Add card'}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              )}
       </div>
     </>
   )

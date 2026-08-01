@@ -533,15 +533,10 @@ export default function LearnMore() {
                 </div>
 
                 {/* Nav */}
-                <nav className="relative z-10 mx-auto flex max-w-[1600px] items-center justify-between px-7 py-6">
+                <nav className="relative z-10 mx-auto flex max-w-[1600px] items-center justify-between px-7 pb-6">
                     <div className="flex items-center gap-14">
-                        <div className="leading-tight">
-                            <div className="flex items-baseline text-[28px] font-semibold text-white">
-                                Beacon<span className="text-[#ffe524]">:</span>
-                            </div>
-                            <div className="-mt-1 text-[11px] font-semibold tracking-wide text-white">
-                            </div>
-                        </div>
+                        
+                       <Link to='/'> <img src="/logo_whire.png" alt="" className="size-32 object-contain" /></Link>
 
                         <div className="hidden items-center gap-10 text-sm text-slate-200 md:flex">
                             <button className="flex items-center gap-1 border-b-2 border-white pb-6 pt-6 text-white">

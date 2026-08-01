@@ -43,7 +43,7 @@ export default function AllUser() {
                       <Td>{item.role}</Td>
                       <Td>{item.currbal}</Td>
                       <Td>{item.verified}</Td>
-                      <Link className='text-primary-dark font-semibold' to={`${'/admin/all-user'}/${item.id}`}><Td>View</Td></Link>
+                      <Link className='text-primary font-semibold' to={`${'/admin/all-user'}/${item.id}`}><Td>View</Td></Link>
                     </Tr>
                   ))}
                 </Tbody>

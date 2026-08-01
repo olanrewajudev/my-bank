@@ -155,7 +155,7 @@ export default function Singleuser() {
                         {isPending && (
                             <Menu>
                                 <Menu.Target>
-                                    <button className="bg-primary-dark rounded-full py-2.5 px-6 font-semibold text-center cursor-pointer text-white">
+                                    <button className="bg-darkgray rounded-full py-2.5 px-6 font-semibold text-center cursor-pointer text-white">
                                         Review KYC
                                     </button>
                                 </Menu.Target>
@@ -177,8 +177,8 @@ export default function Singleuser() {
                     <div className="font-semibold text-xl text-slate-500">User has not submitted their KYC documents.</div>
                 ) : isVerified ? (
                     <div className="bg-lime-light border border-discount p-5 rounded-xl">
-                        <div className="text-primary-dark text-xl font-bold mb-2">✅ KYC Verified</div>
-                        <p className="text-primary-dark mt-2">This user has successfully completed identity verification.</p>
+                        <div className="text-primary text-xl font-bold mb-2">✅ KYC Verified</div>
+                        <p className="text-primary mt-2">This user has successfully completed identity verification.</p>
                     </div>
                 ) : isDeclined ? (
                     <div className="bg-red-50 border border-red-200 p-5 rounded-xl">
@@ -199,6 +199,28 @@ export default function Singleuser() {
                             <div className="mb-2">Front Image</div>
                             <img
                                 className="h-[20rem] w-full object-cover rounded-lg border"
+                                src={`${DocumentBaseUrl}/documents/${user?.frontphoto}`}
+                                alt="Front of ID"
+                            />
+                        </div>
+
+                        <div className="text-[1.1rem] font-semibold w-full">
+                            <div className="mb-2">Back Image</div>
+                            <img
+                                className="h-[20rem] w-full object-cover rounded-lg border"
+                                src={`${DocumentBaseUrl}/documents/${user?.backphoto}`}
+                                alt="Back of ID"
+                            />
+                        </div>
+                    </div>
+                )}
+{/* 
+                {isSubmitted && (user?.frontphoto || user?.backphoto) && (
+                    <div className="flex items-center w-full gap-10 mt-5">
+                        <div className="text-[1.1rem] font-semibold w-full">
+                            <div className="mb-2">Front Image</div>
+                            <img
+                                className="h-[20rem] w-full object-cover rounded-lg border"
                                 src={`${DocumentBaseUrl}/public/documents/${user?.frontphoto}`}
                                 alt="Front of ID"
                             />
@@ -213,7 +235,7 @@ export default function Singleuser() {
                             />
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     )

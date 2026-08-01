@@ -1,34 +1,27 @@
 import React from 'react'
-
 import { BiChevronDown, BiLock } from "react-icons/bi";
-import { BsInfo } from "react-icons/bs";
-import { SlMenu } from 'react-icons/sl';
+
 import { Link } from 'react-router';
 
 export default function Header() {
     return (
         <div>
             {/* Navbar */}
-            <nav className="border-b border-gray-200">
-                <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
-                    <div className="flex items-center gap-20">
-                        {/* Logo */}
-                       <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
+            <nav className="relative z-10 lg:mx-20 flex items-center justify-between px-7 pb-">
+                <div className="flex items-center gap-14">
 
-                        {/* Links */}
-                        <div className="hidden gap-10 lg:flex">
-                            <button className="flex text-sm items-center gap-1 text-gray-700 hover:text-black">Savings <BiChevronDown size={16} /></button>
-                            <button className="flex text-sm items-center gap-1 text-gray-700 hover:text-black">CDs <BiChevronDown size={16} /></button>
-                            <button className="flex text-sm items-center gap-1 text-gray-700 hover:text-black">Tools & Resources<BiChevronDown size={16} /></button>
-                        </div>
-                    </div>
+                    <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
 
-                    {/* Right */}
-                    <div className="lg:flex items-center gap-8 hidden">
-                        <a href="#" className="text-gray-700 hover:text-black">Compare savings products</a>
-                        <Link to='/login' className="flex items-center gap-2"><BiLock size={18} />Log in</Link>
+                    <div className="hidden items-center gap-10 text-sm text-blue md:flex">
+                        <button className="flex items-center gap-1 border-b-2 border-blue pb-6 pt-6">Savings <BiChevronDown className="h-4 w-4" /></button>
+                        <button className="flex items-center gap-1  hover:text-white">CDs <BiChevronDown className="h-4 w-4" /></button>
+                        <button className="flex items-center gap-1  hover:text-white">Tools &amp; Resources <BiChevronDown className="h-4 w-4" /></button>
                     </div>
-                    <div className="lg:hidden "><SlMenu /></div>
+                </div>
+
+                <div className="hidden items-center gap-8 text-[15px] text-blue md:flex">
+                    <Link to="/compare" className="hover:text-white">Compare savings products</Link>
+                    <Link to="/login" className="flex items-center gap-2"><BiLock className="h-4 w-4" />Log in</Link>
                 </div>
             </nav>
         </div>

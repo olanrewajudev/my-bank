@@ -99,19 +99,19 @@ export default function Withdraw() {
                                                     <Td>{item.title}</Td>
                                                     <Td>{item.tags?.firstName} {item.tags?.lastName}</Td>
                                                     <Td>${item.amount}</Td>
-                                                    <Td><span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow' : item.status === 'successful' ? 'bg-primary-dark text-white' : 'bg-red-800 text-white'}`}> {item.status}</span></Td>
+                                                    <Td><span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow' : item.status === 'successful' ? 'bg-primary text-white' : 'bg-red-800 text-white'}`}> {item.status}</span></Td>
                                                     <Td className="truncate max-w-[120px]">{item.txid}</Td>
                                                     <Td>{formatDate(item.date)}</Td>
                                                     <Td>
                                                         <Menu shadow="md" width={200}>
-                                                            <Menu.Target><button className="text-primary-dark font-semibold">Update Status</button></Menu.Target>
+                                                            <Menu.Target><button className="text-primary font-semibold">Update Status</button></Menu.Target>
                                                             <Menu.Dropdown>
                                                                 <Menu.Item disabled={item.status !== 'pending'} onClick={() => verifyWithdrawal(item)}>Verify</Menu.Item>
                                                                 <Menu.Item disabled={item.status !== 'pending'} onClick={() => { setSelectedDeposit(item), openDecline() }}>Decline</Menu.Item>
                                                             </Menu.Dropdown>
                                                         </Menu>
                                                     </Td>
-                                                    <Td><Link to={`/admin/deposit/single-deposit/${item.id}`} className='text-primary-dark font-semibold'>View</Link></Td>
+                                                    <Td><Link to={`/admin/deposit/single-deposit/${item.id}`} className='text-primary font-semibold'>View</Link></Td>
                                                 </Tr>
                                             ))}
                                         </Tbody>

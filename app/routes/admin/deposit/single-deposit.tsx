@@ -22,12 +22,11 @@ export default function SingleDeposit() {
 
     const copyText = async (text: string) => { navigator.clipboard.writeText(text) }
 
-    // const statusColor = deposit?.status === 'approved' ? 'bg-primary-dark text-white' : deposit?.status === 'rejected' ? 'bg-red-800 text-white' : 'bg-yellow-dark '
 
     return (
         <div className="w-full p-4 md:p-8">
             <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-sm border border-lightest overflow-hidden">
-                <div className="bg-linear-to-r from-yellow-dark to-primary-dark  p-6 text-white">
+                <div className="  p-6 text-white">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                         <div>
                             <div className="flex items-center gap-3">
@@ -51,7 +50,7 @@ export default function SingleDeposit() {
                     <div className="space-y-5">
                         <div className="bg-gray-50 rounded-2xl p-5">
                             <p className="text-sm text-gray-500 mb-1">Amount</p>
-                            <h2 className="text-3xl font-bold text-primary-dark">${formatAmount(deposit?.amount)}</h2>
+                            <h2 className="text-3xl font-bold text-primary">${formatAmount(deposit?.amount)}</h2>
                         </div>
                         <div className="bg-gray-50 rounded-2xl p-5">
                             <p className="text-sm text-gray-500 mb-1">Description</p>

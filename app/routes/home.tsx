@@ -6,12 +6,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative lg:h-[42rem] overflow-hidden">
+      <section className="relative lg:h-[40rem] overflow-hidden">
         {/* Background Image */}
         <img src="/banner.png" alt="Referral Banner" className="absolute inset-0 h-full md:w-full object-cover" />
 
         {/* Content */}
-        <div className="relative z-10 mx-auto flex h-[30rem] lg:h-[40rem] max-w-7xl items-center px-8">
+        <div className="relative z-10 mx-auto flex h-[30rem] lg:h-[35rem] max-w-7xl items-center px-8">
           <div className="">
             <h1 className="lg:text-[4rem] text-[2rem] leading-none tracking-tight">
               Earn <span className="font-normal">3.40% APY</span>{" "}
