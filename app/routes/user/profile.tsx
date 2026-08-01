@@ -187,9 +187,9 @@ export default function Profile() {
     { key: 'security', label: 'Security & login', icon: HiOutlineLockClosed, },
     { key: 'kyc', label: 'KYC verification', icon: HiOutlineIdentification, },
     { key: 'feedback', label: 'Give feedback', icon: HiOutlinePencil, },
-    { key: 'linked', label: 'Linked external accounts', icon: HiOutlineLink, },
+    { key: 'linked', label: 'Linked Card', icon: HiOutlineLink, },
     { key: 'policy', label: 'Privacy & Legal', icon: HiOutlineLink, },
-    { key: 'delete', label: 'Delete Account', icon: HiOutlineExclamationTriangle, },
+    // { key: 'delete', label: 'Delete Account', icon: HiOutlineExclamationTriangle, },
   ]
 
   const getCards = async () => {
@@ -496,7 +496,7 @@ export default function Profile() {
 
       <div className="min-h-screen bg-[#eef1f3] pb-24">
         <div className="flex justify-end px-6 pt-6">
-          <button type="button" onClick={openLogout} className="flex items-center gap-2 text-slate-700"><HiOutlineArrowRightOnRectangle />Log out</button>
+          <button type="button" onClick={openLogout} className="flex text-red-800 font-extrabold items-center gap-2"><HiOutlineArrowRightOnRectangle />Log out</button>
         </div>
 
         <div className="mt-4 px-6">

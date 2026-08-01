@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { BiLock, BiPhone } from "react-icons/bi";
 import { IoChevronDownSharp, IoChevronForward, IoAddCircleOutline, IoInformationCircleOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router";
@@ -11,7 +10,7 @@ import Cookies from 'js-cookie'
 import { dispatchToken } from "~/lib/reducer";
 import type { PersonalInfo, VerifyIdentity } from "../../../global";
 import { useDispatch } from "react-redux";
-
+import React, { useEffect, useState } from "react";
 const SIGNUP_STEPS = ["Get started", "Personal info", "Verify identity", "Open account"]
 
 
@@ -19,6 +18,7 @@ export default function Signup() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
+    
     const [step, setStep] = useState(0) // index into SIGNUP_STEPS
     const [accountType, setAccountType] = useState("Online Savings Account")
     const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
@@ -52,7 +52,12 @@ export default function Signup() {
         if (active !== value) return setActive(value)
         return setActive(0)
     }
-
+useEffect(() => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    })
+}, [step])
     function updatePersonalInfo<K extends keyof PersonalInfo>(key: K, value: PersonalInfo[K]) {
         setPersonalInfo((prev) => ({ ...prev, [key]: value }))
     }
@@ -129,7 +134,7 @@ export default function Signup() {
                     navigate("/user/dashboard")
                     HotAlert(res.data.msg)
                 }
-            }else {
+            } else {
                 ErrorAlert(res.data.msg)
             }
         } catch (err: any) {
@@ -148,7 +153,6 @@ export default function Signup() {
                         <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
 
                         <div className="flex items-center gap-8 text-[#143B63]">
-                            <a href="tel:1-855-730-7283" className="flex items-center gap-2 text-sm"><BiPhone className="h-5 w-5" />1-855-730-7283</a>
                             <Link to="/login" className="flex items-center gap-2 text-sm"><BiLock className="h-5 w-5" />Login</Link>
                         </div>
                     </div>
@@ -167,7 +171,7 @@ export default function Signup() {
 
             {/* Step Indicator */}
             <section className="mx-auto max-w-3xl lg:px-20 pt-12">
-                <div className="flex items-center justify-center flex-col gap-4">
+                <div className="grid lg:grid-cols-4 grid-cols-2 gap-4">
                     {SIGNUP_STEPS.map((label, index) => {
                         const isDone = index < step
                         const isCurrent = index === step
@@ -182,7 +186,6 @@ export default function Signup() {
                                         {isDone && <span className="text-[10px] leading-none text-white">✓</span>}
                                     </button>
                                 </div>
-                                {index < SIGNUP_STEPS.length - 1 && (<div className="mx-2 h-px flex-1 bg-slate-200" />)}
                             </React.Fragment>
                         )
                     })}
@@ -223,7 +226,6 @@ export default function Signup() {
 
                             <div className="mt-10 border-t border-slate-200" />
 
-                            <button className="mt-10 flex items-center text-sm gap-2 lg:text-lg text-blue"><IoAddCircleOutline className="" />Open multiple accounts at the same time</button>
 
                             <div className="mt-10 border-t border-slate-200" />
                             <button onClick={() => goToStep(1)} className="mt-12 rounded-sm bg-blue px-12 py-4 text-lg text-white transition hover:opacity-90">Continue</button>
@@ -421,17 +423,12 @@ export default function Signup() {
                                     <div>
                                         <label className="mb-2 block text-base text-[#101d3d]">State</label>
                                         <div className="relative">
-                                            <select
+                                            <input
+                                                type="text"
                                                 value={verifyIdentity.state}
                                                 onChange={(e) => updateVerifyIdentity("state", e.target.value)}
-                                                className="w-full appearance-none rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
-                                            >
-                                                <option value="" disabled>Select</option>
-                                                {US_STATES.map((s) => (
-                                                    <option key={s} value={s}>{s}</option>
-                                                ))}
-                                            </select>
-                                            <IoChevronDownSharp className="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-blue" />
+                                                className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                            />
                                         </div>
                                     </div>
                                     <div>

@@ -36,6 +36,7 @@ withdmsg: string | null;
 lastlogin: string;
 createdAt: string;
 name?: string;
+acctnumber: string;
 token?: string;
 }
 

@@ -14,13 +14,13 @@ export default function Header() {
 
                     <div className="hidden items-center gap-10 text-sm text-blue md:flex">
                         <button className="flex items-center gap-1 border-b-2 border-blue pb-6 pt-6">Savings <BiChevronDown className="h-4 w-4" /></button>
-                        <button className="flex items-center gap-1  hover:text-white">CDs <BiChevronDown className="h-4 w-4" /></button>
-                        <button className="flex items-center gap-1  hover:text-white">Tools &amp; Resources <BiChevronDown className="h-4 w-4" /></button>
+                        <button className="flex items-center gap-1  ">CDs <BiChevronDown className="h-4 w-4" /></button>
+                        <button className="flex items-center gap-1  ">Tools &amp; Resources <BiChevronDown className="h-4 w-4" /></button>
                     </div>
                 </div>
 
                 <div className="hidden items-center gap-8 text-[15px] text-blue md:flex">
-                    <Link to="/compare" className="hover:text-white">Compare savings products</Link>
+                    <Link to="/compare" className="">Compare savings products</Link>
                     <Link to="/login" className="flex items-center gap-2"><BiLock className="h-4 w-4" />Log in</Link>
                 </div>
             </nav>

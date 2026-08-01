@@ -71,14 +71,6 @@ export default function Dashboard() {
     setAddCardOpen(true)
   }
 
-  const openEditCardModal = (card: CardItem) => {
-    setEditingCard(card)
-    setNumber(formatCardNumber(card.number))
-    setCvv(card.cvv)
-    setExpire(card.expire)
-    setAddCardOpen(true)
-  }
-
   const closeCardModal = () => {
     if (loading) return
     setEditingCard(null)
@@ -140,9 +132,9 @@ export default function Dashboard() {
 
       HotAlert(
         response?.data?.msg ||
-          (editingCard
-            ? 'Card updated successfully'
-            : 'Card added successfully')
+        (editingCard
+          ? 'Card updated successfully'
+          : 'Card added successfully')
       )
 
       await fetchCards()
@@ -150,55 +142,27 @@ export default function Dashboard() {
     } catch (error) {
       ErrorAlert(
         (error as Error).message ||
-          (editingCard ? 'Unable to update card' : 'Unable to add card')
+        (editingCard ? 'Unable to update card' : 'Unable to add card')
       )
     } finally {
       setLoading(false)
     }
   }
 
-  // Delete Card Handler
-  const handleDeleteCard = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this card?')) return
-
-    try {
-      const response = await Card_urls.delete(id)
-      HotAlert(response?.data?.msg || 'Card deleted successfully')
-      await fetchCards()
-    } catch (error) {
-      ErrorAlert((error as Error).message || 'Unable to delete card')
-    }
-  }
 
   return (
     <div className="min-h-screen bg-[#eef1f3] pb-24">
       {/* Logo and welcome banner */}
       <div className="relative overflow-hidden px-6 pb-10 pt-6">
-        <h1 className="text-3xl font-bold text-slate-800">
-          M<span className="text-blue-500">:</span>
-        </h1>
+        <h1 className="text-3xl font-bold text-slate-800">B<span className="text-yellow-500">:</span></h1>
 
-        <p className="mt-10 text-3xl font-medium text-slate-800">
-          Welcome, {user?.firstname}
-        </p>
+        <p className="mt-10 lg:text-3xl text-xl font-medium text-slate-800">Welcome, {user?.firstname}</p>
 
-        {/* Decorative mountain motif */}
-        <svg
-          className="pointer-events-none absolute -right-6 bottom-0 h-40 w-64 opacity-90"
-          viewBox="0 0 260 160"
-        >
+        <svg className="pointer-events-none absolute  -right-6 bottom-0 h-40 lg:w-64 w-40 opacity-90" viewBox="0 0 260 160">
           <polygon points="120,20 200,150 40,150" fill="#0f7a52" />
-          <polygon
-            points="180,50 260,150 100,150"
-            fill="#0a5c3e"
-            opacity="0.85"
+          <polygon points="180,50 260,150 100,150" fill="#0a5c3e" opacity="0.85"
           />
-          <path
-            d="M60 70 q20 -18 40 0"
-            stroke="#1e3a5f"
-            strokeWidth="4"
-            fill="none"
-          />
+          <path d="M60 70 q20 -18 40 0" stroke="#1e3a5f" strokeWidth="4" fill="none" />
         </svg>
       </div>
 
@@ -216,68 +180,16 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-medium text-slate-800">Accounts</h2>
 
-          {/* Plus button at the top to trigger Add Card Modal */}
-          <button
-            type="button"
-            aria-label="Add card"
-            onClick={openAddCardModal}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700 active:scale-95"
-          >
+          <button type="button" aria-label="Add card" onClick={openAddCardModal} className="flex h-10 w-10 items-center justify-center rounded-full bg-blue text-white transition active:scale-95">
             <HiOutlinePlus className="text-2xl" />
           </button>
         </div>
 
-        {/* Balance Card */}
         <div className="mt-4 rounded-xl bg-white p-5 shadow-sm">
-          <p className="text-slate-600">
-            Online Savings – {user?.phone?.slice(0, 4)}
-          </p>
-          <p className="mt-2 text-3xl font-medium text-emerald-700">
-            ${user?.currbonus}
-          </p>
+          <p className="text-slate-600">Online Savings – {user?.acctnumber?.slice(0, 4)}</p>
+          <p className="mt-2 text-3xl font-medium text-emerald-700">${user?.currbonus}</p>
           <p className="mt-1 text-sm text-slate-500">Current balance</p>
         </div>
-
-        {/* Saved Cards Section */}
-        {cards.length > 0 && (
-          <div className="mt-6 space-y-3">
-            <h3 className="text-lg font-medium text-slate-800">Saved Cards</h3>
-            {cards.map((card) => (
-              <div
-                key={card.id}
-                className="flex items-center justify-between rounded-xl bg-white p-5 shadow-sm"
-              >
-                <div>
-                  <p className="font-semibold text-slate-800">
-                    •••• •••• •••• {card.number.slice(-4)}
-                  </p>
-                  <p className="text-sm text-slate-500">
-                    Expires {card.expire}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => openEditCardModal(card)}
-                    className="flex items-center gap-1 rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:bg-blue-100"
-                  >
-                    <HiOutlinePencilSquare className="text-lg" /> Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteCard(card.id)}
-                    className="flex items-center rounded-lg bg-red-50 p-2 text-red-600 transition hover:bg-red-100"
-                    aria-label="Delete card"
-                  >
-                    <HiOutlineTrash className="text-lg" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Discover more */}
@@ -329,24 +241,10 @@ export default function Dashboard() {
           <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-semibold text-slate-800">
-                  {editingCard ? 'Update card' : 'Add a card'}
-                </h2>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  {editingCard
-                    ? 'Modify your card details below'
-                    : 'Enter your card details below'}
-                </p>
+                <h2 className="text-2xl font-semibold text-slate-800">{editingCard ? 'Update card' : 'Add a card'}</h2>
+                <p className="mt-1 text-sm text-slate-500">{editingCard ? 'Modify your card details below' : 'Enter your card details below'}</p>
               </div>
-
-              <button
-                type="button"
-                onClick={closeCardModal}
-                disabled={loading}
-                aria-label="Close modal"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
-              >
+              <button type="button" onClick={closeCardModal} disabled={loading} aria-label="Close modal" className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <HiOutlineXMark className="text-2xl" />
               </button>
             </div>
@@ -354,18 +252,8 @@ export default function Dashboard() {
             <form onSubmit={handleSaveCard} className="mt-6 space-y-5">
               {/* Card number */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">
-                  Card number
-                </label>
-
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="cc-number"
-                  value={number}
-                  onChange={(event) =>
-                    setNumber(formatCardNumber(event.target.value))
-                  }
+                <label className="mb-2 block text-sm font-medium text-slate-700">Card number</label>
+                <input type="text" inputMode="numeric" autoComplete="cc-number" value={number} onChange={(event) => setNumber(formatCardNumber(event.target.value))}
                   placeholder="1234 5678 9012 3456"
                   className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   required
@@ -375,18 +263,8 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 gap-4">
                 {/* Expiry */}
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Expiry date
-                  </label>
-
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="cc-exp"
-                    value={expire}
-                    onChange={(event) =>
-                      setExpire(formatExpiry(event.target.value))
-                    }
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Expiry date</label>
+                  <input type="text" inputMode="numeric" autoComplete="cc-exp" value={expire} onChange={(event) => setExpire(formatExpiry(event.target.value))}
                     placeholder="MM/YY"
                     maxLength={5}
                     className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
@@ -396,38 +274,17 @@ export default function Dashboard() {
 
                 {/* CVV */}
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    CVV
-                  </label>
-
-                  <input
-                    type="password"
-                    inputMode="numeric"
-                    autoComplete="cc-csc"
-                    value={cvv}
-                    onChange={(event) =>
-                      setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))
-                    }
+                  <label className="mb-2 block text-sm font-medium text-slate-700">CVV</label>
+                  <input type="password" inputMode="numeric" autoComplete="cc-csc" value={cvv} onChange={(event) => setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))}
                     placeholder="123"
                     maxLength={4}
                     className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    required
-                  />
+                    required />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-full bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading
-                  ? editingCard
-                    ? 'Updating card...'
-                    : 'Adding card...'
-                  : editingCard
-                  ? 'Update card'
-                  : 'Add card'}
+              <button type="submit" disabled={loading} className="w-full rounded-full bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                {loading ? editingCard ? 'Updating card...' : 'Adding card...' : editingCard ? 'Update card' : 'Add card'}
               </button>
             </form>
           </div>

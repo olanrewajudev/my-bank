@@ -60,7 +60,7 @@ export default function Login() {
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
                         <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
-
+                            <Link to="/new/account-creation" className="flex items-center text-blue gap-2 text-sm"><BiLock className="h-5 w-5" />Create Account</Link>
                     </div>
                 </nav>
             </div>
