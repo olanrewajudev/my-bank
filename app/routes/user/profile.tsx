@@ -5,21 +5,7 @@ import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { useEffect, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import {
-  HiOutlineArrowRightOnRectangle,
-  HiOutlineLockClosed,
-  HiOutlinePencil,
-  HiOutlineLink,
-  HiOutlineChevronRight,
-  HiOutlineChevronDown,
-  HiOutlinePlusCircle,
-  HiOutlineTrash,
-  HiOutlineCheckCircle,
-  HiOutlineIdentification,
-  HiOutlineDocumentArrowUp,
-  HiOutlineExclamationTriangle,
-  HiOutlineShieldCheck,
-  HiOutlineXMark,
+import { HiOutlineArrowRightOnRectangle, HiOutlineLockClosed, HiOutlinePencil, HiOutlineLink, HiOutlineChevronRight, HiOutlineChevronDown, HiOutlinePlusCircle, HiOutlineTrash, HiOutlineCheckCircle, HiOutlineIdentification, HiOutlineDocumentArrowUp, HiOutlineExclamationTriangle, HiOutlineShieldCheck, HiOutlineXMark,
 } from 'react-icons/hi2'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
