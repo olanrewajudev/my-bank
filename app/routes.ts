@@ -28,8 +28,6 @@ export default [
   layout("./Layouts/admin-layout.tsx", [
     ...prefix("admin", [
       route("dashboard", "routes/admin/dashboard.tsx"),
-      route("deposit", "routes/admin/deposit/all-deposit.tsx"),
-      route("deposit/single/:id", "routes/admin/deposit/single-deposit.tsx"),
       route("withdraw", "routes/admin/withdraw/all-withdraw.tsx"),
       route("transaction", "routes/admin/transaction/all-transact.tsx"),
       route("all-user", "routes/admin/users/all-user.tsx"),

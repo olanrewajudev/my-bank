@@ -13,14 +13,13 @@ const Headers = ["Name", "Email", "Last Login", 'Phone', 'Role', "Balance", 'Ver
 
 export default function AllUser() {
 
-    const { data: user = [] } = useQuery({
-        queryKey: ['all-users'],
-        queryFn: async () => {
-            const res = await Admin_urls.getAllUser()
-            return res.data.msg
-        },
-    })
-    console.log(user)
+  const { data: user = [] } = useQuery({
+    queryKey: ['all-users'],
+    queryFn: async () => {
+      const res = await Admin_urls.getAllUser()
+      return res.data.msg
+    },
+  })
   return (
     <div>
       <div className="m-5">
@@ -34,18 +33,26 @@ export default function AllUser() {
               <Table>
                 <Thead><Tr header last={false}>{Headers.map((h, i) => (<Td key={i} className="font-semibold">{h}</Td>))}</Tr></Thead>
                 <Tbody>
-                  {user.map((item: any, index: React.Key) => (
-                    <Tr className='my-4' key={index} last={index === user.length - 1}>
-                      <Td>{item.firstname} {item.lastname}</Td>
-                      <Td>{item.email}</Td>
-                      <Td>{item.lastlogin}</Td>
-                      <Td>{item.phone}</Td>
-                      <Td>{item.role}</Td>
-                      <Td>{item.currbal}</Td>
-                      <Td>{item.verified}</Td>
-                      <Link className='text-primary font-semibold' to={`${'/admin/all-user'}/${item.id}`}><Td>View</Td></Link>
-                    </Tr>
-                  ))}
+                  {user.length > 0 ? (
+                    user.map((item: any, index: React.Key) => (
+                      <Tr className='my-4' key={index} last={index === user.length - 1}>
+                        <Td>{item.firstname} {item.lastname}</Td>
+                        <Td>{item.email}</Td>
+                        <Td>{item.lastlogin}</Td>
+                        <Td>{item.phone}</Td>
+                        <Td>{item.role}</Td>
+                        <Td>{item.currbal}</Td>
+                        <Td>{item.verified}</Td>
+                        <Td>
+                          <Link className='text-primary font-semibold' to={`/admin/all-user/${item.id}`}>View</Link>
+                        </Td>
+                      </Tr>
+                    ))
+                  ) : (
+                 <Tr last>
+                  <Td>  <div className="text-lg">No user is added yet</div></Td>
+                 </Tr>
+                  )}
                 </Tbody>
               </Table>
             </div>

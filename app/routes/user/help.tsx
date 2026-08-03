@@ -99,14 +99,10 @@ export default function Help() {
   const [contactOpen, setContactOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#eef1f3] pb-24">
-      <div className="relative px-6 pt-6 pb-10">
-        <h1 className="max-w-[70%] text-3xl font-medium leading-snug text-slate-800">
-          How can we help you today?
-        </h1>
-        <div className="absolute right-6 top-6 flex h-24 w-24 items-center justify-center rounded-full bg-slate-900">
-          <HiOutlineBookOpen className="text-4xl text-blue-300" />
-        </div>
+    <div className="min-h-screen bg-[#eef1f3]  pb-24">
+      <div className="relative px-6 py-6 pb-10">
+        <h1 className="max-w-[70%] lg:text-3xl text-xl font-medium leading-snug text-slate-800">How can we help you today?</h1>
+        <div className="absolute right-6 top-6 flex h-24 w-24 items-center justify-center rounded-full bg-slate-900"><HiOutlineBookOpen className="text-4xl text-blue-300" /></div>
       </div>
 
       <div className="bg-[#dde3e7] px-6 py-5">
@@ -304,13 +300,6 @@ export default function Help() {
       {contactOpen && (
         <div className="mt-2 space-y-2 mx-5 rounded-xl bg-white px-5 py-4 shadow-sm">
 
-          <Link to="tel:18005551234" className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50">
-            <HiOutlinePhone className="text-lg text-blue-700" />
-            <div>
-              <p className="text-sm text-slate-800">Call 1-800-555-1234</p>
-              <p className="text-xs text-slate-500">Toll-free customer support</p>
-            </div>
-          </Link>
 
           <Link to="mailto:support@beacongoldcrest.example.com" className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50">
             <HiOutlineEnvelope className="text-lg text-blue-700" />

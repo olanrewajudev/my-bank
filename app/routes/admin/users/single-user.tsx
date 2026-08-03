@@ -173,7 +173,7 @@ export default function Singleuser() {
             </div>
 
             <div className="mt-6">
-                {!isSubmitted ? (
+                {/* {!isSubmitted ? (
                     <div className="font-semibold text-xl text-slate-500">User has not submitted their KYC documents.</div>
                 ) : isVerified ? (
                     <div className="bg-lime-light border border-discount p-5 rounded-xl">
@@ -213,10 +213,10 @@ export default function Singleuser() {
                             />
                         </div>
                     </div>
-                )}
-{/* 
+                )} */}
+
                 {isSubmitted && (user?.frontphoto || user?.backphoto) && (
-                    <div className="flex items-center w-full gap-10 mt-5">
+                    <div className="lg:flex items-center w-full gap-10 mt-5">
                         <div className="text-[1.1rem] font-semibold w-full">
                             <div className="mb-2">Front Image</div>
                             <img
@@ -226,7 +226,7 @@ export default function Singleuser() {
                             />
                         </div>
 
-                        <div className="text-[1.1rem] font-semibold w-full">
+                        <div className="text-[1.1rem] mt-4 lg:mt-0 font-semibold w-full">
                             <div className="mb-2">Back Image</div>
                             <img
                                 className="h-[20rem] w-full object-cover rounded-lg border"
@@ -235,7 +235,7 @@ export default function Singleuser() {
                             />
                         </div>
                     </div>
-                )} */}
+                )}
             </div>
         </div>
     )

@@ -5,7 +5,8 @@ import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { useEffect, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import { HiOutlineArrowRightOnRectangle, HiOutlineLockClosed, HiOutlinePencil, HiOutlineLink, HiOutlineChevronRight, HiOutlineChevronDown, HiOutlinePlusCircle, HiOutlineTrash, HiOutlineCheckCircle, HiOutlineIdentification, HiOutlineDocumentArrowUp, HiOutlineExclamationTriangle, HiOutlineShieldCheck, HiOutlineXMark,
+import {
+  HiOutlineArrowRightOnRectangle, HiOutlineLockClosed, HiOutlinePencil, HiOutlineLink, HiOutlineChevronRight, HiOutlineChevronDown, HiOutlinePlusCircle, HiOutlineTrash, HiOutlineCheckCircle, HiOutlineIdentification, HiOutlineDocumentArrowUp, HiOutlineExclamationTriangle, HiOutlineShieldCheck, HiOutlineXMark,
 } from 'react-icons/hi2'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
@@ -63,7 +64,7 @@ export default function Profile() {
 
   const [feedbackSent, setFeedbackSent] = useState(false)
 
- // State Management
+  // State Management
   const [cards, setCards] = useState<CardItem[]>([])
   const [editingCard, setEditingCard] = useState<CardItem | null>(null)
   const [addCardOpen, setAddCardOpen] = useState(false)
@@ -135,6 +136,10 @@ export default function Profile() {
       if (res.status === 200) {
         setKycSubmitted(true)
         HotAlert(res.data.msg)
+        closeKyc()
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else if (res.status === 404) {
         ErrorAlert(res.data.msg)
       } else {
@@ -148,13 +153,14 @@ export default function Profile() {
     }
   }
   const resetKyc = () => {
-    closeKyc()
-    setKycSubmitted(false)
-    setKycDocument('')
-    setKycFrontFile(null)
-    setKycBackFile(null)
-    setKycAgreed(false)
-  }
+    setKycDocument('');
+    setKycFrontFile(null);
+    setKycBackFile(null);
+    setKycAgreed(false);
+    setKycSubmitted(false);
+
+    closeKyc();
+  };
   const deleteAccount = async () => {
     if (
       deleteConfirmation.trim() !== 'DELETE'
@@ -240,7 +246,7 @@ export default function Profile() {
     }
   }
 
-   const openAddCardModal = () => {
+  const openAddCardModal = () => {
     setEditingCard(null)
     setNumber('')
     setCvv('')
@@ -309,9 +315,9 @@ export default function Profile() {
 
       HotAlert(
         response?.data?.msg ||
-          (editingCard
-            ? 'Card updated successfully'
-            : 'Card added successfully')
+        (editingCard
+          ? 'Card updated successfully'
+          : 'Card added successfully')
       )
 
       await getCards()
@@ -319,7 +325,7 @@ export default function Profile() {
     } catch (error) {
       ErrorAlert(
         (error as Error).message ||
-          (editingCard ? 'Unable to update card' : 'Unable to add card')
+        (editingCard ? 'Unable to update card' : 'Unable to add card')
       )
     } finally {
       setLoading(false)
@@ -382,86 +388,127 @@ export default function Profile() {
           </div>
         </div>
       </Modal>
-
-
-      <Modal size="34rem" centered opened={openedKyc} onClose={resetKyc} withCloseButton={false} radius="lg">
+      <Modal
+        size="34rem"
+        centered
+        opened={openedKyc}
+        onClose={resetKyc}
+        withCloseButton={false}
+        radius="lg"
+      >
         <div className="relative p-2">
-          <button type="button" onClick={resetKyc} className="absolute right-0 top-0 rounded-full p-2 text-slate-500 hover:bg-slate-100" aria-label="Close KYC"><HiOutlineXMark className="text-xl" /></button>
-          {user?.submitted === 'true' ? (
+
+
+
+          {/* CHANGE THE CONDITION HERE */}
+          {user?.verified === 'verified' ? (
             <div className="py-10 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100"><HiOutlineShieldCheck className="text-4xl text-emerald-600" /></div>
-              <h2 className="mt-5 text-2xl font-bold">KYC Submitted</h2>
-              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">Your identity document has been submitted for review.</p>
-              <button type="button" onClick={resetKyc} className="mt-7 w-full rounded-md bg-blue-700 py-3 font-semibold text-white">Done</button>
+
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                <HiOutlineShieldCheck className="text-4xl text-emerald-600" />
+              </div>
+
+              <h2 className="mt-5 text-2xl font-bold text-emerald-700">
+                Identity Verified
+              </h2>
+
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">
+                Your identity has been successfully verified.
+              </p>
+
+              <button
+                type="button"
+                onClick={resetKyc}
+                className="mt-7 w-full rounded-md bg-emerald-600 py-3 font-semibold text-white"
+              >
+                Done
+              </button>
+
             </div>
           ) : (
             <>
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50"><HiOutlineIdentification className="text-3xl text-blue-700" /></div>
-              <h2 className="mt-4 text-2xl font-bold">Verify your identity</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-500">Select and upload one valid government-issued identification document.</p>
-              <div className="mt-6 space-y-3">
-                <button type="button" onClick={() => setKycDocument('driver_license')}
-                  className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'driver_license' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
-                  <div>
-                    <p className="font-semibold">Driver's License</p>
-                    <p className="text-xs text-slate-500">Upload a valid driver's license</p>
+              <div className="relative p-2">
+                <button type="button" onClick={resetKyc} className="absolute right-0 top-0 rounded-full p-2 text-slate-500 hover:bg-slate-100" aria-label="Close KYC"><HiOutlineXMark className="text-xl" /></button>
+                {user?.submitted === 'true' ? (
+                  <div className="py-10 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100"><HiOutlineShieldCheck className="text-4xl text-emerald-600" /></div>
+                    <h2 className="mt-5 text-2xl font-bold">KYC Submitted</h2>
+                    <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">Your identity document has been submitted for review.</p>
+                    <button type="button" onClick={resetKyc} className="mt-7 w-full rounded-md bg-blue-700 py-3 font-semibold text-white">Done</button>
                   </div>
-                  {kycDocument === 'driver_license' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />)}
-                </button>
-                <button type="button" onClick={() => setKycDocument('passport')}
-                  className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'passport' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
-                  <div>
-                    <p className="font-semibold">Passport</p>
-                    <p className="text-xs text-slate-500">Upload the passport information page</p>
-                  </div>
+                ) : (
+                  <>
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50"><HiOutlineIdentification className="text-3xl text-blue-700" /></div>
+                    <h2 className="mt-4 text-2xl font-bold">Verify your identity</h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-500">Select and upload one valid government-issued identification document.</p>
+                    <div className="mt-6 space-y-3">
+                      <button type="button" onClick={() => setKycDocument('driver_license')}
+                        className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'driver_license' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
+                        <div>
+                          <p className="font-semibold">Driver's License</p>
+                          <p className="text-xs text-slate-500">Upload a valid driver's license</p>
+                        </div>
+                        {kycDocument === 'driver_license' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />)}
+                      </button>
+                      <button type="button" onClick={() => setKycDocument('passport')}
+                        className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'passport' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
+                        <div>
+                          <p className="font-semibold">Passport</p>
+                          <p className="text-xs text-slate-500">Upload the passport information page</p>
+                        </div>
 
-                  {kycDocument === 'passport' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />)}
-                </button>
-                <button type="button" onClick={() => setKycDocument('national_id')}
-                  className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'national_id' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
-                  <div>
-                    <p className="font-semibold">Government-issued ID</p>
-                    <p className="text-xs text-slate-500">Upload a validnational or state ID</p>
-                  </div>
+                        {kycDocument === 'passport' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />)}
+                      </button>
+                      <button type="button" onClick={() => setKycDocument('national_id')}
+                        className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'national_id' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
+                        <div>
+                          <p className="font-semibold">Government-issued ID</p>
+                          <p className="text-xs text-slate-500">Upload a validnational or state ID</p>
+                        </div>
 
-                  {kycDocument === 'national_id' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />
-                  )}
-                </button>
-              </div>
+                        {kycDocument === 'national_id' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />
+                        )}
+                      </button>
+                    </div>
 
-              <div className="mt-5">
-                <label htmlFor="kyc-front-file" className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6">
-                  <HiOutlineDocumentArrowUp />
-                  <span className="text-sm">{kycFrontFile ? kycFrontFile.name : 'Upload your document (Front Page)'}</span>
-                </label>
-                <input id="kyc-front-file" type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setKycFrontFile(file) }}
-                />
+                    <div className="mt-5">
+                      <label htmlFor="kyc-front-file" className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6">
+                        <HiOutlineDocumentArrowUp />
+                        <span className="text-sm">{kycFrontFile ? kycFrontFile.name : 'Upload your document (Front Page)'}</span>
+                      </label>
+                      <input id="kyc-front-file" type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setKycFrontFile(file) }}
+                      />
 
-                <div className="mt-4">
-                  <label htmlFor="kyc-back-file" className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6">
-                    <HiOutlineDocumentArrowUp />
-                    <span className="text-sm">{kycBackFile ? kycBackFile.name : 'Upload your document (Back Page)'}</span>
-                  </label>
-                  <input id="kyc-back-file" type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setKycBackFile(file) }}
-                  />
-                </div>
+                      <div className="mt-4">
+                        <label htmlFor="kyc-back-file" className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6">
+                          <HiOutlineDocumentArrowUp />
+                          <span className="text-sm">{kycBackFile ? kycBackFile.name : 'Upload your document (Back Page)'}</span>
+                        </label>
+                        <input id="kyc-back-file" type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setKycBackFile(file) }}
+                        />
+                      </div>
 
-                <label className="mt-5 flex items-start gap-2 text-sm text-slate-600">
-                  <input type="checkbox" checked={kycAgreed} onChange={(event) => setKycAgreed(event.target.checked)} className="mt-1" />
-                  I confirm this identification document is valid and belongs to me.
-                </label>
-              </div>
-              <div className="mt-5 flex gap-3">
-                <button type="button" onClick={resetKyc} className="w-full rounded-md border py-3 font-semibold">Cancel</button>
-                <button type="button" onClick={submitKyc} disabled={!kycDocument || !kycFrontFile || !kycBackFile || !kycAgreed || kycSubmitting}
-                  className="w-full rounded-md bg-blue-700 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300">
-                  {kycSubmitting ? 'Submitting...' : 'Submit KYC'}
-                </button>
-              </div>
-            </>
+                      <label className="mt-5 flex items-start gap-2 text-sm text-slate-600">
+                        <input type="checkbox" checked={kycAgreed} onChange={(event) => setKycAgreed(event.target.checked)} className="mt-1" />
+                        I confirm this identification document is valid and belongs to me.
+                      </label>
+                    </div>
+                    <div className="mt-5 flex gap-3">
+                      <button type="button" onClick={resetKyc} className="w-full rounded-md border py-3 font-semibold">Cancel</button>
+                      <button type="button" onClick={submitKyc} disabled={!kycDocument || !kycFrontFile || !kycBackFile || !kycAgreed || kycSubmitting}
+                        className="w-full rounded-md bg-blue-700 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300">
+                        {kycSubmitting ? 'Submitting...' : 'Submit KYC'}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>            </>
           )}
+
         </div>
       </Modal>
+
+
 
       {/* =========================
           DELETE ACCOUNT MODAL
@@ -496,7 +543,7 @@ export default function Profile() {
 
       <div className="min-h-screen bg-[#eef1f3] pb-24">
         <div className="flex justify-end px-6 pt-6">
-          <button type="button" onClick={openLogout} className="flex text-red-800 font-extrabold items-center gap-2"><HiOutlineArrowRightOnRectangle />Log out</button>
+          <button type="button" onClick={openLogout} className="flex text-red-800 font-semibold items-center gap-2"><HiOutlineArrowRightOnRectangle />Log out</button>
         </div>
 
         <div className="mt-4 px-6">
@@ -676,116 +723,116 @@ export default function Profile() {
           )}
         </div>
 
-          {/* Add / Update Card Modal */}
-              {addCardOpen && (
-                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
-                  <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-semibold text-slate-800">
-                          {editingCard ? 'Update card' : 'Add a card'}
-                        </h2>
-        
-                        <p className="mt-1 text-sm text-slate-500">
-                          {editingCard
-                            ? 'Modify your card details below'
-                            : 'Enter your card details below'}
-                        </p>
-                      </div>
-        
-                      <button
-                        type="button"
-                        onClick={closeCardModal}
-                        disabled={loading}
-                        aria-label="Close modal"
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
-                      >
-                        <HiOutlineXMark className="text-2xl" />
-                      </button>
-                    </div>
-        
-                    <form onSubmit={handleSaveCard} className="mt-6 space-y-5">
-                      {/* Card number */}
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          Card number
-                        </label>
-        
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          autoComplete="cc-number"
-                          value={number}
-                          onChange={(event) =>
-                            setNumber(formatCardNumber(event.target.value))
-                          }
-                          placeholder="1234 5678 9012 3456"
-                          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                          required
-                        />
-                      </div>
-        
-                      <div className="grid grid-cols-2 gap-4">
-                        {/* Expiry */}
-                        <div>
-                          <label className="mb-2 block text-sm font-medium text-slate-700">
-                            Expiry date
-                          </label>
-        
-                          <input
-                            type="text"
-                            inputMode="numeric"
-                            autoComplete="cc-exp"
-                            value={expire}
-                            onChange={(event) =>
-                              setExpire(formatExpiry(event.target.value))
-                            }
-                            placeholder="MM/YY"
-                            maxLength={5}
-                            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            required
-                          />
-                        </div>
-        
-                        {/* CVV */}
-                        <div>
-                          <label className="mb-2 block text-sm font-medium text-slate-700">
-                            CVV
-                          </label>
-        
-                          <input
-                            type="password"
-                            inputMode="numeric"
-                            autoComplete="cc-csc"
-                            value={cvv}
-                            onChange={(event) =>
-                              setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))
-                            }
-                            placeholder="123"
-                            maxLength={4}
-                            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            required
-                          />
-                        </div>
-                      </div>
-        
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full rounded-full bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        {loading
-                          ? editingCard
-                            ? 'Updating card...'
-                            : 'Adding card...'
-                          : editingCard
-                          ? 'Update card'
-                          : 'Add card'}
-                      </button>
-                    </form>
+        {/* Add / Update Card Modal */}
+        {addCardOpen && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
+            <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-semibold text-slate-800">
+                    {editingCard ? 'Update card' : 'Add a card'}
+                  </h2>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    {editingCard
+                      ? 'Modify your card details below'
+                      : 'Enter your card details below'}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={closeCardModal}
+                  disabled={loading}
+                  aria-label="Close modal"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
+                >
+                  <HiOutlineXMark className="text-2xl" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveCard} className="mt-6 space-y-5">
+                {/* Card number */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Card number
+                  </label>
+
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="cc-number"
+                    value={number}
+                    onChange={(event) =>
+                      setNumber(formatCardNumber(event.target.value))
+                    }
+                    placeholder="1234 5678 9012 3456"
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Expiry */}
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Expiry date
+                    </label>
+
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="cc-exp"
+                      value={expire}
+                      onChange={(event) =>
+                        setExpire(formatExpiry(event.target.value))
+                      }
+                      placeholder="MM/YY"
+                      maxLength={5}
+                      className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      required
+                    />
+                  </div>
+
+                  {/* CVV */}
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      CVV
+                    </label>
+
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      autoComplete="cc-csc"
+                      value={cvv}
+                      onChange={(event) =>
+                        setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))
+                      }
+                      placeholder="123"
+                      maxLength={4}
+                      className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                      required
+                    />
                   </div>
                 </div>
-              )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-full bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading
+                    ? editingCard
+                      ? 'Updating card...'
+                      : 'Adding card...'
+                    : editingCard
+                      ? 'Update card'
+                      : 'Add card'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

@@ -44,13 +44,7 @@ export const Admin_urls = {
             type: 'JSON'
         });
     },
-    allDeposit() {
-        return request({
-            endpoint: "transaction/user-deposits",
-            auth: 'true',
-            method: "GET"
-        });
-    },
+   
     allTransaction() {
         return request({
             endpoint: "transaction/all-transaction",

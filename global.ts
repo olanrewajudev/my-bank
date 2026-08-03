@@ -37,6 +37,7 @@ lastlogin: string;
 createdAt: string;
 name?: string;
 acctnumber: string;
+verified: string;
 token?: string;
 }
 

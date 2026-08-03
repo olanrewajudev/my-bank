@@ -4,7 +4,6 @@ import { FaHandHoldingUsd, FaMoneyBillWave, FaUsersCog } from 'react-icons/fa'
  export const adminSidebar = [
     { title: 'Home', url: ['/admin/dashboard'], Icon: BiHome },
     { title: 'Customers & Kyc Management', url: ['/admin/all-user'], Icon: FaUsersCog },
-    { title: 'Deposit', url: ['/admin/deposit'], Icon: FaMoneyBillWave },
     { title: 'Withdraw', url: ['/admin/withdraw'], Icon: FaHandHoldingUsd },
 ]
 
