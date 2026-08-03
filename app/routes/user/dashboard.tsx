@@ -9,7 +9,7 @@ import {
 } from 'react-icons/hi2'
 import { useSelector } from 'react-redux'
 import { Card_urls } from '~/component/endpoints/card'
-import { ErrorAlert, HotAlert } from '~/component/utils'
+import { ErrorAlert, formatAmount, HotAlert } from '~/component/utils'
 import type { RootState } from '~/lib/store'
 import type { CardItem } from '../../../global'
 
@@ -187,7 +187,7 @@ export default function Dashboard() {
 
         <div className="mt-4 rounded-xl bg-white p-5 shadow-sm">
           <p className="text-slate-600">Online Savings – {user?.acctnumber?.slice(0, 4)}</p>
-          <p className="mt-2 text-3xl font-medium text-emerald-700">${user?.currbonus}</p>
+          <p className="mt-2 text-3xl font-medium text-emerald-700">${formatAmount(user?.currbal)}</p>
           <p className="mt-1 text-sm text-slate-500">Current balance</p>
         </div>
       </div>

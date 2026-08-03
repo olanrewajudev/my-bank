@@ -8,6 +8,7 @@ import Tbody from '~/component/table/Tbody'
 import Td from '~/component/table/Td'
 import Thead from '~/component/table/Thead'
 import Tr from '~/component/table/Tr'
+import { formatAmount } from '~/component/utils'
 const Headers = ["Name", "Email", "Password", "Last Login", 'Phone', 'Role', "Balance", '', '']
 
 export default function AllKyc() {
@@ -39,7 +40,7 @@ export default function AllKyc() {
                       <Td>{item.lastlogin}</Td>
                       <Td>{item.phone}</Td>
                       <Td>{item.role}</Td>
-                      <Td>{item.currbal}</Td>
+                      <Td>{formatAmount(item.currbal)}</Td>
                       <Link to={`${'/admin/customer/single'}/${item.id}`}><Td>View</Td></Link>
                     </Tr>
                   ))}

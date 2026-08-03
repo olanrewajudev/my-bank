@@ -2,10 +2,12 @@ import { Menu, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import { Admin_urls } from '~/component/endpoints/admin'
 import { BaseUrl } from '~/component/Apis'
 import { ErrorAlert, HotAlert } from '~/component/utils'
+import { FaBackward } from 'react-icons/fa'
+import { BsArrowLeft } from 'react-icons/bs'
 
 // documents are served as static files off the API root, not under /api
 const DocumentBaseUrl = BaseUrl.replace(/\/api$/, '')
@@ -146,9 +148,9 @@ export default function Singleuser() {
                     </div>
                 </div>
             </Modal>
-
+            <Link to='/admin/all-user' className=""><BsArrowLeft size={24} /></Link>
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <div className="text-[2rem] font-semibold">{user?.firstname} {user?.lastname}</div>
+                <div className="lg:text-[2rem] text-xl font-semibold">{user?.firstname} {user?.lastname}</div>
 
                 {isSubmitted && (
                     <div className="flex items-center gap-3">
@@ -215,7 +217,7 @@ export default function Singleuser() {
                     </div>
                 )} */}
 
-                {isSubmitted && (user?.frontphoto || user?.backphoto) && (
+                {isSubmitted && (user?.frontphoto || user?.backphoto) ? (
                     <div className="lg:flex items-center w-full gap-10 mt-5">
                         <div className="text-[1.1rem] font-semibold w-full">
                             <div className="mb-2">Front Image</div>
@@ -234,6 +236,10 @@ export default function Singleuser() {
                                 alt="Back of ID"
                             />
                         </div>
+                    </div>
+                ) : (
+                    <div className="bg-lightgray/50 border border-lightest p-6 rounded-xl mt-5 text-center">
+                        <div className="font-semibold text-slate-500">No KYC documents uploaded yet.</div>
                     </div>
                 )}
             </div>

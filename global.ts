@@ -39,6 +39,8 @@ name?: string;
 acctnumber: string;
 verified: string;
 token?: string;
+currbal?: string;
+prevbal?: string;
 }
 
 

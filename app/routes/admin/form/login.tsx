@@ -41,8 +41,6 @@ export default function AdminLogin() {
             ErrorAlert((error as Error).message)
         }
     }
-
-
     return (
         <div className="flex items-center justify-center h-screen">
             <div className='bg-blue w-[80%] mx-auto py-10 px-5 rounded-xl'>

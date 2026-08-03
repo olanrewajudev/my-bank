@@ -49,7 +49,7 @@ export const ErrorAlert = (message: string) => {
         },
     });
 };
-export const formatAmount = (amount?: number) => {
+export const formatAmount = (amount?: number| string) => {
     if (typeof amount !== "number") return "0.00";
 
     return amount.toLocaleString("en-US", {
