@@ -6,6 +6,7 @@ import { isExpired } from 'react-jwt'
 import { useDispatch } from 'react-redux'
 import { Outlet, useNavigate } from 'react-router'
 import Header from '~/component/admin/header'
+import AdminSidebar from '~/component/admin/sidebar'
 import { CookieName } from '~/component/Apis'
 import { User_urls } from '~/component/endpoints/user'
 import UserHeader from '~/component/user/user-header'
@@ -51,9 +52,10 @@ export default function AdminLayout() {
     )
 
     if (login) return (
-        <>
-        <Header />
-          <Outlet />
-        </>
-    )
+    <div className="h-screen">
+      <Header />
+      <div className="hidden lg:block"><AdminSidebar /></div>
+      <div className="lg:ml-[20rem] overflow-y-auto"><Outlet /></div>
+    </div>
+  )
 }

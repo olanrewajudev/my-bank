@@ -22,6 +22,7 @@ export default [
       route("transfer", "routes/user/transfer.tsx"),
       route("help", "routes/user/help.tsx"),
       route("profile", "routes/user/profile.tsx"),
+      route("transaction/:id", "routes/user/transaction-details.tsx"),
 
     ])
   ]),

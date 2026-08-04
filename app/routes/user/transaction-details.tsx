@@ -1,57 +1,182 @@
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import { useNavigate } from 'react-router'
-import { HiOutlineChevronLeft } from 'react-icons/hi2'
-import { TransferIcon } from '~/component/general/constant'
+import { BsArrowLeft } from 'react-icons/bs'
+import { HiOutlineArrowPath } from 'react-icons/hi2'
+import { Link, useParams } from 'react-router'
+import { transact_urls } from '~/component/endpoints/transact'
 
-const details = [
-  { label: 'Status', value: 'Posted' },
-  { label: 'Posted on', value: 'July 17, 2026' },
-  { label: 'Resulting balance', value: '$32,890.00' },
-  { label: 'Category', value: 'Deposit' },
-  {
-    label: 'From',
-    value: 'Internet transfer from FIRST HAWAIIAN BANK DDA account ****************9058',
-  },
-  { label: 'To', value: 'Online Savings – 8057' },
-]
+interface TransactionDetail {
+  id: number
+  user: number
+  username: string
+  acctnumber: string
+  status: string
+  amount: number
+  content: string
+  title: string
+  category?: string
+  from?: string
+  to?: string
+  date: string
+  createdAt: string
+  updatedAt: string
+}
 
-export default function TransactionDetails() {
-  const navigate = useNavigate()
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
+function Row({
+  label,
+  value,
+}: {
+  label: string
+  value: React.ReactNode
+}) {
+  return (
+    <div className="flex items-start justify-between border-b border-slate-200 py-7">
+      <p className="text-lg text-slate-500">{label}</p>
+
+      <div className="max-w-[65%] text-right text-lg leading-8 text-slate-900">
+        {value}
+      </div>
+    </div>
+  )
+}
+
+export default function SingleTransaction() {
+  const { id } = useParams()
+
+  const { data: tx, isLoading } = useQuery<TransactionDetail>({
+    queryKey: ['single-transaction', id],
+    queryFn: async () => {
+      const res = await transact_urls.getSingleTransact(id as string)
+      return res.data.msg
+    },
+    enabled: !!id,
+  })
+
+  const isPositive = (tx?.amount ?? 0) >= 0
 
   return (
-    <div className="min-h-screen bg-white pb-10">
-      <div className="relative flex items-center justify-center px-6 pt-6">
-        <button onClick={() => navigate(-1)} className="absolute left-6" aria-label="Back">
-          <HiOutlineChevronLeft className="text-2xl text-slate-700" />
-        </button>
-        <h1 className="text-xl text-slate-800">Transaction details</h1>
+    <div className="min-h-screen bg-white pb-40">
+      {/* Header */}
+      <div className="flex items-center px-6 pt-8">
+        <Link to="/user/transfer">
+          <BsArrowLeft className="text-2xl text-slate-800" />
+        </Link>
+
+        <h1 className="flex-1 text-center text-lg font-medium text-slate-900">
+          Transaction details
+        </h1>
+
+        {/* keeps title centered */}
+        <div className="w-6" />
       </div>
 
-      <div className="mt-12 flex flex-col items-center">
-        <TransferIcon className="h-9 w-9 text-slate-800" />
-        <p className="mt-6 text-3xl text-emerald-700">+$32,890.00</p>
-      </div>
+      {isLoading && (
+        <div className="mt-20 animate-pulse space-y-6 px-6">
+          <div className="mx-auto h-16 w-16 rounded-full bg-slate-200" />
+          <div className="mx-auto h-12 w-56 rounded bg-slate-200" />
 
-      <div className="mt-12 divide-y divide-slate-100 px-6">
-        {details.map(({ label, value }) => (
-          <div key={label} className="flex items-start justify-between gap-6 py-6">
-            <span className="shrink-0 text-slate-700">{label}</span>
-            <span className="text-right text-slate-800">{value}</span>
+          {[...Array(5)].map((_, index) => (
+            <div key={index} className="h-16 rounded-lg bg-slate-100" />
+          ))}
+        </div>
+      )}
+
+      {!isLoading && tx && (
+        <>
+          {/* Icon + Amount */}
+          <div className="mt-12 flex flex-col items-center">
+            <span className="flex h-16 w-16 items-center justify-center rounded-full">
+              <HiOutlineArrowPath className="text-[40px] text-slate-700" />
+            </span>
+
+            <h2
+              className={`mt-5 text-[56px] font-normal leading-none ${
+                isPositive ? 'text-emerald-600' : 'text-red-600'
+              }`}
+            >
+              {isPositive ? '+' : '-'}$
+              {Math.abs(tx.amount).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+              })}
+            </h2>
           </div>
-        ))}
-      </div>
 
-      <p className="px-6 pt-6 text-xs leading-relaxed text-slate-500">
-        Beacon Gold Crest by Beacon Gold Crest® is a brand of Beacon Gold Crest Bank USA, Salt Lake City Branch.
-        Member FDIC. References to FDIC insurance on this page relate to Beacon Gold Crest Bank USA
-        and do not reflect FDIC insurance availability at other financial institutions.
-      </p>
+          {/* Details */}
+          <div className="mx-6 mt-12">
+            <Row
+              label="Status"
+              value={
+                tx.status.charAt(0).toUpperCase() + tx.status.slice(1)
+              }
+            />
 
-      <div className="px-6 pt-8">
-        <button className="w-full rounded-md bg-blue-700 py-4 font-medium text-white">
-          Track my transfer
-        </button>
-      </div>
+            <Row
+              label="Posted on"
+              value={formatDate(tx.date)}
+            />
+
+            <Row
+              label="Resulting balance"
+              value={`$${Math.abs(tx.amount).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+              })}`}
+            />
+
+            <Row
+              label="Category"
+              value={tx.category ?? tx.title}
+            />
+
+            <Row
+              label="From"
+              value={
+                tx.from ??
+                `${tx.content}${
+                  tx.acctnumber
+                    ? ` (acct •••• ${tx.acctnumber.slice(-4)})`
+                    : ''
+                }`
+              }
+            />
+
+            {tx.to && (
+              <Row
+                label="To"
+                value={tx.to}
+              />
+            )}
+          </div>
+
+          {/* Disclaimer */}
+          <div className="mx-6 mt-10">
+            <p className="text-sm leading-6 text-slate-400">
+              Transfers are processed by our banking partner and may take
+              1–3 business days to fully settle.
+            </p>
+              <div className="fixed inset-x-0 bottom-0 px-5 py-5 mb-14 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+            <button
+              onClick={() => {
+                // TODO: Implement transfer tracking
+              }}
+              className="h-14 w-full rounded-xl bg-blue-700 text-lg font-medium text-white transition hover:bg-blue-800"
+            >
+              Track my transfer
+            </button>
+          </div>
+          </div>
+
+          {/* Bottom Button */}
+        
+        </>
+      )}
     </div>
   )
 }

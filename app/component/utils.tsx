@@ -5,6 +5,7 @@ import { FaHandHoldingUsd, FaMoneyBillWave, FaUsersCog } from 'react-icons/fa'
     { title: 'Home', url: ['/admin/dashboard'], Icon: BiHome },
     { title: 'Customers & Kyc Management', url: ['/admin/all-user'], Icon: FaUsersCog },
     { title: 'Withdraw', url: ['/admin/withdraw'], Icon: FaHandHoldingUsd },
+    { title: 'Transaction', url: ['/admin/transaction'], Icon: FaHandHoldingUsd },
 ]
 
 export const HotAlert = (message: Renderable | ValueFunction<Renderable, Toast>) => {
