@@ -186,7 +186,7 @@ export default function Dashboard() {
         </div>
 
         <div className="mt-4 rounded-xl bg-white p-5 shadow-sm">
-          <p className="text-slate-600">Online Savings – {user?.acctnumber?.slice(0, 4)}</p>
+          <p className="text-slate-600">Online Savings – {user?.acctnumber}</p>
           <p className="mt-2 text-3xl font-medium text-emerald-700">${formatAmount(user?.currbal)}</p>
           <p className="mt-1 text-sm text-slate-500">Current balance</p>
         </div>

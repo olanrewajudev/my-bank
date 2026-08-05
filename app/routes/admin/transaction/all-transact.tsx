@@ -11,18 +11,19 @@ import { formatAmount } from '~/component/utils'
 
 const Headers = [
     'Name',
+    'Sender Name',
     'Account Number',
     'Title',
     'Amount',
     'Status',
     'Date',
-    'Action',   
+    'Action',
 ]
 
 export default function AllTransaction() {
     const { data: transactions = [], isLoading } = useQuery({
         queryKey: ['all-transactions'],
-        queryFn: async () => {                          
+        queryFn: async () => {
             const res = await transact_urls.getAllTransact()
             return res.data.msg || []
         },
@@ -35,95 +36,30 @@ export default function AllTransaction() {
             <div className="m-5 border rounded-2xl border-lightest">
                 <div className="w-full overflow-x-auto no-scrolls">
                     <Table>
-                        <Thead>
-                            <Tr header last={false}>
-                                {Headers.map((header) => (
-                                    <Td
-                                        key={header}
-                                        className="font-semibold"
-                                    >
-                                        {header}
-                                    </Td>
-                                ))}
-                            </Tr>
-                        </Thead>
+                        <Thead><Tr header last={false}>{Headers.map((header) => (<Td key={header} className="font-semibold" >     {header} </Td>))}</Tr></Thead>
 
                         <Tbody>
                             {isLoading ? (
-                                <Tr last>
-                                    <Td>
-                                        <div className="py-4 text-lg">
-                                            Loading transactions...
-                                        </div>
-                                    </Td>
-                                </Tr>
+                                <Tr last><Td> <div className="py-4 text-lg">     Loading transactions... </div></Td></Tr>
                             ) : transactions.length > 0 ? (
                                 transactions.map(
                                     (item: any, index: number) => (
-                                        <Tr
-                                            className="my-4"
-                                            key={item.id}
-                                            last={
-                                                index ===
-                                                transactions.length - 1
-                                            }
-                                        >
+                                        <Tr className="my-4" key={item.id} last={index === transactions.length - 1}>
                                             <Td>{item.username || 'N/A'}</Td>
-
+                                            <Td>{item.sendername || 'N/A'}</Td>
+                                            <Td>{item.acctnumber || 'N/A'}</Td>
+                                            <Td>{item.title || 'N/A'}</Td>
+                                            <Td>${formatAmount(item.amount)}</Td>
                                             <Td>
-                                                {item.acctnumber || 'N/A'}
+                                                <span className={item.status === 'successful' ? 'font-semibold text-green-600' : item.status === 'pending' ? 'font-semibold text-yellow-600' : 'font-semibold text-red-600'}>{item.status || 'N/A'}</span>
                                             </Td>
-
-                                            <Td>
-                                                {item.title || 'N/A'}
-                                            </Td>
-
-                                            <Td>
-                                                ${formatAmount(item.amount)}
-                                            </Td>
-
-                                            <Td>
-                                                <span
-                                                    className={
-                                                        item.status ===
-                                                            'successful'
-                                                            ? 'font-semibold text-green-600'
-                                                            : item.status ===
-                                                                'pending'
-                                                                ? 'font-semibold text-yellow-600'
-                                                                : 'font-semibold text-red-600'
-                                                    }
-                                                >
-                                                    {item.status || 'N/A'}
-                                                </span>
-                                            </Td>
-
-                                            <Td>
-                                                {item.date ||
-                                                    new Date(
-                                                        item.createdAt
-                                                    ).toLocaleDateString()}
-                                            </Td>
-
-                                            <Td>
-                                                <Link
-                                                    className="font-semibold text-primary"
-                                                    to={`/admin/all-transaction/${item.id}`}
-                                                >
-                                                    View
-                                                </Link>
-                                            </Td>
+                                            <Td>{item.date || new Date(item.createdAt).toLocaleDateString()}</Td>
+                                            <Td> <Link className="font-semibold text-primary" to={`/admin/all-transaction/${item.id}`} >     View </Link></Td>
                                         </Tr>
                                     )
                                 )
                             ) : (
-                                <Tr last>
-                                    <Td>
-                                        <div className="py-4 text-lg">
-                                            No transactions found
-                                        </div>
-                                    </Td>
-                                </Tr>
+                                <Tr last><Td> <div className="py-4 text-lg">     No transactions found </div></Td></Tr>
                             )}
                         </Tbody>
                     </Table>

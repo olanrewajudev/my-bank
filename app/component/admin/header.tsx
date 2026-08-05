@@ -94,7 +94,7 @@ export default function Header() {
             </Modal>
             <Drawer className='' opened={sidebarOpened} onClose={closeSidebar} position='left' withCloseButton={false} >
                 <div className="flex items-center justify-between  rounded-full px-4 py-1">
-                    <Link to='/user/dashboard' className=""> <img src='/logo-dark.png' alt="Cryptocoin" className="w-[13rem]" /> </Link>
+                    <Link to='/admin/dashboard' className=""> <img src='/logo-dark.png' alt="Cryptocoin" className="w-[13rem]" /> </Link>
                     <div onClick={closeSidebar} className="cursor-pointer"><LiaTimesSolid /></div>
                 </div>
                 <div>
@@ -112,11 +112,11 @@ export default function Header() {
                     </div>
                 </div>
             </Drawer >
-            <div className="sticky top-0 left-0 border-b px-10 border-[#AAAAAA] z-50 bg-white">
+            <div className="sticky top-0 left-0 border-b px-10 border-gray-200 z-50 bg-white">
                 <div className='flex flex-row items-center gap-5 justify-between  py-3'>
                     <div className="flex items-center gap-4">
                         <div className="lg:hidden block" onClick={openSidebar}><SlMenu /></div>
-                        <Link to='/user/dashboard' className=""> <img src="/logo-dark.png" loading="lazy" className="h-10 w-auto object-contain" /> </Link>
+                        <Link to='/admin/dashboard' className=""> <img src="/logo-dark.png" loading="lazy" className="h-10 w-auto object-contain" /> </Link>
                     </div>
                     <div className="flex text-xl gap-3">
                         <div className=""><IoIosNotifications /></div>

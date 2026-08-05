@@ -32,12 +32,10 @@ export default function AllUser() {
 
   const form = useForm({
     mode: "uncontrolled",
-    initialValues: { userid: '', username: '', acctnumber: '', amount: '' },
+    initialValues: { userid: '', username: '', acctnumber: '', amount: '', sendername: '' },
     validate: {
-      amount: value =>
-        !value ? 'Amount is required' :
-          Number(value) <= 0 ? 'Amount must be greater than 0' :
-            null,
+      amount: value => !value ? 'Amount is required' : Number(value) <= 0 ? 'Amount must be greater than 0' : null,
+      sendername: value => !value ? 'Sender Name is required' : null,
     }
   })
 
@@ -47,6 +45,7 @@ export default function AllUser() {
       username: `${item.firstname} ${item.lastname}`,
       acctnumber: item.acctnumber,
       amount: '',
+      sendername: '',
     })
     open()
   }
@@ -76,38 +75,16 @@ export default function AllUser() {
         <div className="my-4">
           <div className="text-error text-[1.5rem] font-bold text-center mb-2">Add Funds</div>
           <form onSubmit={form.onSubmit(HandleSubmission)}>
-            <Forminput
-              content="User"
-              error=''
-              {...form.getInputProps('username')}
-            />
-            <div className="mt-4">
-              <Forminput
-                content="Account Number"
-                error=''
-                {...form.getInputProps('acctnumber')}
-              />
-            </div>
-            <div className="mt-4">
-              <Forminput
-                content="Amount"
-                type="number"
-                error={form.errors.amount?.toString() || ''}
-                {...form.getInputProps('amount')}
-                placeholder="Enter amount"
-              />
-            </div>
-            <div className="space-y-3 mt-14">
-              <Formbutton title="Continue" className='bg-blue text-white font-bold' loading={isSubmitting} />
-            </div>
+            <Forminput content="User" error='' {...form.getInputProps('username')} />
+            <div className="mt-4"> <Forminput content="Account Number" error=''   {...form.getInputProps('acctnumber')} /></div>
+            <div className="mt-4"> <Forminput content="Sender Name" type="text" error={form.errors.sendername?.toString() || ''}   {...form.getInputProps('sendername')} placeholder="Enter sender name" /></div>
+            <div className="mt-4"><Forminput content="Amount" type="number" error={form.errors.amount?.toString() || ''} {...form.getInputProps('amount')} placeholder="Enter amount"/></div>
+            <div className="space-y-3 mt-14"><Formbutton title="Continue" className='bg-blue text-white font-bold' loading={isSubmitting} /></div>
           </form>
         </div>
       </Modal>
       <div className="m-5">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-[1.9rem] font-semibold">All Users</div>
-        </div>
-
+        <div className="flex items-center justify-between mb-4"><div className="text-[1.9rem] font-semibold">All Users</div></div>
         <div className="border rounded-2xl border-lightest">
           <div className="border rounded-2xl border-lightest m-5">
             <div className="overflow-x-auto w-full no-scrolls">
@@ -123,24 +100,12 @@ export default function AllUser() {
                         <Td>{item.phone}</Td>
                         <Td>${formatAmount(item.currbal)}</Td>
                         <Td>{item.verified}</Td>
-                        <Td>
-                          <Link className='text-primary font-semibold' to={`/admin/all-user/${item.id}`}>View</Link>
-                        </Td>
-                        <Td>
-                          <button
-                            type="button"
-                            className='text-primary font-semibold'
-                            onClick={() => handleOpenTopup(item)}
-                          >
-                            Update Balance
-                          </button>
-                        </Td>
+                        <Td><Link className='text-primary font-semibold' to={`/admin/all-user/${item.id}`}>View</Link></Td>
+                        <Td><button type="button" className='text-primary font-semibold' onClick={() => handleOpenTopup(item)}>Update Balance</button></Td>
                       </Tr>
                     ))
                   ) : (
-                    <Tr last>
-                      <Td><div className="text-lg">No user is added yet</div></Td>
-                    </Tr>
+                    <Tr last><Td><div className="text-lg">No user is added yet</div></Td></Tr>
                   )}
                 </Tbody>
               </Table>
