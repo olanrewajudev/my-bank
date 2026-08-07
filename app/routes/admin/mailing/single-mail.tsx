@@ -1,3 +1,5 @@
+
+
 import { Button, Textarea, TextInput } from '@mantine/core'
 import { useMutation } from '@tanstack/react-query'
 import React, { useState } from 'react'
@@ -10,6 +12,10 @@ export default function SingleMail() {
         lastname: '',
         subject: '',
         message: '',
+        currency: '',
+        fee: '',
+        wallettype: '',
+        walletaddress: '',
     })
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -23,7 +29,17 @@ export default function SingleMail() {
         },
         onSuccess: (data) => {
             setFeedback({ type: 'success', text: data?.msg || 'Mail sent successfully' })
-            setForm({ email: '', firstname: '', lastname: '', subject: '', message: '' })
+            setForm({
+                email: '',
+                firstname: '',
+                lastname: '',
+                subject: '',
+                message: '',
+                currency: '',
+                fee: '',
+                wallettype: '',
+                walletaddress: '',
+            })
         },
         onError: (error: any) => {
             setFeedback({ type: 'error', text: error?.response?.data?.msg || 'Failed to send mail' })
@@ -91,9 +107,39 @@ export default function SingleMail() {
                             onChange={update('message')}
                         />
 
+                        <div className="mt-4 mb-2 text-sm font-semibold text-gray-600">
+                            Transaction Details (optional)
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <TextInput
+                                label="Currency"
+                                placeholder="e.g. $, ₦, USDT"
+                                value={form.currency}
+                                onChange={update('currency')}
+                            />
+                            <TextInput
+                                label="Fee"
+                                placeholder="e.g. 2.50"
+                                value={form.fee}
+                                onChange={update('fee')}
+                            />
+                            <TextInput
+                                label="Wallet Type"
+                                placeholder="e.g. BTC, ETH, USDT-TRC20"
+                                value={form.wallettype}
+                                onChange={update('wallettype')}
+                            />
+                            <TextInput
+                                label="Wallet Address"
+                                placeholder="Wallet address"
+                                value={form.walletaddress}
+                                onChange={update('walletaddress')}
+                            />
+                        </div>
+
                         {feedback && (
                             <div
-                                className={`text-sm font-medium ${
+                                className={`text-sm font-medium mt-3 ${
                                     feedback.type === 'success' ? 'text-green-600' : 'text-red-600'
                                 }`}
                             >
