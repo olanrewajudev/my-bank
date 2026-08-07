@@ -152,7 +152,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#eef1f3] pb-24">
-      {/* Logo and welcome banner */}
       <div className="relative overflow-hidden px-6 pb-10 pt-6">
         <h1 className="text-3xl font-bold text-slate-800">B<span className="text-yellow-500">:</span></h1>
 
@@ -166,7 +165,6 @@ export default function Dashboard() {
         </svg>
       </div>
 
-      {/* FDIC banner */}
       <div className="bg-[#dde3e7] px-6 py-5">
         <p className="text-sm italic text-slate-700">
           <span className="mr-2 font-bold not-italic text-blue-900">FDIC</span>
@@ -175,7 +173,6 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* Accounts & Cards Section */}
       <div className="px-6 pt-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-medium text-slate-800">Accounts</h2>
@@ -192,20 +189,14 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Discover more */}
       <div className="mt-8 px-6">
         <h2 className="text-xl font-medium text-slate-800">Discover more</h2>
 
         <div className="no-scrolls mt-4 flex gap-3 overflow-x-auto pb-2">
           {discoverCards.map((card) => (
-            <div
-              key={card.title}
-              className={`min-w-[160px] shrink-0 rounded-md p-5 ${card.bg} ${card.text}`}
-            >
+            <div key={card.title} className={`min-w-[160px] shrink-0 rounded-md p-5 ${card.bg} ${card.text}`}>
               <p className="text-sm">{card.tag}</p>
-              <p className="mt-4 text-2xl font-medium leading-snug">
-                {card.title}
-              </p>
+              <p className="mt-4 text-2xl font-medium leading-snug">{card.title}</p>
               <HiOutlineArrowRight className="mt-8 text-xl" />
             </div>
           ))}
@@ -235,7 +226,6 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* Add / Update Card Modal */}
       {addCardOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
           <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
@@ -261,7 +251,6 @@ export default function Dashboard() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {/* Expiry */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">Expiry date</label>
                   <input type="text" inputMode="numeric" autoComplete="cc-exp" value={expire} onChange={(event) => setExpire(formatExpiry(event.target.value))}
@@ -272,7 +261,6 @@ export default function Dashboard() {
                   />
                 </div>
 
-                {/* CVV */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">CVV</label>
                   <input type="password" inputMode="numeric" autoComplete="cc-csc" value={cvv} onChange={(event) => setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))}

@@ -18,33 +18,13 @@ export default function Signup() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [active, setActive] = useState(0)
-    
+
     const [step, setStep] = useState(0) // index into SIGNUP_STEPS
     const [accountType, setAccountType] = useState("Online Savings Account")
-    const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
-        firstName: "",
-        mi: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirmPassword: "",
-        agreed: false,
-    })
+    const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({ firstName: "", mi: "", lastName: "", email: "", phone: "", password: "", confirmPassword: "", agreed: false, })
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [verifyIdentity, setVerifyIdentity] = useState<VerifyIdentity>({
-        primaryAddress: "",
-        aptSuite: "",
-        city: "",
-        state: "",
-        zip: "",
-        countryOfCitizenship: "United States",
-        alternatePhone: "",
-        dob: "",
-        confirmSsn: "",
-        employmentStatus: "",
-    })
+    const [verifyIdentity, setVerifyIdentity] = useState<VerifyIdentity>({ primaryAddress: "", aptSuite: "", city: "", state: "", zip: "", countryOfCitizenship: "United States", alternatePhone: "", dob: "", confirmSsn: "", employmentStatus: "", })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
@@ -52,12 +32,10 @@ export default function Signup() {
         if (active !== value) return setActive(value)
         return setActive(0)
     }
-useEffect(() => {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-    })
-}, [step])
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth",})
+    }, [step])
+    
     function updatePersonalInfo<K extends keyof PersonalInfo>(key: K, value: PersonalInfo[K]) {
         setPersonalInfo((prev) => ({ ...prev, [key]: value }))
     }

@@ -76,7 +76,6 @@ export default function Profile() {
 
   const form = useForm({
     mode: 'uncontrolled',
-
     initialValues: {
       current_password: '',
       password: '',
