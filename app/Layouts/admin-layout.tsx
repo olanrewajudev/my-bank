@@ -1,5 +1,3 @@
-
-
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { isExpired } from 'react-jwt'
@@ -9,7 +7,6 @@ import Header from '~/component/admin/header'
 import AdminSidebar from '~/component/admin/sidebar'
 import { CookieName } from '~/component/Apis'
 import { User_urls } from '~/component/endpoints/user'
-import UserHeader from '~/component/user/user-header'
 import { dispatchUser } from '~/lib/reducer'
 
 export default function AdminLayout() {
@@ -26,17 +23,24 @@ export default function AdminLayout() {
                     Cookies.remove(CookieName)
                     console.log('Session Expired', 'Your session has expired, please login again', 'error')
                     return navigate('/admin/login')
-
                 }
                 const response = await User_urls.profile()
                 if (!response) {
                     console.log('Unauthorized', 'Kindly verify your email address to proceed', 'error')
                     setLogin(false)
                     return navigate('/admin/login')
-                }else {
-                    setLogin(true)
-                    dispatch(dispatchUser(response.data.msg))
                 }
+
+                const user = response.data.msg
+                if (user.tag !== 'admin') {
+                    // logged in, but not an admin — send them to their own area
+                    console.log('Forbidden', 'You do not have access to the admin area', 'error')
+                    setLogin(false)
+                    return navigate('/login')
+                }
+
+                setLogin(true)
+                dispatch(dispatchUser(user))
             } catch (error) {
                 console.log('Error Occured', 'error')
                 return navigate('/admin/login')
@@ -51,11 +55,11 @@ export default function AdminLayout() {
         </div>
     )
 
-    if (login) return (
-    <div className="h-screen">
-      <Header />
-      <div className="hidden lg:block"><AdminSidebar /></div>
-      <div className="lg:ml-[20rem] overflow-y-auto"><Outlet /></div>
-    </div>
-  )
+    return (
+        <div className="h-screen">
+            <Header />
+            <div className="hidden lg:block"><AdminSidebar /></div>
+            <div className="lg:ml-[20rem] overflow-y-auto"><Outlet /></div>
+        </div>
+    )
 }

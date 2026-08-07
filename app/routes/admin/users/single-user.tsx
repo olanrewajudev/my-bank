@@ -238,7 +238,7 @@ export default function Singleuser() {
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-lightgray/50 border border-lightest p-6 rounded-xl mt-5 text-center">
+                    <div className="bg-lightgray/50 border border-gray-200 p-6 rounded-xl mt-5 text-center">
                         <div className="font-semibold text-slate-500">No KYC documents uploaded yet.</div>
                     </div>
                 )}

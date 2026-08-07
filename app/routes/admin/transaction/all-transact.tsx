@@ -32,8 +32,8 @@ export default function AllTransaction() {
     return (<div> <div className="m-5"> <div className="flex items-center justify-between mb-4"> <div className="text-[1.9rem] font-semibold">
         All Transactions </div> </div>
 
-        <div className="border rounded-2xl border-lightest">
-            <div className="m-5 border rounded-2xl border-lightest">
+        <div className="border rounded-2xl border-gray-200">
+            <div className="m-5 border rounded-2xl border-gray-200">
                 <div className="w-full overflow-x-auto no-scrolls">
                     <Table>
                         <Thead><Tr header last={false}>{Headers.map((header) => (<Td key={header} className="font-semibold" >     {header} </Td>))}</Tr></Thead>

@@ -1,39 +1,3 @@
-// import { request } from "../Apis";
-
-// export const transact_urls = {
-//     getAllTransact() {
-//         return request({
-//             endpoint: "transactions/all-admin",
-//             method: "GET",
-//             auth:'true'
-//         });
-//     },
-//     getAllUserTransact() {
-//         return request({
-//             endpoint: "transactions/all",
-//             method: "GET",
-//             auth:'true'
-//         });
-//     },
-//     getSingleTransact(id: string) {
-//         return request({
-//             endpoint: `transactions/transaction/${id}`,
-//             method: 'GET',
-//             auth: 'true',
-//         })
-//     },
-
-//     topup(data: any) {
-//         return request({
-//             endpoint: "transactions/create-balance",
-//             auth: 'true',
-//             method: "POST",
-//             data,
-//             type: 'JSON'
-//         });
-//     },
-   
-// }
 
 
 import { request } from "../Apis";
@@ -150,6 +114,24 @@ export const transact_urls = {
   declineWithdrawal(data: any) {
     return request({
       endpoint: "transactions/decline-withdrawal",
+      auth: 'true',
+      method: "POST",
+      data,
+      type: 'JSON'
+    });
+  },
+  sendSingleMail(data: any) {
+    return request({
+      endpoint: "transactions/single-mail",
+      auth: 'true',
+      method: "POST",
+      data,
+      type: 'JSON'
+    });
+  },
+  sendBroadcastMail(data: any) {
+    return request({
+      endpoint: "transactions/broadcast-mail",
       auth: 'true',
       method: "POST",
       data,

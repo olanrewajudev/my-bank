@@ -1,59 +1,3 @@
-// import React, { useEffect, useState } from 'react'
-// import { useDispatch } from 'react-redux'
-// import { Outlet, useLocation } from 'react-router'
-// import Footer from '~/component/general/footer'
-// import Header from '~/component/general/header'
-// import Cookies from 'js-cookie'
-// import { CookieName } from '~/component/Apis'
-// import { isExpired } from 'react-jwt'
-// import { User_urls } from '~/component/endpoints/user'
-// import { dispatchUser } from '~/lib/reducer'
-// export default function UserLayout() {
-//   const dispatch = useDispatch()
-//   const { pathname } = useLocation()
-
-//   const [show, setShow] = useState(false)
-
-//   useEffect(() => {
-//     (async () => {
-//       try {
-//         const token = Cookies.get(CookieName)
-//         const exp = isExpired(token || '')
-
-//         if(!exp) {
-//           const response = await User_urls.profile()
-//           dispatch(dispatchUser(response.data))
-//         }
-//       } catch (error) {
-
-//       }
-//     })
-//   }, [])
-
-//   useEffect(() => {
-//     (() => {
-//       setShow(false)
-//       setTimeout(() => {
-//         setShow(true)
-//       }, 2000);
-//     })()
-//   }, [pathname])
-
-//   if (!show) return (
-//     <div>
-      
-//     </div>
-//   )
-
-//   if (show) return (
-//     <>
-//       <Header />
-//       <Outlet />
-//       <Footer />
-//     </>
-//   )
-// }
-
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { isExpired } from 'react-jwt'
@@ -78,17 +22,24 @@ export default function AuthLayout() {
                     Cookies.remove(CookieName)
                     console.log('Session Expired', 'Your session has expired, please login again', 'error')
                     return navigate('/login')
-
                 }
                 const response = await User_urls.profile()
                 if (!response) {
                     console.log('Unauthorized', 'Kindly verify your email address to proceed', 'error')
                     setLogin(false)
                     return navigate('/login')
-                }else {
-                    setLogin(true)
-                    dispatch(dispatchUser(response.data.msg))
                 }
+
+                const user = response.data.msg
+                if (user.tag !== 'user') {
+                    // logged in, but this is an admin account — send them to their own area
+                    console.log('Forbidden', 'You do not have access to this area', 'error')
+                    setLogin(false)
+                    return navigate('/admin/login')
+                }
+
+                setLogin(true)
+                dispatch(dispatchUser(user))
             } catch (error) {
                 console.log('Error Occured', 'error')
                 return navigate('/login')
@@ -103,10 +54,10 @@ export default function AuthLayout() {
         </div>
     )
 
-    if (login) return (
+    return (
         <>
-          <Outlet />
-          <UserHeader />
+            <Outlet />
+            <UserHeader />
         </>
     )
 }

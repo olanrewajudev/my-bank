@@ -91,8 +91,8 @@ export default function Withdraw() {
                 <div>
                     <div className="m-5">
                         <div className="flex items-center justify-between mb-4"><div className="text-[1.9rem] font-semibold">All Withdraw</div></div>
-                        <div className="border rounded-2xl border-lightest">
-                            <div className="border rounded-2xl border-lightest m-5">
+                        <div className="border rounded-2xl border-gray-200">
+                            <div className="border rounded-2xl border-gray-200 m-5">
                                 <div className="overflow-x-auto w-full no-scrolls">
                                     <Table>
                                         <Thead><Tr header last={false}>{Headers.map((h, i) => (<Td key={i} className="font-semibold">{h}</Td>))}</Tr></Thead>

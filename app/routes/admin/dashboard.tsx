@@ -76,7 +76,7 @@ export default function AdminDashboard() {
             <div className="text-[2rem] font-semibold mb-5">Welcome back, {user?.firstname}</div>
             <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">
                 {admindashboard.map((item: any, index: number) => (
-                    <div key={index} className="bg-white border border-lightest rounded-xl shadow-xl p-5">
+                    <div key={index} className="bg-white border border-gray-200 rounded-xl shadow-xl p-5">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-12 h-12 rounded-full flex items-center justify-center text-white" style={{ background: item.color }}>{getIcon(item.title)}</div>
                             <div className="text-right">
@@ -91,8 +91,8 @@ export default function AdminDashboard() {
 
             <div className="mt-10">
                 <div className="text-xl font-bold mb-4">All Transaction</div>
-                <div className="border rounded-2xl border-lightest">
-                    <div className="m-5 border rounded-2xl border-lightest">
+                <div className="border rounded-2xl border-gray-200">
+                    <div className="m-5 border rounded-2xl border-gray-200">
                         <div className="w-full overflow-x-auto no-scrolls">
                             <Table>
                                 <Thead><Tr header last={false}> {Headers.map((header) => (<Td key={header} className="font-semibold"     >         {header}     </Td>))}</Tr></Thead>
