@@ -1,8 +1,7 @@
-import type { FormbuttonProps } from "global";
+import type { FormbuttonProps } from "../../../global";
 
 
-
-export default function Formbutton({ title, Icon, position="left", loading, type = "submit", disabled = false, onClick, className = "bg-yellow-dark text-white hover:bg-hovers" }: FormbuttonProps) {
+export default function Formbutton({ title, Icon, position = "left", loading, type = "submit", disabled = false, onClick, className = "bg-blue text-white hover:bg-hovers" }: FormbuttonProps) {
   return (
     <div className={`relative`}>
       {(loading || disabled) && <div className={`absolute z-10 top-0 left-0 size-full rounded-full ${disabled ? 'cursor-not-allowed bg-white/50' : loading ? 'cursor-not-allowed bg-white/50' : 'cursor-pointer'}`}></div>}

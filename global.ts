@@ -138,3 +138,20 @@ export interface CardItem {
   cvv: string
   expire: string
 }
+
+
+
+export interface Transaction {
+  id: number
+  user: number
+  username: string
+  sendername: string
+  acctnumber: string
+  status: string
+  amount: number
+  content: string
+  title: string
+  date: string
+  createdAt: string
+  updatedAt: string
+}

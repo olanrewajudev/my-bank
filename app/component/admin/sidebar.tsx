@@ -44,7 +44,7 @@ export default function AdminSidebar() {
                         {adminSidebar.map((item, index) => {
                             const isActive = Array.isArray(item.url) ? item.url.some((path: string) => location.pathname.startsWith(path.replace('/:id', ''))) : location.pathname === item.url
                             return (
-                                <Link key={index} to={Array.isArray(item.url) ? item.url[0] : item.url} className={`flex items-center gap-2 p-2 transition-all rounded-lg ${isActive ? 'bg-yellow-dark    ' : ''}`}>
+                                <Link key={index} to={Array.isArray(item.url) ? item.url[0] : item.url} className={`flex items-center gap-2 p-2 transition-all rounded-lg ${isActive ? 'bg-blue' : ''}`}>
                                     <item.Icon className="text-lg" /><span>{item.title}</span>
                                 </Link>
                             )
