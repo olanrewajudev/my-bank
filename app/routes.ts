@@ -15,7 +15,8 @@ export default [
   route("new/account-creation", "routes/user/signup.tsx"),
   route("savings/referrals", "routes/learn-more.tsx"),
   route("admin/login", "routes/admin/form/login.tsx"),
-
+  route("terms-of-service", "routes/terms.tsx"),
+  route("privacy-policy", "routes/privacy.tsx"),
   layout("./Layouts/user-layout.tsx", [
     ...prefix("user", [
       route("dashboard", "routes/user/dashboard.tsx"),

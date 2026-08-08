@@ -691,22 +691,6 @@ export default function Profile() {
                                 'Terms of Service',
                                 '/terms-of-service',
                               ],
-                              [
-                                'Electronic Consent',
-                                '/electronic-consent',
-                              ],
-                              [
-                                'Account Agreement',
-                                '/account-agreement',
-                              ],
-                              [
-                                'Important Disclosures',
-                                '/disclosures',
-                              ],
-                              [
-                                'Contact Support',
-                                '/contact',
-                              ],
                             ].map(
                               ([title, link,]) => (
                                 <a key={link} href={link} className="flex items-center justify-between rounded-md bg-white px-4 py-3 text-sm">{title}<HiOutlineChevronRight /></a>
