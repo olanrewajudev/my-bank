@@ -206,22 +206,6 @@ export default function Help() {
         )}
       </div>
 
-      <div className="px-6 pt-8">
-        <h2 className="text-lg font-medium text-slate-800">Chat with us</h2>
-        <button
-          onClick={() => setChatOpen(true)}
-          className="mt-4 flex w-full items-center justify-between rounded-xl bg-white px-5 py-5 shadow-sm"
-        >
-          <div className="flex items-center gap-3">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-700" />
-            <div className="text-left">
-              <p className="text-slate-800">Chat now</p>
-              <p className="text-sm text-slate-500">Our Savings support team is offline</p>
-            </div>
-          </div>
-          <HiOutlineChevronRight className="text-slate-400" />
-        </button>
-      </div>
 
       <div className="px-6 pt-8">
         <h2 className="text-lg font-medium text-slate-800">We're here to help</h2>
@@ -301,11 +285,11 @@ export default function Help() {
         <div className="mt-2 space-y-2 mx-5 rounded-xl bg-white px-5 py-4 shadow-sm">
 
 
-          <Link to="mailto:support@beacongoldcrest.example.com" className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50">
+          <Link to="mailto:support@beacongoldcrest.gmail.com" className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50">
             <HiOutlineEnvelope className="text-lg text-blue-700" />
             <div>
               <p className="text-sm text-slate-800">Email support</p>
-              <p className="text-xs text-slate-500">support@beacongoldcrest.example.com</p>
+              <p className="text-xs text-slate-500">support@beacongoldcrest.gmail.com</p>
             </div>
           </Link>
 

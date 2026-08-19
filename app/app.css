@@ -51,3 +51,9 @@ body {
   border-radius: 10px;
   background: lightgrey;
 }
+
+@media (max-width: 768px) {
+  .__jivoMobileButton {
+    bottom: 100px !important;
+  }
+}
