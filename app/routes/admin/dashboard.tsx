@@ -20,7 +20,6 @@ const Headers = [
     'Amount',
     'Status',
     'Date',
-    'Action',
 ]
 export default function AdminDashboard() {
 
@@ -115,7 +114,6 @@ export default function AdminDashboard() {
                                                     </Td>
                                                     <Td> {item.date || new Date(item.createdAt).toLocaleDateString()}</Td>
 
-                                                    <Td><Link className="font-semibold text-primary" to={`/admin/all-transaction/${item.id}`}>View</Link></Td>
                                                 </Tr>
                                             )
                                         )

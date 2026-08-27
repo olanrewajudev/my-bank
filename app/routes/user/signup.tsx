@@ -13,6 +13,10 @@ import { useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 const SIGNUP_STEPS = ["Get started", "Personal info", "Verify identity", "Open account"]
 
+// Helper: returns the border classes for a required field based on whether it's empty
+function reqBorder(value: string) {
+    return value.trim() === "" ? "border-red-500" : "border-slate-300"
+}
 
 export default function Signup() {
     const navigate = useNavigate()
@@ -24,7 +28,7 @@ export default function Signup() {
     const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({ firstName: "", mi: "", lastName: "", email: "", phone: "", password: "", confirmPassword: "", agreed: false, })
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [verifyIdentity, setVerifyIdentity] = useState<VerifyIdentity>({ primaryAddress: "", aptSuite: "", city: "", state: "", zip: "", countryOfCitizenship: "United States", alternatePhone: "", dob: "", confirmSsn: "", employmentStatus: "", })
+    const [verifyIdentity, setVerifyIdentity] = useState<VerifyIdentity>({ primaryAddress: "", aptSuite: "", city: "", state: "", zip: "", countryOfCitizenship: "United States", alternatePhone: "", dob: "", ssn: "", confirmSsn: "", employmentStatus: "", })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
@@ -49,6 +53,12 @@ export default function Signup() {
         return parts.filter(Boolean).join("/")
     }
 
+    function formatSSN(value: string) {
+        const digits = value.replace(/\D/g, "").slice(0, 9)
+        const parts = [digits.slice(0, 3), digits.slice(3, 5), digits.slice(5, 9)]
+        return parts.filter(Boolean).join("-")
+    }
+
     function toApiDob(mmddyyyy: string) {
         // form stores "MM/DD/YYYY", API wants "YYYY-MM-DD"
         const [mm, dd, yyyy] = mmddyyyy.split("/")
@@ -69,6 +79,8 @@ export default function Signup() {
         personalInfo.password === personalInfo.confirmPassword &&
         personalInfo.agreed
 
+    const isUSCitizen = verifyIdentity.countryOfCitizenship === "United States"
+
     const verifyIdentityValid =
         verifyIdentity.primaryAddress.trim() !== "" &&
         verifyIdentity.city.trim() !== "" &&
@@ -76,8 +88,9 @@ export default function Signup() {
         /^\d{5}$/.test(verifyIdentity.zip) &&
         verifyIdentity.countryOfCitizenship.trim() !== "" &&
         /^\d{2}\/\d{2}\/\d{4}$/.test(verifyIdentity.dob) &&
-
-        verifyIdentity.employmentStatus.trim() !== ""
+        verifyIdentity.employmentStatus.trim() !== "" &&
+        (!isUSCitizen ||
+            (/^\d{3}-\d{2}-\d{4}$/.test(verifyIdentity.ssn) && verifyIdentity.ssn === verifyIdentity.confirmSsn))
 
     function goToStep(index: number) {
         setStep(Math.max(0, Math.min(index, SIGNUP_STEPS.length - 1)))
@@ -102,6 +115,7 @@ export default function Signup() {
                 state: verifyIdentity.state,
                 zipcode: verifyIdentity.zip,
                 dob: toApiDob(verifyIdentity.dob),
+                ...(isUSCitizen ? { ssn: verifyIdentity.ssn.replace(/\D/g, "") } : {}),
             }
 
             const res = await User_urls.register(payload)
@@ -182,7 +196,7 @@ export default function Signup() {
                                 We'll pre-fill your info to save time.
                             </p>
 
-                            <label className="mt-6 block text-base text-[#101d3d]">Account type</label>
+                            <label className="mt-6 block text-base text-[#101d3d]">Account type <span className="text-red-500">*</span></label>
                             <div className="relative mt-3">
                                 <select value={accountType} onChange={(e) => setAccountType(e.target.value)} className="w-full appearance-none rounded-sm border border-slate-300 px-6 py-3 text-base text-[#101d3d] outline-none">
                                     <option>Online Savings Account</option>
@@ -216,9 +230,9 @@ export default function Signup() {
                             <p className="mt-4 lg:text-lg text-slate-700">This should be your legal full name as it appears on your government ID</p>
                             <div className="mt-10 grid lg:grid-cols-3 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="mb-2 block text-base text-[#101d3d]">First name</label>
+                                    <label className="mb-2 block text-base text-[#101d3d]">First name <span className="text-red-500">*</span></label>
                                     <input type="text" placeholder="First name" value={personalInfo.firstName} onChange={(e) => updatePersonalInfo("firstName", e.target.value)}
-                                        className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none" />
+                                        className={`w-full rounded-sm border ${reqBorder(personalInfo.firstName)} px-4 py-4 text-lg text-[#101d3d] outline-none`} />
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-base text-[#101d3d]">MI</label>
@@ -232,45 +246,45 @@ export default function Signup() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="mb-2 block text-base text-[#101d3d]">Last name</label>
+                                    <label className="mb-2 block text-base text-[#101d3d]">Last name <span className="text-red-500">*</span></label>
                                     <input
                                         type="text"
                                         placeholder="Last name"
                                         value={personalInfo.lastName}
                                         onChange={(e) => updatePersonalInfo("lastName", e.target.value)}
-                                        className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                        className={`w-full rounded-sm border ${reqBorder(personalInfo.lastName)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                     />
                                 </div>
                             </div>
 
                             <label className="mt-10 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
-                                Email address
+                                Email address <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="email"
                                 placeholder="email@address.com"
                                 value={personalInfo.email}
                                 onChange={(e) => updatePersonalInfo("email", e.target.value)}
-                                className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                className={`w-full rounded-sm border ${reqBorder(personalInfo.email)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                             />
 
-                            <label className="mt-10 mb-2 block text-base text-[#101d3d]">Phone number</label>
+                            <label className="mt-10 mb-2 block text-base text-[#101d3d]">Phone number <span className="text-red-500">*</span></label>
                             <input
                                 type="tel"
                                 placeholder="(###) ###-####"
                                 value={personalInfo.phone}
                                 onChange={(e) => updatePersonalInfo("phone", formatPhone(e.target.value))}
-                                className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                className={`w-full rounded-sm border ${reqBorder(personalInfo.phone)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                             />
 
-                            <label className="mt-10 mb-2 block text-base text-[#101d3d]">Password</label>
+                            <label className="mt-10 mb-2 block text-base text-[#101d3d]">Password <span className="text-red-500">*</span></label>
                             <div className="relative">
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Create a password"
                                     value={personalInfo.password}
                                     onChange={(e) => updatePersonalInfo("password", e.target.value)}
-                                    className="w-full rounded-sm border border-slate-300 px-4 py-4 pr-14 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
+                                    className={`w-full rounded-sm border ${reqBorder(personalInfo.password)} px-4 py-4 pr-14 text-lg text-[#101d3d] outline-none placeholder:text-slate-400`}
                                 />
                                 <button
                                     type="button"
@@ -283,14 +297,18 @@ export default function Signup() {
                             </div>
                             <p className="mt-2 text-sm text-slate-600">Must be at least 8 characters and include a letter and a number.</p>
 
-                            <label className="mt-8 mb-2 block text-base text-[#101d3d]">Confirm password</label>
+                            <label className="mt-8 mb-2 block text-base text-[#101d3d]">Confirm password <span className="text-red-500">*</span></label>
                             <div className="relative">
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
                                     placeholder="Re-enter your password"
                                     value={personalInfo.confirmPassword}
                                     onChange={(e) => updatePersonalInfo("confirmPassword", e.target.value)}
-                                    className="w-full rounded-sm border border-slate-300 px-4 py-4 pr-14 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
+                                    className={`w-full rounded-sm border ${
+                                        personalInfo.confirmPassword.trim() !== "" && personalInfo.confirmPassword !== personalInfo.password
+                                            ? "border-red-500"
+                                            : reqBorder(personalInfo.confirmPassword)
+                                    } px-4 py-4 pr-14 text-lg text-[#101d3d] outline-none placeholder:text-slate-400`}
                                 />
                                 <button
                                     type="button"
@@ -305,7 +323,7 @@ export default function Signup() {
                                 <p className="mt-2 text-sm text-red-600">Passwords don't match.</p>
                             )}
 
-                            <label className="mt-10 flex items-start gap-4">
+                            <label className={`mt-10 flex items-start gap-4 rounded-sm ${!personalInfo.agreed ? "outline outline-1 outline-red-500 p-2 -m-2" : ""}`}>
                                 <input
                                     type="checkbox"
                                     checked={personalInfo.agreed}
@@ -329,6 +347,7 @@ export default function Signup() {
                                     <Link to="/terms" className="text-blue underline underline-offset-4">
                                         Site Terms
                                     </Link>
+                                    <span className="text-red-500"> *</span>
                                 </span>
                             </label>
 
@@ -369,12 +388,12 @@ export default function Signup() {
 
                                 <div className="mt-6 grid lg:grid-cols-3 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="mb-2 block text-base text-[#101d3d]">Primary address</label>
+                                        <label className="mb-2 block text-base text-[#101d3d]">Primary address <span className="text-red-500">*</span></label>
                                         <textarea
                                             rows={2}
                                             value={verifyIdentity.primaryAddress}
                                             onChange={(e) => updateVerifyIdentity("primaryAddress", e.target.value)}
-                                            className="w-full resize-none rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                            className={`w-full resize-none rounded-sm border ${reqBorder(verifyIdentity.primaryAddress)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                         />
                                     </div>
                                     <div>
@@ -389,35 +408,39 @@ export default function Signup() {
                                     </div>
                                 </div>
 
-                                <label className="mt-6 mb-2 block text-base text-[#101d3d]">City</label>
+                                <label className="mt-6 mb-2 block text-base text-[#101d3d]">City <span className="text-red-500">*</span></label>
                                 <input
                                     type="text"
                                     value={verifyIdentity.city}
                                     onChange={(e) => updateVerifyIdentity("city", e.target.value)}
-                                    className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                    className={`w-full rounded-sm border ${reqBorder(verifyIdentity.city)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                 />
 
                                 <div className="mt-6 grid grid-cols-2 gap-6">
                                     <div>
-                                        <label className="mb-2 block text-base text-[#101d3d]">State</label>
+                                        <label className="mb-2 block text-base text-[#101d3d]">State <span className="text-red-500">*</span></label>
                                         <div className="relative">
                                             <input
                                                 type="text"
                                                 value={verifyIdentity.state}
                                                 onChange={(e) => updateVerifyIdentity("state", e.target.value)}
-                                                className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                                className={`w-full rounded-sm border ${reqBorder(verifyIdentity.state)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                             />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="mb-2 block text-base text-[#101d3d]">ZIP code</label>
+                                        <label className="mb-2 block text-base text-[#101d3d]">ZIP code <span className="text-red-500">*</span></label>
                                         <input
                                             type="text"
                                             inputMode="numeric"
                                             maxLength={5}
                                             value={verifyIdentity.zip}
                                             onChange={(e) => updateVerifyIdentity("zip", e.target.value.replace(/\D/g, "").slice(0, 5))}
-                                            className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                            className={`w-full rounded-sm border ${
+                                                verifyIdentity.zip.trim() !== "" && !/^\d{5}$/.test(verifyIdentity.zip)
+                                                    ? "border-red-500"
+                                                    : reqBorder(verifyIdentity.zip)
+                                            } px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                         />
                                     </div>
                                 </div>
@@ -433,14 +456,14 @@ export default function Signup() {
                                 </p>
 
                                 <label className="mt-6 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
-                                    Country of citizenship
+                                    Country of citizenship <span className="text-red-500">*</span>
                                     <IoInformationCircleOutline className="h-4 w-4 text-blue" />
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={verifyIdentity.countryOfCitizenship}
                                         onChange={(e) => updateVerifyIdentity("countryOfCitizenship", e.target.value)}
-                                        className="w-full appearance-none rounded-sm border border-slate-300 px-4 py-4 text-lg text-blue outline-none"
+                                        className={`w-full appearance-none rounded-sm border ${reqBorder(verifyIdentity.countryOfCitizenship)} px-4 py-4 text-lg text-blue outline-none`}
                                     >
                                         <option>United States</option>
                                         <option>Canada</option>
@@ -448,6 +471,44 @@ export default function Signup() {
                                     </select>
                                     <IoChevronDownSharp className="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-blue" />
                                 </div>
+
+                                {isUSCitizen && (
+                                    <>
+                                        <label className="mt-6 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
+                                            Social Security Number <span className="text-red-500">*</span>
+                                            <IoInformationCircleOutline className="h-4 w-4 text-blue" />
+                                        </label>
+                                        <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="###-##-####"
+                                            value={verifyIdentity.ssn}
+                                            onChange={(e) => updateVerifyIdentity("ssn", formatSSN(e.target.value))}
+                                            className={`w-full rounded-sm border ${
+                                                verifyIdentity.ssn.trim() !== "" && !/^\d{3}-\d{2}-\d{4}$/.test(verifyIdentity.ssn)
+                                                    ? "border-red-500"
+                                                    : reqBorder(verifyIdentity.ssn)
+                                            } px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400`}
+                                        />
+
+                                        <label className="mt-6 mb-2 block text-base text-[#101d3d]">Confirm SSN <span className="text-red-500">*</span></label>
+                                        <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="###-##-####"
+                                            value={verifyIdentity.confirmSsn}
+                                            onChange={(e) => updateVerifyIdentity("confirmSsn", formatSSN(e.target.value))}
+                                            className={`w-full rounded-sm border ${
+                                                verifyIdentity.confirmSsn.trim() !== "" && verifyIdentity.confirmSsn !== verifyIdentity.ssn
+                                                    ? "border-red-500"
+                                                    : reqBorder(verifyIdentity.confirmSsn)
+                                            } px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400`}
+                                        />
+                                        {verifyIdentity.confirmSsn !== "" && verifyIdentity.confirmSsn !== verifyIdentity.ssn && (
+                                            <p className="mt-2 text-sm text-red-600">SSNs don't match.</p>
+                                        )}
+                                    </>
+                                )}
 
                                 <label className="mt-6 mb-2 block text-base text-[#101d3d]">Alternate phone number (optional)</label>
                                 <input
@@ -458,14 +519,18 @@ export default function Signup() {
                                     className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
                                 />
 
-                                <label className="mt-6 mb-2 block text-base text-[#101d3d]">Date of birth</label>
+                                <label className="mt-6 mb-2 block text-base text-[#101d3d]">Date of birth <span className="text-red-500">*</span></label>
                                 <input
                                     type="text"
                                     inputMode="numeric"
                                     placeholder="MM/DD/YYYY"
                                     value={verifyIdentity.dob}
                                     onChange={(e) => updateVerifyIdentity("dob", formatDOB(e.target.value))}
-                                    className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
+                                    className={`w-full rounded-sm border ${
+                                        verifyIdentity.dob.trim() !== "" && !/^\d{2}\/\d{2}\/\d{4}$/.test(verifyIdentity.dob)
+                                            ? "border-red-500"
+                                            : reqBorder(verifyIdentity.dob)
+                                    } px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400`}
                                 />
 
 
@@ -478,14 +543,14 @@ export default function Signup() {
                                 <h2 className="text-2xl text-[#101d3d]">Employment</h2>
 
                                 <label className="mt-6 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
-                                    Employment status
+                                    Employment status <span className="text-red-500">*</span>
                                     <IoInformationCircleOutline className="h-4 w-4 text-blue" />
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={verifyIdentity.employmentStatus}
                                         onChange={(e) => updateVerifyIdentity("employmentStatus", e.target.value)}
-                                        className="w-full appearance-none rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                        className={`w-full appearance-none rounded-sm border ${reqBorder(verifyIdentity.employmentStatus)} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                     >
                                         <option value="" disabled>Employment status</option>
                                         {EMPLOYMENT_STATUSES.map((status) => (

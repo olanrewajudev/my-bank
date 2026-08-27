@@ -17,7 +17,6 @@ const Headers = [
     'Amount',
     'Status',
     'Date',
-    'Action',
 ]
 
 export default function AllTransaction() {
@@ -54,7 +53,6 @@ export default function AllTransaction() {
                                                 <span className={item.status === 'successful' ? 'font-semibold text-green-600' : item.status === 'pending' ? 'font-semibold text-yellow-600' : 'font-semibold text-red-600'}>{item.status || 'N/A'}</span>
                                             </Td>
                                             <Td>{item.date || new Date(item.createdAt).toLocaleDateString()}</Td>
-                                            <Td> <Link className="font-semibold text-primary" to={`/admin/all-transaction/${item.id}`} >     View </Link></Td>
                                         </Tr>
                                     )
                                 )

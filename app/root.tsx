@@ -51,7 +51,7 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "shortcut icon",
-    href: "/logo-dark.png",
+    href: "/beacon-gold.svg",
     type: "image/x-icon",
   },
 ];

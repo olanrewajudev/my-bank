@@ -149,7 +149,6 @@ export default function Dashboard() {
     }
   }
 
-
   return (
     <div className="min-h-screen bg-[#eef1f3] pb-24">
       <div className="relative overflow-hidden px-6 pb-10 pt-6">
@@ -187,6 +186,21 @@ export default function Dashboard() {
           <p className="mt-2 text-3xl font-medium text-emerald-700">${formatAmount(user?.currbal)}</p>
           <p className="mt-1 text-sm text-slate-500">Current balance</p>
         </div>
+        {user?.postNoDebit === 'true' ? (
+          <div className="mt-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
+            <svg className="mt-0.5 h-5 w-5 shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <div>
+              <p className="font-semibold text-red-800">Account restricted — Post No Debit</p>
+              <p className="mt-1 text-sm text-red-700">
+                This account is currently flagged as Post No Debit (PND). Withdrawals and outgoing
+                transfers are temporarily disabled. Deposits are still accepted. Please contact
+                support to resolve this restriction.
+              </p>
+            </div>
+          </div>
+        ): ( <div className=""></div> )}
       </div>
 
       <div className="mt-8 px-6">

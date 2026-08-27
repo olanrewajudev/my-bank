@@ -9,6 +9,7 @@ import Cookies from 'js-cookie'
 import { CookieName } from "~/component/Apis";
 import { useDispatch } from "react-redux";
 import { dispatchToken } from "~/lib/reducer";
+import { ErrorAlert } from "~/component/utils";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -40,6 +41,8 @@ export default function Login() {
             if (res.data?.token) {
                 Cookies.set(CookieName, res.data.token)
                 dispatch(dispatchToken(res.data.token))
+            }else {
+                ErrorAlert(res.data.msg)
             }
             navigate("/user/dashboard")
         } catch (err: any) {

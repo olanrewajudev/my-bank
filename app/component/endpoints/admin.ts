@@ -36,6 +36,24 @@ export const Admin_urls = {
             type: 'JSON'
         });
     },
+    activatePnd(data: any) {
+        return request({
+            endpoint: "user/delete-kyc",
+            auth: 'true',
+            method: "POST",
+            data,
+            type: 'JSON'
+        });
+    },
+    deactivatePnd(data: any) {
+        return request({
+            endpoint: "user/delete-kyc",
+            auth: 'true',
+            method: "POST",
+            data,
+            type: 'JSON'
+        });
+    },
     login(data: any) {
         return request({
             endpoint: "user/login",
