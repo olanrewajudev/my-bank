@@ -944,7 +944,7 @@ export default function Transfer() {
                                       'Withdrawal Request'
                                     ) : (
                                       <>
-                                        {tx.sendername ||
+                                        {tx.title ||
                                           'Admin Panel'}
 
                                         {tx.acctnumber && (

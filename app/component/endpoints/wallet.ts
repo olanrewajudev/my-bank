@@ -9,20 +9,18 @@ export const Wallet_urls = {
             auth: 'true'
         });
     },
+    getAllUserWallet() {
+        return request({
+            endpoint: "wallet/all-user-wallets",
+            method: "GET",
+            auth: 'true'
+        });
+    },
     getSingleWallet() {
         return request({
             endpoint: "wallet/admin-wallet",
             method: "GET",
             auth: 'true'
-        });
-    },
-    deleteKyc(data: any) {
-        return request({
-            endpoint: "wallet/delete-kyc",
-            auth: 'true',
-            method: "POST",
-            data,
-            type: 'JSON'
         });
     },
     addWallet(data: any) {

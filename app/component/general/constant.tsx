@@ -64,17 +64,17 @@ export function TransferIcon({ className = 'h-6 w-6' }: { className?: string }) 
 }
 import React from "react";
 import { FaBitcoin } from "react-icons/fa";
-import { HiOutlineBuildingLibrary } from "react-icons/hi2";
+import { HiOutlineBanknotes, HiOutlineBuildingLibrary, HiOutlineWallet } from "react-icons/hi2";
 import { SiEthereum, SiTether } from "react-icons/si";
 export default function formatPhone(raw: string) {
-    const digits = raw.replace(/\D/g, "").slice(0, 10)
-    const part1 = digits.slice(0, 3)
-    const part2 = digits.slice(3, 6)
-    const part3 = digits.slice(6, 10)
-    if (digits.length > 6) return `(${part1}) ${part2}-${part3}`
-    if (digits.length > 3) return `(${part1}) ${part2}`
-    if (digits.length > 0) return `(${part1}`
-    return ""
+  const digits = raw.replace(/\D/g, "").slice(0, 10)
+  const part1 = digits.slice(0, 3)
+  const part2 = digits.slice(3, 6)
+  const part3 = digits.slice(6, 10)
+  if (digits.length > 6) return `(${part1}) ${part2}-${part3}`
+  if (digits.length > 3) return `(${part1}) ${part2}`
+  if (digits.length > 0) return `(${part1}`
+  return ""
 }
 export const FAQs = [
   {
@@ -173,58 +173,56 @@ export const FAQs = [
 ];
 
 
-  export const cryptoAssets = [
-    {
-      name: 'BTC',
-      amount: '0.000000',
-      value: '$0.00',
-      icon: (
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f6b93b]">
-          <FaBitcoin className="text-sm text-white" />
-        </div>
-      ),
-    },
-    {
-      name: 'ETH',
-      amount: '0.000000',
-      value: '$0.00',
-      icon: (
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">
-          <SiEthereum className="text-sm text-slate-600" />
-        </div>
-      ),
-    },
-    {
-      name: 'USDT',
-      amount: '0.00',
-      value: '$0.00',
-      icon: (
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#26a17b]">
-          <SiTether className="text-sm text-white" />
-        </div>
-      ),
-    },
-  ]
+export const cryptoAssets = [
+  {
+    name: 'BTC',
+    amount: '0.000000',
+    value: '$0.00',
+    icon: (
+      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f6b93b]">
+        <FaBitcoin className="text-sm text-white" />
+      </div>
+    ),
+  },
+  {
+    name: 'ETH',
+    amount: '0.000000',
+    value: '$0.00',
+    icon: (
+      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">
+        <SiEthereum className="text-sm text-slate-600" />
+      </div>
+    ),
+  },
+  {
+    name: 'USDT',
+    amount: '0.00',
+    value: '$0.00',
+    icon: (
+      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#26a17b]">
+        <SiTether className="text-sm text-white" />
+      </div>
+    ),
+  },
+]
 
- export const transferOptions = [
-    {
-      type: 'wire' as ModalType,
-      title: 'Wire Transfer',
-      description: 'International bank transfer',
-      icon: (
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100">
-          <HiOutlineBuildingLibrary className="text-3xl text-slate-600" />
-        </div>
-      ),
-    },
-    {
-      type: 'crypto' as ModalType,
-      title: 'Crypto Transfer',
-      description: 'Send crypto to another wallet',
-      icon: (
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-100">
-          <SiTether className="text-3xl text-emerald-600" />
-        </div>
-      ),
-    },
-  ]
+export const transferOptions = [
+  {
+    title: 'Wire Transfer',
+    description: 'Send money through a wire transfer.',
+    type: 'wire',
+    icon: <HiOutlineBuildingLibrary className="text-2xl text-blue-600" />,
+  },
+  {
+    title: 'Local Transfer',
+    description: 'Send money to a local bank account.',
+    type: 'local',
+    icon: <HiOutlineBanknotes className="text-2xl text-emerald-600" />,
+  },
+  {
+    title: 'Crypto Transfer',
+    description: 'Send cryptocurrency to an external wallet.',
+    type: 'crypto-send',
+    icon: <HiOutlineWallet className="text-2xl text-purple-600" />,
+  },
+]

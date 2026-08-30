@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Menu, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { Link } from 'react-router'
 import Table from '~/component/table/Table'
 import Thead from '~/component/table/Thead'
 import Tr from '~/component/table/Tr'
@@ -10,8 +9,9 @@ import Tbody from '~/component/table/Tbody'
 import Td from '~/component/table/Td'
 import { ErrorAlert, formatDate, HotAlert } from '~/component/utils'
 import { transact_urls } from '~/component/endpoints/transact'
+import { DocumentBaseUrl } from '~/component/Apis'
 
-const Headers = ['Title', 'Name', 'Amount', 'Status', 'TxID', 'Date', 'Action', '']
+const Headers = ['Title', 'Name', 'Amount', 'Status', 'TxID', 'Date', 'Proof', 'Action']
 
 const statusStyle = (status: string) => {
     switch (status) {
@@ -27,6 +27,9 @@ export default function AllDeposit() {
     const [selectedDeposit, setSelectedDeposit] = useState<any>(null)
     const [declineOpened, { open: openDecline, close: closeDecline }] = useDisclosure(false)
     const [verifyingId, setVerifyingId] = useState<string | null>(null)
+
+    const [previewImage, setPreviewImage] = useState<string | null>(null)
+    const [previewOpened, { open: openPreview, close: closePreview }] = useDisclosure(false)
 
     const { data: deposit = [] } = useQuery({
         queryKey: ['deposits'],
@@ -73,6 +76,11 @@ export default function AllDeposit() {
         }
     }
 
+    const handleImageClick = (imageName: string) => {
+        setPreviewImage(`${DocumentBaseUrl}/deposit/${imageName}`)
+        openPreview()
+    }
+
     return (
         <div>
             {/* Decline modal */}
@@ -94,6 +102,25 @@ export default function AllDeposit() {
                         <button onClick={closeDecline} className="w-full py-2.5 rounded-full bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">Cancel</button>
                         <button onClick={() => declineDeposit(selectedDeposit)} className="w-full py-2.5 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors">Submit</button>
                     </div>
+                </div>
+            </Modal>
+
+            {/* Proof of payment — large preview */}
+            <Modal size="auto" centered withCloseButton={false} opened={previewOpened} onClose={closePreview} padding={0}>
+                <div className="relative">
+                    <button
+                        onClick={closePreview}
+                        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                    >
+                        ×
+                    </button>
+                    {previewImage && (
+                        <img
+                            src={previewImage}
+                            alt="Deposit proof of payment"
+                            className="max-h-[80vh] max-w-[90vw] rounded-lg object-contain"
+                        />
+                    )}
                 </div>
             </Modal>
 
@@ -127,6 +154,23 @@ export default function AllDeposit() {
                                             <Td className="truncate max-w-[120px] text-gray-500 font-mono text-sm">{item.txid}</Td>
                                             <Td className="text-gray-500">{formatDate(item.date)}</Td>
                                             <Td>
+                                                {item.image ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleImageClick(item.image)}
+                                                        className="block h-12 w-12 overflow-hidden rounded-lg border border-gray-200 hover:border-[#7c5cf0] transition-colors cursor-pointer"
+                                                    >
+                                                        <img
+                                                            src={`${DocumentBaseUrl}/deposit/${item.image}`}
+                                                            alt="Proof of payment"
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-gray-300 text-sm">—</span>
+                                                )}
+                                            </Td>
+                                            <Td>
                                                 {item.status === 'pending' ? (
                                                     <Menu shadow="md" width={180} position="bottom-end">
                                                         <Menu.Target>
@@ -150,11 +194,6 @@ export default function AllDeposit() {
                                                 ) : (
                                                     <span className="text-gray-300 text-sm">—</span>
                                                 )}
-                                            </Td>
-                                            <Td>
-                                                <Link to={`/admin/deposit/single-deposit/${item.id}`} className="text-[#7c5cf0] font-semibold text-sm hover:underline">
-                                                    View
-                                                </Link>
                                             </Td>
                                         </Tr>
                                     ))

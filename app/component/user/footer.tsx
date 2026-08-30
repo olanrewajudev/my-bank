@@ -7,7 +7,7 @@ export default function UserFooter() {
     return (
         <div>
 
-            <footer className="bg-[#242844] text-white lg:py-20">
+            <footer className="bg-[#075c40] text-white lg:py-20">
                 <div className="max-w-7xl mx-auto px-8">
                     <div className="flex flex-col lg:flex-row justify-between gap-20">
                         {/* Left Section */}

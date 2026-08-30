@@ -153,9 +153,18 @@ export const transact_urls = {
     });
   },
 
+  submitDeposit(data: any) {
+    return request({
+      endpoint: "transactions/save-deposit",
+      method: "POST",
+      data,
+      type: 'FILE',
+      auth: 'true'
+    });
+  },
   confirmDeposit(data: { userid: string; depositid: string }) {
     return request({
-      endpoint: "transactions/confirm-deposit",
+      endpoint: "transactions/verify-deposit",
       method: "POST",
       data,
       type: 'JSON',
