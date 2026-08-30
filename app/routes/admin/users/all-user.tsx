@@ -1,5 +1,4 @@
-
-import { Modal, Table } from '@mantine/core'
+import { Modal, Table, Switch } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -15,12 +14,18 @@ import Thead from '~/component/table/Thead'
 import Tr from '~/component/table/Tr'
 import { ErrorAlert, formatAmount, HotAlert } from '~/component/utils'
 
-const Headers = ["Name", "Email", "Last Login", 'Phone', "Balance", 'Verified', '', '']
+const Headers = ["Name", "Email", "Last Login", 'Phone', "Balance", 'Verified', 'PND', '', '']
 
 export default function AllUser() {
   const [opened, { open, close }] = useDisclosure(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const queryClient = useQueryClient()
+
+  // --- PND toggle state ---
+  const [pndModalOpened, { open: openPndModal, close: closePndModal }] = useDisclosure(false)
+  const [pndTarget, setPndTarget] = React.useState<any>(null)
+  const [pndAction, setPndAction] = React.useState<'activate' | 'deactivate'>('activate')
+  const [pndLoadingId, setPndLoadingId] = React.useState<string | null>(null)
 
   const { data: user = [] } = useQuery({
     queryKey: ['all-users'],
@@ -37,6 +42,11 @@ export default function AllUser() {
       amount: value => !value ? 'Amount is required' : Number(value) <= 0 ? 'Amount must be greater than 0' : null,
       sendername: value => !value ? 'Sender Name is required' : null,
     }
+  })
+
+  const pndForm = useForm({
+    mode: "uncontrolled",
+    initialValues: { reason: '' },
   })
 
   function handleOpenTopup(item: any) {
@@ -69,6 +79,41 @@ export default function AllUser() {
     }
   }
 
+  // Switch is intentionally NOT bound directly to server data for the click itself —
+  // both directions go through a confirm step, so the visible checked state only
+  // changes after the request succeeds and the list refetches.
+  function handlePndToggle(item: any, nextChecked: boolean) {
+    setPndTarget(item)
+    setPndAction(nextChecked ? 'activate' : 'deactivate')
+    pndForm.setValues({ reason: '' })
+    openPndModal()
+  }
+
+  async function submitPnd(values: typeof pndForm.values) {
+    if (!pndTarget) return
+    setPndLoadingId(pndTarget.id)
+    try {
+      const res = pndAction === 'activate'
+        ? await Admin_urls.activatePnd({ id: pndTarget.id, reason: values.reason })
+        : await Admin_urls.deactivatePnd({ id: pndTarget.id })
+
+      const ok = res.status === 200 || res.data?.status === 200
+      if (ok) {
+        HotAlert(res.data.msg || (pndAction === 'activate'
+          ? 'Account placed under Post No Debit restriction'
+          : 'Post No Debit restriction lifted'))
+        closePndModal()
+        queryClient.invalidateQueries({ queryKey: ['all-users'] })
+      } else {
+        ErrorAlert(res.data.msg)
+      }
+    } catch (error) {
+      ErrorAlert((error as Error).message)
+    } finally {
+      setPndLoadingId(null)
+    }
+  }
+
   return (
     <div>
       <Modal size={'32rem'} centered withCloseButton={false} opened={opened} onClose={close}>
@@ -83,6 +128,35 @@ export default function AllUser() {
           </form>
         </div>
       </Modal>
+
+      {/* PND activate / deactivate modal (shared) */}
+      <Modal size={'28rem'} centered withCloseButton={false} opened={pndModalOpened} onClose={closePndModal}>
+        <div className="my-4">
+          <div className="text-error text-[1.3rem] font-bold text-center mb-2">
+            {pndAction === 'activate' ? 'Restrict Account (PND)' : 'Lift PND Restriction'}
+          </div>
+          <div className="text-sm text-gray-500 text-center mb-4">
+            {pndTarget ? `${pndTarget.firstname} ${pndTarget.lastname}` : ''}
+          </div>
+          <form onSubmit={pndForm.onSubmit(submitPnd)}>
+            {pndAction === 'activate' ? (
+              <Forminput content="Reason (optional)" error='' {...pndForm.getInputProps('reason')} placeholder="Enter reason for restriction" />
+            ) : (
+              <div className="text-center text-sm text-gray-600">
+                This will restore debit access for this account. Are you sure?
+              </div>
+            )}
+            <div className="space-y-3 mt-8">
+              <Formbutton
+                title={pndAction === 'activate' ? 'Restrict Account' : 'Lift Restriction'}
+                className='bg-blue text-white font-bold'
+                loading={pndLoadingId === pndTarget?.id}
+              />
+            </div>
+          </form>
+        </div>
+      </Modal>
+
       <div className="m-5">
         <div className="flex items-center justify-between mb-4"><div className="text-[1.9rem] font-semibold">All Users</div></div>
         <div className="border rounded-2xl border-gray-200">
@@ -100,6 +174,14 @@ export default function AllUser() {
                         <Td>{item.phone}</Td>
                         <Td>${formatAmount(item.currbal)}</Td>
                         <Td>{item.verified}</Td>
+                        <Td>
+                          <Switch
+                            checked={item.postNoDebit === 'true'}
+                            disabled={pndLoadingId === item.id}
+                            onChange={(e) => handlePndToggle(item, e.currentTarget.checked)}
+                            color="red"
+                          />
+                        </Td>
                         <Td><Link className='text-primary font-semibold' to={`/admin/all-user/${item.id}`}>View</Link></Td>
                         <Td><button type="button" className='text-primary font-semibold' onClick={() => handleOpenTopup(item)}>Update Balance</button></Td>
                       </Tr>

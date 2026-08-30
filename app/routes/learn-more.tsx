@@ -213,26 +213,26 @@ function SavingsCalculator() {
                     </div>
 
                     {/* Comparison panel */}
-                    <div className="relative bg-[#101d3d] p-10">
+                    <div className="relative bg-[#075c40] p-10">
                         <div className="flex items-start justify-between">
                             <p className="text-[20px] text-white">Tap the button to select banks</p>
                             <button
                                 onClick={() => setPickerOpen((v) => !v)}
-                                className="flex-none rounded-sm bg-[#3f6fcf] px-6 py-3 text-[16px] text-white transition hover:bg-[#4a7ddb]"
+                                className="flex-none rounded-sm bg-[#09ab75] px-6 py-3 text-[16px] text-white transition"
                             >
                                 Select banks
                             </button>
                         </div>
 
                         {pickerOpen && (
-                            <div className="mt-4 grid grid-cols-2 gap-3 rounded-sm bg-[#182548] p-5 sm:grid-cols-3">
+                            <div className="mt-4 grid grid-cols-2 gap-3 rounded-sm bg-[#fff] p-5 sm:grid-cols-3">
                                 {ALL_BANKS.filter((b) => !b.isBeacon).map((b) => (
-                                    <label key={b.id} className="flex items-center gap-2 text-[14px] text-slate-200">
+                                    <label key={b.id} className="flex items-center gap-2 text-[14px] text-[#09ab75]">
                                         <input
                                             type="checkbox"
                                             checked={selectedIds.includes(b.id)}
                                             onChange={() => toggleBank(b.id)}
-                                            className="accent-[#3f6fcf]"
+                                            className="accent-[#09ab75]"
                                         />
                                         {b.name}
                                     </label>
@@ -263,7 +263,7 @@ function SavingsCalculator() {
 
                                     <div className="flex-1">
                                         <div
-                                            className="h-[6px] rounded-full bg-[#5b8def]"
+                                            className="h-[6px] rounded-full bg-[#09ab75]"
                                             style={{ width: `${bank.pct}%` }}
                                         />
                                     </div>
@@ -480,8 +480,8 @@ function ReferralFAQs() {
 }
 export default function LearnMore() {
     return (
-        <div className="bg-[#101d3d]">
-            <section className="relative overflow-hidden bg-[#101d3d]">
+        <div className="">
+            <section className="relative overflow-hidden bg-[#075c40]">
                 {/* Decorative background: clouds + folded mountains + walking figure */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
                     <svg
@@ -583,10 +583,10 @@ export default function LearnMore() {
                         </div>
 
                         <div className="mt-9 flex flex-wrap items-center gap-8">
-                            <Link to="/new/account-creation" className="rounded-sm border-2 border-[#5b8def] bg-[#3f6fcf] px-10 py-4 text- text-white transition hover:bg-[#4a7ddb]">
+                            <Link to="/new/account-creation" className="rounded-sm  bg-[#0dc386] px-10 py-4 text- text-white transition hover:bg-[#4a7ddb]">
                                 Open an Account
                             </Link>
-                            <Link to="/terms" className="text-sm text-[#7fb2f0] underline underline-offset-2">See full terms</Link>
+                            <Link to="/terms" className="text-sm text-white underline underline-offset-2">See full terms</Link>
                         </div>
 
                         <div className="mt-14 flex items-start gap-4">

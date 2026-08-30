@@ -1,15 +1,17 @@
 import toast, { type Renderable, type Toast, type ValueFunction } from "react-hot-toast";
 import { BiHome, BiPackage, BiWallet } from 'react-icons/bi'
-import { FaHandHoldingUsd, FaMoneyBillWave, FaUsersCog } from 'react-icons/fa'
- export const adminSidebar = [
+import { FaUsersCog, FaHandHoldingUsd, FaExchangeAlt, FaEnvelope, FaBullhorn, FaPiggyBank, FaWallet } from 'react-icons/fa'
+
+export const adminSidebar = [
     { title: 'Home', url: ['/admin/dashboard'], Icon: BiHome },
     { title: 'Customers & Kyc Management', url: ['/admin/all-user'], Icon: FaUsersCog },
     { title: 'Withdraw', url: ['/admin/withdraw'], Icon: FaHandHoldingUsd },
-    { title: 'Transaction', url: ['/admin/transaction'], Icon: FaHandHoldingUsd },
-    { title: 'Mailing', url: ['/admin/single-mail'], Icon: FaHandHoldingUsd },
-    { title: 'Broadcast', url: ['/admin/broadcast-mail'], Icon: FaHandHoldingUsd },
+    { title: 'Transaction', url: ['/admin/transaction'], Icon: FaExchangeAlt },
+    { title: 'Mailing', url: ['/admin/single-mail'], Icon: FaEnvelope },
+    { title: 'Broadcast', url: ['/admin/broadcast-mail'], Icon: FaBullhorn },
+    { title: 'Deposit', url: ['/admin/all-deposit'], Icon: FaPiggyBank },
+    { title: 'Wallet', url: ['/admin/all-wallet'], Icon: FaWallet },
 ]
-
 export const HotAlert = (message: Renderable | ValueFunction<Renderable, Toast>) => {
     return toast.success(message, {
         duration: 6000,

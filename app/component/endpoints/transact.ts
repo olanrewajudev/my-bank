@@ -2,6 +2,11 @@
 
 import { request } from "../Apis";
 
+// router.post('/save-deposit', UserPrivacy, SubmitDeposit)
+// router.get('/all-deposits', AdminPrivacy, AllDeposits)
+// router.get('/user-deposits/:id', UserPrivacy, AllUserDeposits)
+// router.post('/verify-deposit', AdminPrivacy, AdminVerifyDeposit)
+// router.post('/decline-deposit', AdminPrivacy, AdminDeclineDeposit)
 export const transact_urls = {
   getAllTransact() {
     return request({
@@ -138,4 +143,34 @@ export const transact_urls = {
       type: 'JSON'
     });
   },
+
+
+  getAllDeposit() {
+    return request({
+      endpoint: "transactions/all-deposits",
+      method: "GET",
+      auth: 'true'
+    });
+  },
+
+  confirmDeposit(data: { userid: string; depositid: string }) {
+    return request({
+      endpoint: "transactions/confirm-deposit",
+      method: "POST",
+      data,
+      type: 'JSON',
+      auth: 'true'
+    });
+  },
+
+  declineDeposit(data: { userid: string; depositid: string; note?: string }) {
+    return request({
+      endpoint: "transactions/decline-deposit",
+      method: "POST",
+      data,
+      type: 'JSON',
+      auth: 'true'
+    });
+  },
+
 }

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import {
   HiOutlineArrowRightOnRectangle, HiOutlineLockClosed, HiOutlinePencil, HiOutlineLink, HiOutlineChevronRight, HiOutlineChevronDown, HiOutlinePlusCircle, HiOutlineTrash, HiOutlineCheckCircle, HiOutlineIdentification, HiOutlineDocumentArrowUp, HiOutlineExclamationTriangle, HiOutlineShieldCheck, HiOutlineXMark,
+  HiOutlineCreditCard,
 } from 'react-icons/hi2'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
@@ -330,492 +331,718 @@ export default function Profile() {
       setLoading(false)
     }
   }
-
   return (
     <>
-      <Modal size="32rem" centered withCloseButton={false} opened={openedPassword} onClose={closePassword}>
-        <div>
-          <div className="mb-6 text-center text-2xl font-semibold">Change Password</div>
-          <form onSubmit={form.onSubmit(handlePasswordSubmission)}>
-            <div className="relative">
-              <Forminput content="Current Password" error={form.errors.current_password?.toString() || ''} {...form.getInputProps('current_password')} placeholder="Current password" type={showCurrentPassword ? 'text' : 'password'} />
+      {/* ================= PASSWORD MODAL ================= */}
+      <Modal
+        size="32rem"
+        centered
+        withCloseButton={false}
+        opened={openedPassword}
+        onClose={closePassword}
+        radius="lg"
+      >
+        <div className="p-2">
+          <div className="mb-6 flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
+              <HiOutlineLockClosed className="text-2xl text-blue-700" />
+            </div>
 
-              <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="absolute right-4 top-9 cursor-pointer text-slate-500">
-                {showCurrentPassword ? (
-                  <FaEye />
-                ) : (
-                  <FaEyeSlash />
-                )}
+            <div>
+              <h2 className="text-xl font-semibold text-slate-800">
+                Change password
+              </h2>
+              <p className="text-sm text-slate-500">
+                Keep your account secure
+              </p>
+            </div>
+          </div>
+
+          <form onSubmit={form.onSubmit(handlePasswordSubmission)} className="space-y-1">
+            <div className="relative">
+              <Forminput
+                content="Current Password"
+                error={form.errors.current_password?.toString() || ''}
+                {...form.getInputProps('current_password')}
+                placeholder="Current password"
+                type={showCurrentPassword ? 'text' : 'password'}
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-4 top-9 text-slate-400"
+              >
+                {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
 
             <div className="relative">
-              <Forminput content="New Password" error={form.errors.password?.toString() || ''} {...form.getInputProps('password')} placeholder="New password" type={showNewPassword ? 'text' : 'password'} />
-              <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-4 top-9 cursor-pointer text-slate-500">
-                {showNewPassword ? (
-                  <FaEye />
-                ) : (
-                  <FaEyeSlash />
-                )}
+              <Forminput
+                content="New Password"
+                error={form.errors.password?.toString() || ''}
+                {...form.getInputProps('password')}
+                placeholder="New password"
+                type={showNewPassword ? 'text' : 'password'}
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-4 top-9 text-slate-400"
+              >
+                {showNewPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
 
             <div className="relative">
-              <Forminput content="Confirm New Password" error={form.errors.confirm_password?.toString() || ''} {...form.getInputProps('confirm_password')} placeholder="Confirm new password" type={showConfirmPassword ? 'text' : 'password'} />
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-9 cursor-pointer text-slate-500"> {showConfirmPassword ? (<FaEye />) : (<FaEyeSlash />)}</button>
+              <Forminput content="Confirm New Password" error={form.errors.confirm_password?.toString() || ''} {...form.getInputProps('confirm_password')} placeholder="Confirm new password" type={showConfirmPassword ? 'text' : 'password'}/>
+              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-9 text-slate-400">
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
 
-            <Formbutton title="Change Password" />
+            <div className="pt-3">
+              <Formbutton title="Change Password" />
+            </div>
           </form>
         </div>
       </Modal>
 
+      {/* ================= LOGOUT MODAL ================= */}
+      <Modal size="30rem" centered withCloseButton={false} opened={openedLogout} onClose={closeLogout} radius="lg">
+        <div className="p-3 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50"><HiOutlineArrowRightOnRectangle className="text-2xl text-red-600" /></div>
+          <h2 className="mt-5 text-xl font-semibold text-slate-800">Log out?</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">You will need to sign in again to access your account.</p>
 
-      <Modal size="32rem" centered withCloseButton={false} opened={openedLogout} onClose={closeLogout}>
-        <div className="my-4">
-          <div className="mb-2 text-center text-2xl font-bold text-red-600">Logout</div>
-          <div className="text-center">
-            <div className="mb-5">
-              <div className="text-lg font-semibold">Are you sure you want to log out?</div>
-              <p>You will need to sign in again to continue.</p>
-            </div>
+          <div className="mt-7 grid grid-cols-2 gap-3">
+            <button type="button" onClick={closeLogout} className="rounded-xl border border-slate-200 py-3 font-medium text-slate-700 hover:bg-slate-50">Cancel</button>
 
-            <div className="mt-4 flex gap-3">
-              <button type="button" onClick={closeLogout} className="w-full rounded-full bg-slate-200 py-2.5 font-semibold">Cancel</button>
-              <button type="button" onClick={logout} className="w-full rounded-full bg-red-700 py-2.5 font-semibold text-white">Logout</button>
-            </div>
+            <button type="button" onClick={logout} className="rounded-xl bg-red-600 py-3 font-semibold text-white hover:bg-red-700">Log out</button>
           </div>
         </div>
       </Modal>
-      <Modal
-        size="34rem"
-        centered
-        opened={openedKyc}
-        onClose={resetKyc}
-        withCloseButton={false}
-        radius="lg"
-      >
+
+      {/* ================= KYC MODAL ================= */}
+      <Modal size="36rem" centered opened={openedKyc} onClose={resetKyc} withCloseButton={false} radius="xl">
         <div className="relative p-2">
+          <button type="button" onClick={resetKyc} className="absolute right-0 top-0 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200">
+            <HiOutlineXMark className="text-lg" />
+          </button>
 
-
-
-          {/* CHANGE THE CONDITION HERE */}
+          {/* VERIFIED */}
           {user?.verified === 'verified' ? (
-            <div className="py-10 text-center">
+            <div className="px-4 py-10 text-center">
 
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-                <HiOutlineShieldCheck className="text-4xl text-emerald-600" />
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50"><HiOutlineShieldCheck className="text-4xl text-emerald-600" /></div>
+              <h2 className="mt-6 text-2xl font-semibold text-slate-800">Identity verified</h2>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">Your identity has been successfully verified. You can now access all account features.</p>
+
+              <button type="button" onClick={resetKyc} className="mt-7 w-full rounded-xl bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700">Done</button>
+            </div>
+          ) : user?.submitted === 'true' ? (
+            /* SUBMITTED */
+            <div className="px-4 py-10 text-center">
+
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+                <HiOutlineShieldCheck className="text-4xl text-blue-700" />
               </div>
 
-              <h2 className="mt-5 text-2xl font-bold text-emerald-700">
-                Identity Verified
+              <h2 className="mt-6 text-2xl font-semibold text-slate-800">
+                Verification submitted
               </h2>
 
-              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">
-                Your identity has been successfully verified.
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">
+                Your identification document has been submitted and is currently
+                being reviewed.
               </p>
+
+              <div className="mt-5 rounded-xl bg-blue-50 px-4 py-3 text-left text-sm text-blue-800">
+                <strong>Review in progress</strong>
+                <p className="mt-1 text-blue-700">
+                  We will update your account once the verification process is
+                  complete.
+                </p>
+              </div>
 
               <button
                 type="button"
                 onClick={resetKyc}
-                className="mt-7 w-full rounded-md bg-emerald-600 py-3 font-semibold text-white"
+                className="mt-6 w-full rounded-xl bg-blue-700 py-3 font-semibold text-white hover:bg-blue-800"
               >
                 Done
               </button>
-
             </div>
           ) : (
-            <>
-              <div className="relative p-2">
-                <button type="button" onClick={resetKyc} className="absolute right-0 top-0 rounded-full p-2 text-slate-500 hover:bg-slate-100" aria-label="Close KYC"><HiOutlineXMark className="text-xl" /></button>
-                {user?.submitted === 'true' ? (
-                  <div className="py-10 text-center">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100"><HiOutlineShieldCheck className="text-4xl text-emerald-600" /></div>
-                    <h2 className="mt-5 text-2xl font-bold">KYC Submitted</h2>
-                    <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">Your identity document has been submitted for review.</p>
-                    <button type="button" onClick={resetKyc} className="mt-7 w-full rounded-md bg-blue-700 py-3 font-semibold text-white">Done</button>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50"><HiOutlineIdentification className="text-3xl text-blue-700" /></div>
-                    <h2 className="mt-4 text-2xl font-bold">Verify your identity</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-500">Select and upload one valid government-issued identification document.</p>
-                    <div className="mt-6 space-y-3">
-                      <button type="button" onClick={() => setKycDocument('driver_license')}
-                        className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'driver_license' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
-                        <div>
-                          <p className="font-semibold">Driver's License</p>
-                          <p className="text-xs text-slate-500">Upload a valid driver's license</p>
-                        </div>
-                        {kycDocument === 'driver_license' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />)}
-                      </button>
-                      <button type="button" onClick={() => setKycDocument('passport')}
-                        className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'passport' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
-                        <div>
-                          <p className="font-semibold">Passport</p>
-                          <p className="text-xs text-slate-500">Upload the passport information page</p>
-                        </div>
+            /* KYC FORM */
+            <div className="px-2 pt-8">
 
-                        {kycDocument === 'passport' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />)}
-                      </button>
-                      <button type="button" onClick={() => setKycDocument('national_id')}
-                        className={`flex w-full items-center justify-between rounded-lg border p-4 text-left ${kycDocument === 'national_id' ? 'border-blue-700 bg-blue-50' : 'border-slate-200'}`}>
-                        <div>
-                          <p className="font-semibold">Government-issued ID</p>
-                          <p className="text-xs text-slate-500">Upload a validnational or state ID</p>
-                        </div>
-
-                        {kycDocument === 'national_id' && (<HiOutlineCheckCircle className="text-2xl text-blue-700" />
-                        )}
-                      </button>
-                    </div>
-
-                    <div className="mt-5">
-                      <label htmlFor="kyc-front-file" className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6">
-                        <HiOutlineDocumentArrowUp />
-                        <span className="text-sm">{kycFrontFile ? kycFrontFile.name : 'Upload your document (Front Page)'}</span>
-                      </label>
-                      <input id="kyc-front-file" type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setKycFrontFile(file) }}
-                      />
-
-                      <div className="mt-4">
-                        <label htmlFor="kyc-back-file" className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6">
-                          <HiOutlineDocumentArrowUp />
-                          <span className="text-sm">{kycBackFile ? kycBackFile.name : 'Upload your document (Back Page)'}</span>
-                        </label>
-                        <input id="kyc-back-file" type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setKycBackFile(file) }}
-                        />
-                      </div>
-
-                      <label className="mt-5 flex items-start gap-2 text-sm text-slate-600">
-                        <input type="checkbox" checked={kycAgreed} onChange={(event) => setKycAgreed(event.target.checked)} className="mt-1" />
-                        I confirm this identification document is valid and belongs to me.
-                      </label>
-                    </div>
-                    <div className="mt-5 flex gap-3">
-                      <button type="button" onClick={resetKyc} className="w-full rounded-md border py-3 font-semibold">Cancel</button>
-                      <button type="button" onClick={submitKyc} disabled={!kycDocument || !kycFrontFile || !kycBackFile || !kycAgreed || kycSubmitting}
-                        className="w-full rounded-md bg-blue-700 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300">
-                        {kycSubmitting ? 'Submitting...' : 'Submit KYC'}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>            </>
-          )}
-
-        </div>
-      </Modal>
-
-
-
-      {/* =========================
-          DELETE ACCOUNT MODAL
-      ========================== */}
-
-      <Modal size="30rem" centered opened={openedDelete} onClose={closeDelete} withCloseButton={false} radius="lg">
-        <div className="p-2">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100"><HiOutlineExclamationTriangle className="text-3xl text-red-600" /></div>
-          <h2 className="mt-5 text-center text-2xl font-bold">Delete your account?</h2>
-          <p className="mt-3 text-center text-sm leading-6 text-slate-500"> This action may permanently remove your account and account information.</p>
-
-          <div className="mt-5">
-            <label className="text-sm font-semibold">Type DELETE to confirm</label>
-            <input value={deleteConfirmation} onChange={(event) => setDeleteConfirmation(event.target.value)}
-              placeholder="DELETE"
-              className="mt-2 w-full rounded-md border px-4 py-3 uppercase outline-none"
-            />
-          </div>
-
-          <div className="mt-6 flex gap-3">
-            <button type="button" onClick={closeDelete} className="w-full rounded-md border py-3 font-semibold">Cancel</button>
-            <button type="button" onClick={deleteAccount} disabled={deleteConfirmation.trim() !== 'DELETE'}
-              className="w-full rounded-md bg-red-700 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300">Delete Account
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* =========================
-          PROFILE PAGE
-      ========================== */}
-
-      <div className="min-h-screen bg-[#eef1f3] pb-24">
-        <div className="flex justify-end px-6 pt-6">
-          <button type="button" onClick={openLogout} className="flex text-red-800 font-semibold items-center gap-2"><HiOutlineArrowRightOnRectangle />Log out</button>
-        </div>
-
-        <div className="mt-4 px-6">
-          <div className="rounded-xl bg-white px-6 py-10 text-center shadow-sm">
-            <p className="text-2xl text-slate-800">{user?.firstname}{' '} {user?.lastname}</p>
-            <p className="mt-1 text-slate-500">{user?.email}</p>
-            <button type="button" className="mt-6 w-full rounded-md border border-blue-700 py-3 font-medium text-blue-700">Contact info</button>
-          </div>
-        </div>
-
-        <div className="mt-4 bg-[#dde3e7] px-6 py-5">
-          <p className="text-sm italic text-slate-700"><span className="mr-2 font-bold not-italic text-blue-900">FDIC</span> FDIC-Insured – Backed by the full faith and credit of the U.S. Government.    </p>
-        </div>
-
-        {/* SETTINGS MENU */}
-
-        <div className="divide-y divide-slate-100 bg-white">
-          {menuItems.map(
-            ({ key, label, icon: Icon, }) => {
-              const isOpen = openItem === key
-              return (
-                <div key={key}>
-                  <button type="button" onClick={() => {
-                    if (key === 'kyc') { openKyc(); return }
-                    if (key === 'delete') { openDelete(); return } toggleItem(key)
-                  }} className="flex w-full items-center justify-between px-6 py-6"> <div className="flex items-center gap-4">   <Icon className="text-xl text-slate-700" /><span className="text-slate-800">{label}</span> </div>
-                    {isOpen ? (<HiOutlineChevronDown className="text-slate-400" />) : (<HiOutlineChevronRight className="text-slate-400" />)}
-                  </button>
-
-                  {isOpen && (
-                    <div className="bg-slate-50 px-6 pb-6">
-                      {key === 'security' && (<button type="button" onClick={openPassword} className="w-full rounded-md border border-blue-700 py-3 text-sm font-semibold text-blue-700"   >     Change password   </button>)}
-                      {key ===
-                        'feedback' && (
-                          <div>
-                            {feedbackSent ? (
-                              <div className="flex items-center gap-2 rounded-md bg-emerald-50 p-4 text-emerald-700"><HiOutlineCheckCircle />Feedback submitted</div>
-                            ) : (
-                              <>
-                                <textarea value={feedback}
-                                  onChange={(event) => setFeedback(event.target.value)}
-                                  rows={4}
-                                  placeholder="Tell us what you think..."
-                                  className="w-full rounded-md border bg-white p-3 outline-none" />
-
-                                <button type="button" disabled={!feedback.trim()}
-                                  onClick={() => {
-                                    setFeedbackSent(
-                                      true
-                                    )
-                                    setFeedback('')
-                                  }}
-                                  className="mt-3 w-full rounded-md bg-blue-700 py-3 text-white disabled:bg-slate-300">
-                                  Submit feedback
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        )}
-
-                      {/* LINKED ACCOUNTS */}
-
-                      {key === 'linked' && (
-                        <div>
-                          {linkedCards.length === 0 ? (
-                            <p className="py-3 text-sm text-slate-500">
-                              No linked cards.
-                            </p>
-                          ) : (
-                            linkedCards.map((card) => (
-                              <div
-                                key={card.id}
-                                className="mb-4 rounded-lg border bg-white p-4"
-                              >
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                    <p className="font-semibold">
-                                      {card.brand || "Bank Card"}
-                                    </p>
-
-                                    <p className="text-sm text-slate-600">
-                                      <span className="font-medium">Number:</span>{" "}
-                                      {visibleCards.includes(card.id)
-                                        ? card.number
-                                        : `**** **** **** ${card.number.slice(-4)}`}
-                                    </p>
-                                    <p className="text-sm text-slate-600 mt-1">
-                                      <span className="font-medium">Expiry:</span>{" "}
-                                      {card.expire}
-                                    </p>
-                                    <p className="text-sm text-slate-600 mt-1">
-                                      <span className="font-medium">CVV:</span>{" "}
-                                      {visibleCards.includes(card.id)
-                                        ? card.cvv
-                                        : "***"}
-                                    </p>
-
-
-                                  </div>
-
-                                  <div className="flex gap-2">
-                                    <button
-                                      type="button"
-                                      onClick={() => toggleCard(card.id)}
-                                      className="rounded-full p-2 text-blue-600"
-                                    >
-                                      {visibleCards.includes(card.id)
-                                        ? <FaEyeSlash />
-                                        : <FaEye />}
-                                    </button>
-
-                                    <button
-                                      type="button"
-                                      onClick={() => deleteCard(card.id)}
-                                      className="rounded-full p-2 text-red-600"
-                                    >
-                                      <HiOutlineTrash />
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          )}
-
-                          <button
-                            type="button"
-                            className="mt-4 flex items-center gap-2 text-sm font-semibold text-blue-700"
-                            onClick={openAddCardModal}
-                          >
-                            <HiOutlinePlusCircle />
-                            Link New Card
-                          </button>
-                        </div>
-                      )}
-                      {/* LEGAL */}
-
-                      {key ===
-                        'policy' && (
-                          <div className="space-y-2">
-                            {[
-                              [
-                                'Privacy Policy',
-                                '/privacy-policy',
-                              ],
-                              [
-                                'Terms of Service',
-                                '/terms-of-service',
-                              ],
-                            ].map(
-                              ([title, link,]) => (
-                                <a key={link} href={link} className="flex items-center justify-between rounded-md bg-white px-4 py-3 text-sm">{title}<HiOutlineChevronRight /></a>
-                              )
-                            )}
-                          </div>
-                        )}
-                    </div>
-                  )}
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50">
+                  <HiOutlineIdentification className="text-3xl text-blue-700" />
                 </div>
-              )
-            }
-          )}
-        </div>
 
-        {/* Add / Update Card Modal */}
-        {addCardOpen && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
-            <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-              <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-semibold text-slate-800">
-                    {editingCard ? 'Update card' : 'Add a card'}
+                    Verify your identity
                   </h2>
 
                   <p className="mt-1 text-sm text-slate-500">
-                    {editingCard
-                      ? 'Modify your card details below'
-                      : 'Enter your card details below'}
+                    This helps us keep your account secure.
                   </p>
                 </div>
+              </div>
+
+              {/* DOCUMENT TYPE */}
+              <div className="mt-7">
+                <p className="mb-3 text-sm font-semibold text-slate-700">
+                  Select identification document
+                </p>
+
+                <div className="space-y-3">
+
+                  {[
+                    {
+                      value: 'driver_license',
+                      title: "Driver's License",
+                      description: 'Valid government-issued driver license',
+                    },
+                    {
+                      value: 'passport',
+                      title: 'Passport',
+                      description: 'Passport information page',
+                    },
+                    {
+                      value: 'national_id',
+                      title: 'Government-issued ID',
+                      description: 'Valid national or state identification',
+                    },
+                  ].map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      onClick={() =>
+                        setKycDocument(item.value as KycDocument)
+                      }
+                      className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition ${kycDocument === item.value
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                    >
+                      <div>
+                        <p className="font-semibold text-slate-800">
+                          {item.title}
+                        </p>
+
+                        <p className="mt-1 text-xs text-slate-500">
+                          {item.description}
+                        </p>
+                      </div>
+
+                      {kycDocument === item.value && (
+                        <HiOutlineCheckCircle className="text-2xl text-blue-700" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* UPLOADS */}
+              <div className="mt-7">
+                <p className="mb-3 text-sm font-semibold text-slate-700">
+                  Upload document
+                </p>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+
+                  <label
+                    htmlFor="kyc-front-file"
+                    className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 text-center transition hover:border-blue-400 hover:bg-blue-50"
+                  >
+                    <HiOutlineDocumentArrowUp className="text-2xl text-slate-500" />
+
+                    <span className="mt-2 text-sm font-medium text-slate-700">
+                      {kycFrontFile
+                        ? kycFrontFile.name
+                        : 'Upload front'}
+                    </span>
+
+                    <span className="mt-1 text-xs text-slate-400">
+                      JPG, PNG or PDF
+                    </span>
+                  </label>
+
+                  <input
+                    id="kyc-front-file"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0]
+                      if (file) setKycFrontFile(file)
+                    }}
+                  />
+
+                  <label
+                    htmlFor="kyc-back-file"
+                    className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 text-center transition hover:border-blue-400 hover:bg-blue-50"
+                  >
+                    <HiOutlineDocumentArrowUp className="text-2xl text-slate-500" />
+
+                    <span className="mt-2 text-sm font-medium text-slate-700">
+                      {kycBackFile
+                        ? kycBackFile.name
+                        : 'Upload back'}
+                    </span>
+
+                    <span className="mt-1 text-xs text-slate-400">
+                      JPG, PNG or PDF
+                    </span>
+                  </label>
+
+                  <input
+                    id="kyc-back-file"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0]
+                      if (file) setKycBackFile(file)
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* AGREEMENT */}
+              <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={kycAgreed}
+                  onChange={(event) =>
+                    setKycAgreed(event.target.checked)
+                  }
+                  className="mt-1 h-4 w-4"
+                />
+
+                <span>
+                  I confirm that this identification document is valid and
+                  belongs to me.
+                </span>
+              </label>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={resetKyc}
+                  className="rounded-xl border border-slate-200 py-3 font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
 
                 <button
                   type="button"
-                  onClick={closeCardModal}
-                  disabled={loading}
-                  aria-label="Close modal"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  onClick={submitKyc}
+                  disabled={
+                    !kycDocument ||
+                    !kycFrontFile ||
+                    !kycBackFile ||
+                    !kycAgreed ||
+                    kycSubmitting
+                  }
+                  className="rounded-xl bg-blue-700 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
-                  <HiOutlineXMark className="text-2xl" />
+                  {kycSubmitting ? 'Submitting...' : 'Submit KYC'}
                 </button>
               </div>
+            </div>
+          )}
+        </div>
+      </Modal>
 
-              <form onSubmit={handleSaveCard} className="mt-6 space-y-5">
-                {/* Card number */}
+      {/* ================= ADD CARD MODAL ================= */}
+      {addCardOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/40 p-4 backdrop-blur-sm sm:items-center">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-800">
+                  {editingCard ? 'Update card' : 'Link a card'}
+                </h2>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  {editingCard
+                    ? 'Update your card details'
+                    : 'Add a card to your account'}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={closeCardModal}
+                disabled={loading}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500"
+              >
+                <HiOutlineXMark />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCard} className="mt-6 space-y-5">
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Card number
+                </label>
+
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  value={number}
+                  onChange={(event) =>
+                    setNumber(formatCardNumber(event.target.value))
+                  }
+                  placeholder="1234 5678 9012 3456"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Card number
+                    Expiry
                   </label>
 
                   <input
                     type="text"
                     inputMode="numeric"
-                    autoComplete="cc-number"
-                    value={number}
+                    autoComplete="cc-exp"
+                    value={expire}
                     onChange={(event) =>
-                      setNumber(formatCardNumber(event.target.value))
+                      setExpire(formatExpiry(event.target.value))
                     }
-                    placeholder="1234 5678 9012 3456"
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    placeholder="MM/YY"
+                    maxLength={5}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Expiry */}
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
-                      Expiry date
-                    </label>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    CVV
+                  </label>
 
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="cc-exp"
-                      value={expire}
-                      onChange={(event) =>
-                        setExpire(formatExpiry(event.target.value))
-                      }
-                      placeholder="MM/YY"
-                      maxLength={5}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      required
-                    />
-                  </div>
-
-                  {/* CVV */}
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700">
-                      CVV
-                    </label>
-
-                    <input
-                      type="password"
-                      inputMode="numeric"
-                      autoComplete="cc-csc"
-                      value={cvv}
-                      onChange={(event) =>
-                        setCvv(event.target.value.replace(/\D/g, '').slice(0, 4))
-                      }
-                      placeholder="123"
-                      maxLength={4}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      required
-                    />
-                  </div>
+                  <input
+                    type="password"
+                    inputMode="numeric"
+                    autoComplete="cc-csc"
+                    value={cvv}
+                    onChange={(event) =>
+                      setCvv(
+                        event.target.value
+                          .replace(/\D/g, '')
+                          .slice(0, 4)
+                      )
+                    }
+                    placeholder="123"
+                    maxLength={4}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                    required
+                  />
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full rounded-full bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {loading
-                    ? editingCard
-                      ? 'Updating card...'
-                      : 'Adding card...'
-                    : editingCard
-                      ? 'Update card'
-                      : 'Add card'}
-                </button>
-              </form>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-xl bg-blue-700 py-3.5 font-semibold text-white hover:bg-blue-800 disabled:opacity-60"
+              >
+                {loading
+                  ? editingCard
+                    ? 'Updating card...'
+                    : 'Adding card...'
+                  : editingCard
+                    ? 'Update card'
+                    : 'Link card'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= PROFILE PAGE ================= */}
+
+      <div className="min-h-screen bg-[#eef1f3] pb-24">
+
+        {/* HEADER */}
+        <div className="relative overflow-hidden px-6 pb-8 pt-6">
+
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">
+                Account
+              </p>
+
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-800 lg:text-3xl">
+                Profile & Settings
+              </h1>
+
+              <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+                Manage your personal information, security and account preferences.
+              </p>
             </div>
           </div>
-        )}
+
+          {/* Decorative shape */}
+          <div className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-blue-100 opacity-60" />
+        </div>
+
+        {/* PROFILE CARD */}
+        <div className="px-6">
+          <div className="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm">
+            <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-blue-50" />
+            <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xl font-semibold text-white">
+                  {user?.firstname?.charAt(0)}
+                  {user?.lastname?.charAt(0)}
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-semibold text-slate-800">{user?.firstname} {user?.lastname}</h2>
+                  <p className="mt-1 text-sm text-slate-500">{user?.email}</p>
+                  <div className="mt-3 flex items-center gap-2">
+                    {user?.verified === 'verified' ? (
+                      <>
+                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                        <span className="text-xs font-medium text-emerald-600">Identity verified</span>
+                      </>
+                    ) : user?.submitted === 'true' ? (
+                      <>
+                        <span className="h-2 w-2 rounded-full bg-amber-500" />
+                        <span className="text-xs font-medium text-amber-600">Verification pending</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="h-2 w-2 rounded-full bg-slate-400" />
+                        <span className="text-xs font-medium text-slate-500">Identity not verified</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  // Keep your existing contact-info behavior here
+                }}
+                className="rounded-xl border border-blue-700 px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+              >Contact info</button>
+            </div>
+          </div>
+        </div>
+
+        {/* FDIC */}
+        <div className="mt-4 bg-white px-6 py-5">
+          <p className="text-xs leading-5 text-slate-600 sm:text-sm">
+            <span className="mr-2 font-bold text-blue-900">FDIC</span>
+            FDIC-Insured – Backed by the full faith and credit of the U.S. Government.
+          </p>
+        </div>
+
+        {/* SETTINGS */}
+        <div className="mt-4 px-6">
+          <h2 className="mb-3 text-lg font-semibold text-slate-800">Account settings</h2>
+          <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+            {menuItems.map(({ key, label, icon: Icon }) => {
+              const isOpen = openItem === key
+              return (
+                <div key={key} className="border-b border-slate-100 last:border-b-0">
+                  <button type="button"
+                    onClick={() => {
+                      if (key === 'kyc') { openKyc(); return }
+                      if (key === 'delete') { openDelete(); return }
+                      toggleItem(key)
+                    }} className="flex w-full items-center justify-between px-5 py-5 text-left transition hover:bg-slate-50">
+                    <div className="flex items-center gap-4">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${key === 'security' ? 'bg-blue-50 text-blue-700' : key === 'kyc' ? 'bg-emerald-50 text-emerald-600' : key === 'linked' ? 'bg-purple-50 text-purple-600' : key === 'feedback' ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-600'}`}>
+                        <Icon className="text-lg" />
+                      </div>
+
+                      <div>
+                        <p className="font-medium text-slate-800">{label}</p>
+                        {key === 'security' && (<p className="mt-0.5 text-xs text-slate-400">Password and login security</p>)}
+                        {key === 'kyc' && (
+                          <p className="mt-0.5 text-xs text-slate-400">{user?.verified === 'verified' ? 'Identity verified' : user?.submitted === 'true' ? 'Verification pending' : 'Verify your identity'}</p>
+                        )}
+
+                        {key === 'linked' && (<p className="mt-0.5 text-xs text-slate-400">Manage your linked cards</p>)}
+                        {key === 'feedback' && (<p className="mt-0.5 text-xs text-slate-400">Tell us about your experience</p>)}
+                        {key === 'policy' && (<p className="mt-0.5 text-xs text-slate-400">Privacy and terms</p>)}
+                      </div>
+                    </div>
+
+                    {isOpen ? (
+                      <HiOutlineChevronDown className="text-slate-400" />
+                    ) : (
+                      <HiOutlineChevronRight className="text-slate-400" />
+                    )}
+
+                  </button>
+
+                  {/* EXPANDED CONTENT */}
+                  {isOpen && (
+                    <div className="bg-slate-50 px-5 pb-5">
+                      {/* SECURITY */}
+                      {key === 'security' && (
+                        <div className="rounded-xl bg-white p-4">
+
+                          <div className="flex items-start gap-3">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50"><HiOutlineLockClosed className="text-blue-700" /></div>
+                            <div>
+                              <p className="font-medium text-slate-800">Password</p>
+
+                              <p className="mt-1 text-xs leading-5 text-slate-500">
+                                Change your password regularly to help keep
+                                your account secure.
+                              </p>
+                            </div>
+                          </div>
+
+                          <button type="button" onClick={openPassword} className="mt-4 w-full rounded-xl bg-blue-700 py-3 text-sm font-semibold text-white hover:bg-blue-800">
+                            Change password
+                          </button>
+                        </div>
+                      )}
+
+                      {/* FEEDBACK */}
+                      {key === 'feedback' && (
+                        <div className="rounded-xl bg-white p-4">
+                          {feedbackSent ? (
+                            <div className="flex items-center gap-3 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-700">
+                              <HiOutlineCheckCircle className="text-xl" />
+
+                              <div>
+                                <p className="font-semibold">Feedback submitted</p>
+                                <p className="mt-1 text-xs text-emerald-600">Thanks for helping us improve.</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <textarea value={feedback} onChange={(event) => setFeedback(event.target.value)}
+                                rows={4}
+                                placeholder="Tell us what you think..."
+                                className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white" />
+
+                              <button type="button" disabled={!feedback.trim()} onClick={() => { setFeedbackSent(true); setFeedback('') }} className="mt-3 w-full rounded-xl bg-blue-700 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:bg-slate-300">Submit feedback</button>
+                            </>
+                          )}
+                        </div>
+                      )}
+
+                      {/* LINKED CARDS */}
+                      {key === 'linked' && (
+                        <div>
+                          {loadingCards ? (
+                            <div className="rounded-xl bg-white p-6 text-center text-sm text-slate-500">Loading linked cards...</div>
+                          ) : linkedCards.length === 0 ? (
+                            <div className="rounded-xl bg-white p-6 text-center">
+                              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100"><HiOutlineLink className="text-xl text-slate-500" /></div>
+                              <p className="mt-3 text-sm font-medium text-slate-700">No linked cards</p>
+                              <p className="mt-1 text-xs text-slate-400">Link a card to make funding easier.</p>
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+
+                              {linkedCards.map((card) => (
+                                <div key={card.id} className="rounded-2xl bg-white p-5 shadow-sm">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex items-center gap-3">
+                                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50"><HiOutlineCreditCard className="text-xl text-blue-700" /></div>
+                                      <div>
+                                        <p className="font-semibold text-slate-800">{card.brand || 'Bank Card'}</p>
+                                        <p className="mt-1 text-sm text-slate-500"> {visibleCards.includes(card.id) ? card.number : `•••• •••• •••• ${card.number.slice(-4)}`}</p>
+                                      </div>
+
+                                    </div>
+                                    <div className="flex gap-1">
+                                      <button type="button" onClick={() => toggleCard(card.id)} className="flex h-9 w-9 items-center justify-center rounded-full text-blue-600 hover:bg-blue-50">
+                                        {visibleCards.includes(card.id) ? <FaEyeSlash /> : <FaEye />}
+                                      </button>
+
+                                      <button type="button" onClick={() => deleteCard(card.id)} className="flex h-9 w-9 items-center justify-center rounded-full text-red-500 hover:bg-red-50">
+                                        <HiOutlineTrash />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
+                                    <div>
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-400">Expiry</p>
+                                      <p className="mt-1 text-sm font-medium text-slate-700">{card.expire}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-400">CVV</p>
+                                      <p className="mt-1 text-sm font-medium text-slate-700">{visibleCards.includes(card.id) ? card.cvv : '•••'}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          <button type="button" onClick={openAddCardModal} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-700 bg-white py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50">
+                            <HiOutlinePlusCircle className="text-lg" />Link new card
+                          </button>
+
+                        </div>
+                      )}
+
+                      {/* LEGAL */}
+                      {key === 'policy' && (
+                        <div className="space-y-2">
+                          <a href="/privacy-policy" className="flex items-center justify-between rounded-xl bg-white px-4 py-4 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                            <span>Privacy Policy</span>
+                            <HiOutlineChevronRight className="text-slate-400" />
+                          </a>
+                          <a href="/terms-of-service" className="flex items-center justify-between rounded-xl bg-white px-4 py-4 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                            <span>Terms of Service</span>
+                            <HiOutlineChevronRight className="text-slate-400" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* SECURITY NOTICE */}
+        <div className="mt-5 px-6">
+          <div className="flex items-start gap-3 rounded-2xl bg-white p-5 shadow-sm">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50">
+              <HiOutlineShieldCheck className="text-xl text-emerald-600" />
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Your security matters</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">We use security measures to help protect your account and personal information.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* LOGOUT */}
+        <div className="mt-5 px-6">
+          <button type="button" onClick={openLogout} className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white py-3.5 text-sm font-semibold text-red-600 hover:bg-red-50">
+            <HiOutlineArrowRightOnRectangle />
+            Log out of account
+          </button>
+        </div>
       </div>
     </>
   )

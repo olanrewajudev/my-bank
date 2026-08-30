@@ -38,7 +38,7 @@ export const Admin_urls = {
     },
     activatePnd(data: any) {
         return request({
-            endpoint: "user/delete-kyc",
+            endpoint: "user/activate-pnd",
             auth: 'true',
             method: "POST",
             data,
@@ -47,7 +47,7 @@ export const Admin_urls = {
     },
     deactivatePnd(data: any) {
         return request({
-            endpoint: "user/delete-kyc",
+            endpoint: "user/deactivate-pnd",
             auth: 'true',
             method: "POST",
             data,

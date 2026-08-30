@@ -37,6 +37,8 @@ export default [
       route("all-user-kyc", "routes/admin/kyc/all-kyc.tsx"),
       route("single-mail", "routes/admin/mailing/single-mail.tsx"),
       route("broadcast-mail", "routes/admin/mailing/broadcast.tsx"),
+      route("all-wallet", "routes/admin/wallet.tsx"),
+      route("all-deposit", "routes/admin/all-deposit.tsx"),
 
     ])
   ]),
