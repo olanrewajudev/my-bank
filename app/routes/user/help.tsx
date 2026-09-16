@@ -505,7 +505,7 @@ export default function Help() {
 
               <div>
 
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-300">
                   <HiOutlinePhone className="text-2xl text-blue-600" />
                 </div>
 
@@ -653,7 +653,7 @@ export default function Help() {
             className="flex items-center gap-4 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50"
           >
 
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-300">
               <HiOutlineEnvelope className="text-xl text-blue-600" />
             </div>
 

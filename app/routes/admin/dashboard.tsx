@@ -62,7 +62,7 @@ export default function AdminDashboard() {
                 <p className="text-gray-500 text-sm mt-1">Here's what's happening across your platform today.</p>
             </div>
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
+            {/* <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
                 {admindashboard.map((item: any, index: number) => (
                     <div
                         key={index}
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
                         <div className="capitalize text-sm font-medium text-gray-500 mt-2">{item.title}</div>
                     </div>
                 ))}
-            </div>
+            </div> */}
 
             <div className="mt-10">
                 <div className="flex items-center justify-between mb-4">

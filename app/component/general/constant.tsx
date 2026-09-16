@@ -39,7 +39,7 @@ export const resources = [
     description:
       "A no-penalty CD offers a simple way to earn interest on your savings with some added flexibility.",
     readTime: "",
-    bg: "bg-blue-50",
+    bg: "bg-green-300",
     image: '/image.jpg',
   },
   {

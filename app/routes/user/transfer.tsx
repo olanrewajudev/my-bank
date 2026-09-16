@@ -1063,7 +1063,7 @@ export default function Transfer() {
 
             <div className="rounded-2xl bg-white p-5 shadow-sm">
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-300">
 
                 <HiOutlineBuildingLibrary className="text-xl text-blue-600" />
 

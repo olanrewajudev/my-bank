@@ -63,7 +63,7 @@ export default function Login() {
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
                         <Link to='/'> <img src="/logo-dark.png" alt="" className="size-32 object-contain" /></Link>
-                            <Link to="/new/account-creation" className="flex items-center text-blue gap-2 text-sm"><BiLock className="h-5 w-5" />Create Account</Link>
+                            <Link to="/new/account-creation" className="flex items-center text-[#09ab75] gap-2 text-sm"><BiLock className="h-5 w-5" />Create Account</Link>
                     </div>
                 </nav>
             </div>
@@ -97,7 +97,7 @@ export default function Login() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="h-14 w-full border border-slate-300 px-5 outline-none focus:border-blue focus:border-2"
+                            className="h-14 w-full border border-slate-300 px-5 outline-none focus:border-[#09ab75] focus:border-2"
                         />
                     </div>
 
@@ -109,7 +109,7 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="h-14 w-full border border-slate-300 px-5 outline-none focus:border-blue focus:border-2"
+                            className="h-14 w-full border border-slate-300 px-5 outline-none focus:border-[#09ab75] focus:border-2"
                         />
                     </div>
 
@@ -118,11 +118,11 @@ export default function Login() {
                         <button
                             onClick={handleLogin}
                             disabled={loading}
-                            className="rounded bg-blue px-5 lg:px-10 text-base py-3.5 text-white hover:bg-[#005FB8] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="rounded bg-[#09ab75] px-5 lg:px-10 text-base py-3.5 text-white hover:bg-[#005FB8] disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {loading ? "Signing in..." : "Continue"}
                         </button>
-                        <a href="#" className="lg:text- text-sm text-blue font-light underline underline-offset-4">Create or reset password</a>
+                        <a href="#" className="lg:text- text-sm text-[#09ab75] font-light underline underline-offset-4">Create or reset password</a>
                     </div>
 
                     {/* SSL */}
@@ -139,7 +139,7 @@ export default function Login() {
                     <h2 className="mb-12 text-3xl font-light">Help and support</h2>
 
                     <p className="mb-6 text-xl">Need help?{" "}
-                        <a href="#" className="text-base text-blue font-light underline underline-offset-4">Contact Us</a>
+                        <a href="#" className="text-base text-[#09ab75] font-light underline underline-offset-4">Contact Us</a>
                     </p>
 
 
@@ -151,9 +151,9 @@ export default function Login() {
                             return (
                                 <div key={index} onClick={() => handleActive(index + 1)} className="mb-6 cursor-pointer">
                                     {/* Question row */}
-                                    <div className={`flex items-center gap-3 px-2 py-4 ${exists ? 'border border-blue w-fit' : ''}`}>
-                                        <ActiveIcon className="text-blue text-xl flex-shrink-0" />
-                                        <h1 className="text-lg text-blue">{item.q}</h1>
+                                    <div className={`flex items-center gap-3 px-2 py-4 ${exists ? 'border border-[#09ab75] w-fit' : ''}`}>
+                                        <ActiveIcon className="text-[#09ab75] text-xl flex-shrink-0" />
+                                        <h1 className="text-lg text-[#09ab75]">{item.q}</h1>
                                     </div>
                                     {exists && (
                                         <div className="mt-3 px-2 text-slate-700 text-base leading-relaxed">{item.a}</div>

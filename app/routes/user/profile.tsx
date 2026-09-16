@@ -344,7 +344,7 @@ export default function Profile() {
       >
         <div className="p-2">
           <div className="mb-6 flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-300">
               <HiOutlineLockClosed className="text-2xl text-blue-700" />
             </div>
 
@@ -445,7 +445,7 @@ export default function Profile() {
             /* SUBMITTED */
             <div className="px-4 py-10 text-center">
 
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-300">
                 <HiOutlineShieldCheck className="text-4xl text-blue-700" />
               </div>
 
@@ -458,7 +458,7 @@ export default function Profile() {
                 being reviewed.
               </p>
 
-              <div className="mt-5 rounded-xl bg-blue-50 px-4 py-3 text-left text-sm text-blue-800">
+              <div className="mt-5 rounded-xl bg-green-300 px-4 py-3 text-left text-sm text-blue-800">
                 <strong>Review in progress</strong>
                 <p className="mt-1 text-blue-700">
                   We will update your account once the verification process is
@@ -479,7 +479,7 @@ export default function Profile() {
             <div className="px-2 pt-8">
 
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-300">
                   <HiOutlineIdentification className="text-3xl text-blue-700" />
                 </div>
 
@@ -526,7 +526,7 @@ export default function Profile() {
                         setKycDocument(item.value as KycDocument)
                       }
                       className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition ${kycDocument === item.value
-                        ? 'border-blue-600 bg-blue-50'
+                        ? 'border-blue-600 bg-green-300'
                         : 'border-slate-200 bg-white hover:border-slate-300'
                         }`}
                     >
@@ -558,7 +558,7 @@ export default function Profile() {
 
                   <label
                     htmlFor="kyc-front-file"
-                    className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 text-center transition hover:border-blue-400 hover:bg-blue-50"
+                    className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 text-center transition hover:border-blue-400 hover:bg-green-300"
                   >
                     <HiOutlineDocumentArrowUp className="text-2xl text-slate-500" />
 
@@ -586,7 +586,7 @@ export default function Profile() {
 
                   <label
                     htmlFor="kyc-back-file"
-                    className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 text-center transition hover:border-blue-400 hover:bg-blue-50"
+                    className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 text-center transition hover:border-blue-400 hover:bg-green-300"
                   >
                     <HiOutlineDocumentArrowUp className="text-2xl text-slate-500" />
 
@@ -803,7 +803,7 @@ export default function Profile() {
         {/* PROFILE CARD */}
         <div className="px-6">
           <div className="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm">
-            <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-blue-50" />
+            <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-green-300" />
             <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xl font-semibold text-white">
@@ -839,7 +839,7 @@ export default function Profile() {
                 onClick={() => {
                   // Keep your existing contact-info behavior here
                 }}
-                className="rounded-xl border border-blue-700 px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+                className="rounded-xl border border-blue-700 px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-green-300"
               >Contact info</button>
             </div>
           </div>
@@ -868,7 +868,7 @@ export default function Profile() {
                       toggleItem(key)
                     }} className="flex w-full items-center justify-between px-5 py-5 text-left transition hover:bg-slate-50">
                     <div className="flex items-center gap-4">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${key === 'security' ? 'bg-blue-50 text-blue-700' : key === 'kyc' ? 'bg-emerald-50 text-emerald-600' : key === 'linked' ? 'bg-purple-50 text-purple-600' : key === 'feedback' ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-600'}`}>
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${key === 'security' ? 'bg-green-300 text-blue-700' : key === 'kyc' ? 'bg-emerald-50 text-emerald-600' : key === 'linked' ? 'bg-purple-50 text-purple-600' : key === 'feedback' ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-600'}`}>
                         <Icon className="text-lg" />
                       </div>
 
@@ -901,7 +901,7 @@ export default function Profile() {
                         <div className="rounded-xl bg-white p-4">
 
                           <div className="flex items-start gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50"><HiOutlineLockClosed className="text-blue-700" /></div>
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-300"><HiOutlineLockClosed className="text-blue-700" /></div>
                             <div>
                               <p className="font-medium text-slate-800">Password</p>
 
@@ -961,7 +961,7 @@ export default function Profile() {
                                 <div key={card.id} className="rounded-2xl bg-white p-5 shadow-sm">
                                   <div className="flex items-start justify-between">
                                     <div className="flex items-center gap-3">
-                                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50"><HiOutlineCreditCard className="text-xl text-blue-700" /></div>
+                                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-300"><HiOutlineCreditCard className="text-xl text-blue-700" /></div>
                                       <div>
                                         <p className="font-semibold text-slate-800">{card.brand || 'Bank Card'}</p>
                                         <p className="mt-1 text-sm text-slate-500"> {visibleCards.includes(card.id) ? card.number : `•••• •••• •••• ${card.number.slice(-4)}`}</p>
@@ -969,7 +969,7 @@ export default function Profile() {
 
                                     </div>
                                     <div className="flex gap-1">
-                                      <button type="button" onClick={() => toggleCard(card.id)} className="flex h-9 w-9 items-center justify-center rounded-full text-blue-600 hover:bg-blue-50">
+                                      <button type="button" onClick={() => toggleCard(card.id)} className="flex h-9 w-9 items-center justify-center rounded-full text-blue-600 hover:bg-green-300">
                                         {visibleCards.includes(card.id) ? <FaEyeSlash /> : <FaEye />}
                                       </button>
 
@@ -994,7 +994,7 @@ export default function Profile() {
                             </div>
                           )}
 
-                          <button type="button" onClick={openAddCardModal} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-700 bg-white py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50">
+                          <button type="button" onClick={openAddCardModal} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-700 bg-white py-3 text-sm font-semibold text-blue-700 hover:bg-green-300">
                             <HiOutlinePlusCircle className="text-lg" />Link new card
                           </button>
 

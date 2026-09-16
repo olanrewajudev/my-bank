@@ -565,7 +565,7 @@ export default function Dashboard() {
                 }}
                 className="group flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left transition hover:border-emerald-500 hover:bg-emerald-50/40 hover:shadow-sm"
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-300">
                   <HiOutlineBuildingLibrary className="text-2xl text-blue-600" />
                 </div>
                 <div className="min-w-0 flex-1">

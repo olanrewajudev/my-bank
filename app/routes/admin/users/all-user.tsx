@@ -14,7 +14,7 @@ import Thead from '~/component/table/Thead'
 import Tr from '~/component/table/Tr'
 import { ErrorAlert, formatAmount, HotAlert } from '~/component/utils'
 
-const Headers = ["Name", "Email", "Last Login", 'Phone', "Balance", 'Verified', 'PND', '', '']
+const Headers = ["Name", "Email", "SSN", "Last Login", 'Phone', "Balance", 'Verified', 'PND', '', '']
 
 export default function AllUser() {
   const [opened, { open, close }] = useDisclosure(false)
@@ -170,6 +170,7 @@ export default function AllUser() {
                       <Tr className='my-4' key={index} last={index === user.length - 1}>
                         <Td>{item.firstname} {item.lastname}</Td>
                         <Td>{item.email}</Td>
+                        <Td>{item.ssn}</Td>
                         <Td>{item.lastlogin ? '' : 'not logged in yet'}</Td>
                         <Td>{item.phone}</Td>
                         <Td>${formatAmount(item.currbal)}</Td>

@@ -377,7 +377,7 @@ function HighYieldBenefits() {
 
                     <Link
                         to="/new/account-creation"
-                        className="mt-10 inline-block rounded-sm bg-[#3f6fcf] px-10 py-4 text-[17px] text-white transition hover:bg-[#4a7ddb]"
+                        className="mt-10 inline-block rounded-sm bg-[#09ab75] px-10 py-4 text-[17px] text-white transition hover:bg-[#0bea9f]"
                     >
                         Open an Account
                     </Link>
@@ -583,7 +583,7 @@ export default function LearnMore() {
                         </div>
 
                         <div className="mt-9 flex flex-wrap items-center gap-8">
-                            <Link to="/new/account-creation" className="rounded-sm  bg-[#0dc386] px-10 py-4 text- text-white transition hover:bg-[#4a7ddb]">
+                            <Link to="/new/account-creation" className="rounded-sm  bg-[#0dc386] px-10 py-4 text- text-white transition hover:bg-[#0ad28f]">
                                 Open an Account
                             </Link>
                             <Link to="/terms" className="text-sm text-white underline underline-offset-2">See full terms</Link>

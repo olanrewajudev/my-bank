@@ -15,7 +15,7 @@ export default function Home() {
           <div className="">
             <h1 className="lg:text-[4rem] text-[2rem] leading-none tracking-tight">
               Earn <span className="font-normal">3.40% APY</span>{" "}
-              <span className="text-blue">+ 1.00% APY</span>
+              <span className="text-[#09ab75]">+ 1.00% APY</span>
             </h1>
 
             <div className="mb-5 mt-3"><h2 className="lg:text-[3.5rem] text-[1.4rem] font-light leading-none">when you refer a friend!</h2></div>
@@ -26,10 +26,10 @@ export default function Home() {
               Terms apply.
             </p>
 
-            <div className="mt-10">  <Link to='savings/referrals' className=" rounded-md bg-blue px-20 py-4 text-lg font-light text-white">Create Account</Link></div>
+            <div className="mt-10">  <Link to='savings/referrals' className=" rounded-md bg-[#09ab75] px-20 py-4 text-lg font-light text-white">Create Account</Link></div>
 
             <div className="mt-12 max-w-lg flex items-center gap-2">
-              <h3 className="font-bold text-lg text-blue-950">FDIC</h3>
+              <h3 className="font-bold text-lg text-[#09ab75]">FDIC</h3>
               <div className="">
                 <p className="text-xs italic">FDIC-Insured – Backed by the full faith and credit of the U.S. Government.</p>
                 <p className="text-xs italic">Beacon Gold Crest Bank USA, Salt Lake City Branch.</p>
@@ -51,7 +51,7 @@ export default function Home() {
                 <h1 className={`text-5xl font- ${item.color}`}>{item.rate}</h1>
                 <div className="flex items-center gap-2 mt-3">
                   <p className="lg:text-lg">Annual Percentage Yield</p>
-                  <BsInfo className="text-blue" size={20} />
+                  <BsInfo className="text-[#09ab75]" size={20} />
                 </div>
               </div>
               <a href="#" className="underline lg:text-lg mt-8">{item.link}</a>
@@ -64,7 +64,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-8">
         <div className="text-center mt-16">
           <p className="text-lg font-medium mb-4">Additional CD terms are available</p>
-          <button className="border-2 border-blue text-blue  px-10 lg:px-28 py-4 rounded hover:bg-blue hover:text-white transition">Compare savings products</button>
+          <button className="border-2 border-[#09ab75] text-[#09ab75]  px-10 lg:px-28 py-4 rounded hover:bg-[#09ab75] hover:text-white transition">Compare savings products</button>
         </div>
 
         <p className="text-xs text-gray-500 mt-10 leading-6">
@@ -81,7 +81,7 @@ export default function Home() {
         <div>
           <div className="lg:text-[3rem] text-[2rem] font-medium mb-4">Security focused</div>
           <p className="lg:text-lg text-slate-700 font-medium ">At Beacon Gold Crest, we make it a priority to protect your <br /> privacy andsafeguard your account information.</p>
-          <button className="bg-blue text-white px-16 py-4 mt-10 rounded hover:bg-blue">Learn more</button>
+          <button className="bg-[#09ab75] text-white px-16 py-4 mt-10 rounded hover:bg-[#09ab75]">Learn more</button>
         </div>
 
         <img src="/shield.png" alt="" className="" />
@@ -125,7 +125,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-16">
-            <button className="bg-blue text-white px-10 py-4 rounded font-medium hover:bg-blue transition">See all resources</button>
+            <button className="bg-[#09ab75] text-white px-10 py-4 rounded font-medium hover:bg-[#09ab75] transition">See all resources</button>
           </div>
         </div>
       </section>
