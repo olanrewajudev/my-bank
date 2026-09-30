@@ -2,11 +2,6 @@
 
 import { request } from "../Apis";
 
-// router.post('/save-deposit', UserPrivacy, SubmitDeposit)
-// router.get('/all-deposits', AdminPrivacy, AllDeposits)
-// router.get('/user-deposits/:id', UserPrivacy, AllUserDeposits)
-// router.post('/verify-deposit', AdminPrivacy, AdminVerifyDeposit)
-// router.post('/decline-deposit', AdminPrivacy, AdminDeclineDeposit)
 export const transact_urls = {
   getAllTransact() {
     return request({
@@ -35,6 +30,15 @@ export const transact_urls = {
   topup(data: any) {
     return request({
       endpoint: "transactions/create-balance",
+      auth: 'true',
+      method: "POST",
+      data,
+      type: 'JSON'
+    });
+  },
+  createTransactionPin(data: any) {
+    return request({
+      endpoint: "transactions/transaction-pin",
       auth: 'true',
       method: "POST",
       data,

@@ -78,6 +78,7 @@ export const EMPLOYMENT_STATUSES = [
     "Unemployed",
     "Retired",
 ]
+export type Region = 'usa' | 'europe' | 'other'
 
 export const REFERRAL_STEPS = [
     {
@@ -100,4 +101,82 @@ export const REFERRAL_STEPS = [
         title: 'Repeat',
         body: 'Spread the high-yield love: you can refer up to 5 friends for rate boosts.',
     },
+]
+
+
+
+export const EUROPE_COUNTRIES = [
+  'Austria',
+  'Belgium',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Estonia',
+  'Finland',
+  'France',
+  'Germany',
+  'Greece',
+  'Hungary',
+  'Iceland',
+  'Ireland',
+  'Italy',
+  'Latvia',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Netherlands',
+  'Norway',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  'Sweden',
+  'Switzerland',
+  'United Kingdom',
+]
+
+
+export const OTHER_COUNTRIES = [
+  'Nigeria',
+  'Ghana',
+  'Kenya',
+  'South Africa',
+  'Canada',
+  'Australia',
+  'India',
+  'China',
+  'Japan',
+  'Brazil',
+  'Mexico',
+  'United Arab Emirates',
+  'Saudi Arabia',
+  'Singapore',
+  'Philippines',
+  'Indonesia',
+  'Egypt',
+  'Turkey',
+  'Argentina',
+  'New Zealand',
+  'Other',
+]
+
+
+export const COUNTRY_OPTIONS = [
+  {
+    group: 'United States',
+    items: ['United States'],
+  },
+  {
+    group: 'Europe',
+    items: EUROPE_COUNTRIES,
+  },
+  {
+    group: 'Other',
+    items: OTHER_COUNTRIES,
+  },
 ]

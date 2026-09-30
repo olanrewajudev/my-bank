@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 export interface User {
   id?: string;
   firstname: string;
+pin: string | null;
   lastname: string;
   mi: string | null;
   email: string;
@@ -64,6 +65,8 @@ export interface AuthState {
 export interface PersonalInfo {
   firstName: string
   mi: string
+  pin: string
+  confirmPin: string
   lastName: string
   email: string
   phone: string

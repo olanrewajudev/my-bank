@@ -1,38 +1,65 @@
 import { BiLock, BiPhone } from "react-icons/bi";
+
 import {
     IoChevronDownSharp,
     IoChevronForward,
     IoAddCircleOutline,
     IoInformationCircleOutline,
     IoEyeOutline,
-    IoEyeOffOutline
+    IoEyeOffOutline,
 } from "react-icons/io5";
+
 import { Link, useNavigate } from "react-router";
+
 import formatPhone, { FAQs } from "~/component/general/constant";
+
 import UserFooter from "~/component/user/footer";
-import { EMPLOYMENT_STATUSES, ErrorAlert, HotAlert, US_STATES } from "~/component/utils";
+
+import {
+    EMPLOYMENT_STATUSES,
+    ErrorAlert,
+    HotAlert,
+    US_STATES,
+} from "~/component/utils";
+
 import { User_urls } from "~/component/endpoints/user";
+
 import { CookieName } from "~/component/Apis";
+
 import Cookies from "js-cookie";
+
 import { dispatchToken } from "~/lib/reducer";
+
 import type { PersonalInfo, VerifyIdentity } from "../../../global";
+
 import { useDispatch } from "react-redux";
+
 import React, { useEffect, useState } from "react";
 
-const SIGNUP_STEPS = ["Get started", "Personal info", "Verify identity", "Open account"];
+const SIGNUP_STEPS = [
+    "Get started",
+    "Personal info",
+    "Verify identity",
+    "Open account",
+];
 
 // Helper: returns the border classes for a required field based on whether it's empty
 function reqBorder(value: string) {
-    return value.trim() === "" ? "border-red-500" : "border-slate-300";
+    return value.trim() === ""
+        ? "border-red-500"
+        : "border-slate-300";
 }
 
 export default function Signup() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [active, setActive] = useState(0);
 
+    const [active, setActive] = useState(0);
     const [step, setStep] = useState(0);
-    const [accountType, setAccountType] = useState("Online Savings Account");
+
+    const [accountType, setAccountType] = useState(
+        "Online Savings Account"
+    );
 
     const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
         firstName: "",
@@ -42,34 +69,40 @@ export default function Signup() {
         phone: "",
         password: "",
         confirmPassword: "",
+        pin: "",
+        confirmPin: "",
         agreed: false,
     });
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const [verifyIdentity, setVerifyIdentity] = useState<VerifyIdentity>({
-        primaryAddress: "",
-        aptSuite: "",
-        city: "",
-        state: "",
-        zip: "",
-        countryOfCitizenship: "United States",
-        alternatePhone: "",
-        dob: "",
+    const [verifyIdentity, setVerifyIdentity] =
+        useState<VerifyIdentity>({
+            primaryAddress: "",
+            aptSuite: "",
+            city: "",
+            state: "",
+            zip: "",
+            countryOfCitizenship: "United States",
+            alternatePhone: "",
+            dob: "",
 
-        // SSN temporarily disabled
-        ssn: "",
-        confirmSsn: "",
+            // SSN temporarily disabled
+            ssn: "",
+            confirmSsn: "",
 
-        employmentStatus: "",
-    });
+            employmentStatus: "",
+        });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     function handleActive(value: number) {
-        if (active !== value) return setActive(value);
+        if (active !== value) {
+            return setActive(value);
+        }
+
         return setActive(0);
     }
 
@@ -101,7 +134,10 @@ export default function Signup() {
     }
 
     function formatDOB(value: string) {
-        const digits = value.replace(/\D/g, "").slice(0, 8);
+        const digits = value
+            .replace(/\D/g, "")
+            .slice(0, 8);
+
         const parts = [
             digits.slice(0, 2),
             digits.slice(2, 4),
@@ -115,6 +151,7 @@ export default function Signup() {
     /*
     function formatSSN(value: string) {
         const digits = value.replace(/\D/g, "").slice(0, 9);
+
         const parts = [
             digits.slice(0, 3),
             digits.slice(3, 5),
@@ -128,6 +165,7 @@ export default function Signup() {
     function toApiDob(mmddyyyy: string) {
         // form stores "MM/DD/YYYY", API wants "YYYY-MM-DD"
         const [mm, dd, yyyy] = mmddyyyy.split("/");
+
         return `${yyyy}-${mm}-${dd}`;
     }
 
@@ -136,62 +174,153 @@ export default function Signup() {
         /[A-Za-z]/.test(personalInfo.password) &&
         /\d/.test(personalInfo.password);
 
+    const pinValid = /^\d{4}$/.test(personalInfo.pin);
+
+    /*
+     * STEP 1 VALIDATION
+     *
+     * MI is now REQUIRED.
+     */
     const personalInfoValid =
         personalInfo.firstName.trim() !== "" &&
+        personalInfo.mi.trim() !== "" &&
         personalInfo.lastName.trim() !== "" &&
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email) &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+            personalInfo.email
+        ) &&
         personalInfo.phone.replace(/\D/g, "").length >= 10 &&
         passwordValid &&
-        personalInfo.password === personalInfo.confirmPassword &&
+        personalInfo.password ===
+            personalInfo.confirmPassword &&
+        pinValid &&
+        personalInfo.pin === personalInfo.confirmPin &&
         personalInfo.agreed;
 
     const isUSCitizen =
-        verifyIdentity.countryOfCitizenship === "United States";
+        verifyIdentity.countryOfCitizenship ===
+        "United States";
 
-    // SSN validation disabled
+    /*
+     * STEP 2 VALIDATION
+     *
+     * ZIP is REQUIRED but does NOT have to be exactly
+     * 5 digits.
+     *
+     * Examples:
+     * 1234     ✅
+     * 12345    ✅
+     * 123456   ✅
+     * 1234567  ✅
+     *
+     * Empty     ❌
+     * 123AB     ❌
+     */
     const verifyIdentityValid =
         verifyIdentity.primaryAddress.trim() !== "" &&
         verifyIdentity.city.trim() !== "" &&
         verifyIdentity.state.trim() !== "" &&
-        /^\d{5}$/.test(verifyIdentity.zip) &&
+        /^\d+$/.test(verifyIdentity.zip) &&
         verifyIdentity.countryOfCitizenship.trim() !== "" &&
-        /^\d{2}\/\d{2}\/\d{4}$/.test(verifyIdentity.dob) &&
+        /^\d{2}\/\d{2}\/\d{4}$/.test(
+            verifyIdentity.dob
+        ) &&
         verifyIdentity.employmentStatus.trim() !== "";
 
     function goToStep(index: number) {
         setStep(
             Math.max(
                 0,
-                Math.min(index, SIGNUP_STEPS.length - 1)
+                Math.min(
+                    index,
+                    SIGNUP_STEPS.length - 1
+                )
             )
         );
     }
 
+    /*
+     * FINAL SUBMISSION
+     *
+     * Validation is performed AGAIN here.
+     *
+     * This guarantees that the API request will NOT be
+     * sent if required fields are missing or invalid.
+     */
     const handleSubmission = async () => {
         setError("");
+
+        // Prevent submission if Personal Information is invalid
+        if (!personalInfoValid) {
+            setError(
+                "Please complete all required personal information fields."
+            );
+            return;
+        }
+
+        // Prevent submission if Identity Information is invalid
+        if (!verifyIdentityValid) {
+            setError(
+                "Please complete all required identity information fields."
+            );
+            return;
+        }
+
         setLoading(true);
 
         try {
             const payload = {
-                firstname: personalInfo.firstName,
-                lastname: personalInfo.lastName,
-                mi: personalInfo.mi,
-                phone: personalInfo.phone.replace(/\D/g, ""),
-                email: personalInfo.email,
-                password: personalInfo.password,
-                confirm_password: personalInfo.confirmPassword,
-                agreed: personalInfo.agreed,
-                accounttype: accountType
-                    .toLowerCase()
-                    .includes("savings")
-                    ? "personal"
-                    : accountType.toLowerCase(),
+                firstname:
+                    personalInfo.firstName.trim(),
 
-                address: verifyIdentity.primaryAddress,
-                city: verifyIdentity.city,
-                state: verifyIdentity.state,
-                zipcode: verifyIdentity.zip,
-                dob: toApiDob(verifyIdentity.dob),
+                lastname:
+                    personalInfo.lastName.trim(),
+
+                // MI is now required
+                mi: personalInfo.mi.trim(),
+
+                phone: personalInfo.phone.replace(
+                    /\D/g,
+                    ""
+                ),
+
+                email:
+                    personalInfo.email.trim(),
+
+                password:
+                    personalInfo.password,
+
+                confirm_password:
+                    personalInfo.confirmPassword,
+
+                agreed:
+                    personalInfo.agreed,
+
+                accounttype:
+                    accountType
+                        .toLowerCase()
+                        .includes("savings")
+                        ? "personal"
+                        : accountType.toLowerCase(),
+
+                address:
+                    verifyIdentity.primaryAddress.trim(),
+
+                city:
+                    verifyIdentity.city.trim(),
+
+                state:
+                    verifyIdentity.state.trim(),
+
+                // ZIP can be any number of digits
+                zipcode:
+                    verifyIdentity.zip,
+
+                dob: toApiDob(
+                    verifyIdentity.dob
+                ),
+
+                pin:
+                    personalInfo.pin,
 
                 // SSN temporarily disabled
                 // ...(isUSCitizen
@@ -201,20 +330,36 @@ export default function Signup() {
                 //     : {}),
             };
 
-            const res = await User_urls.register(payload);
+            const res =
+                await User_urls.register(payload);
 
             if (res.status === 200) {
                 if (res.data?.token) {
-                    Cookies.set(CookieName, res.data.token);
-                    dispatch(dispatchToken(res.data.token));
-                    navigate("/user/dashboard");
+                    Cookies.set(
+                        CookieName,
+                        res.data.token
+                    );
+
+                    dispatch(
+                        dispatchToken(
+                            res.data.token
+                        )
+                    );
+
+                    navigate(
+                        "/user/dashboard"
+                    );
+
                     HotAlert(res.data.msg);
                 }
             } else {
                 ErrorAlert(res.data.msg);
             }
         } catch (err: any) {
-            setError(err.message || "Something went wrong");
+            setError(
+                err.message ||
+                    "Something went wrong"
+            );
         } finally {
             setLoading(false);
         }
@@ -222,8 +367,8 @@ export default function Signup() {
 
     return (
         <div className="min-h-screen bg-white">
+            {/* Navbar */}
             <div>
-                {/* Navbar */}
                 <nav className="border-b border-gray-200">
                     <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
                         <Link to="/">
@@ -255,71 +400,82 @@ export default function Signup() {
                     </h2>
 
                     <p className="text-xs italic text-slate-700">
-                        FDIC-Insured - Backed by the full faith and credit of
-                        the U.S. Government. Beacon Gold Crest Bank USA, Salt
-                        Lake City Branch.
+                        FDIC-Insured - Backed by the full
+                        faith and credit of the U.S. Government.
+                        Beacon Gold Crest Bank USA, Salt Lake
+                        City Branch.
                     </p>
                 </div>
             </div>
 
             {/* Step Indicator */}
-            <section className="mx-auto max-w-3xl lg:px-20 pt-12">
-                <div className="grid lg:grid-cols-4 grid-cols-2 gap-4">
-                    {SIGNUP_STEPS.map((label, index) => {
-                        const isDone = index < step;
-                        const isCurrent = index === step;
+            <section className="mx-auto max-w-3xl pt-12 lg:px-20">
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    {SIGNUP_STEPS.map(
+                        (label, index) => {
+                            const isDone =
+                                index < step;
 
-                        return (
-                            <React.Fragment key={label}>
-                                <div className="flex flex-col justify-center items-center gap-3">
-                                    <span
-                                        className={`text-sm ${
-                                            isDone || isCurrent
-                                                ? "text-[#2f9e6f]"
-                                                : "text-slate-400"
-                                        }`}
-                                    >
-                                        {label}
-                                    </span>
+                            const isCurrent =
+                                index === step;
 
-                                    <button
-                                        onClick={() =>
-                                            index < step &&
-                                            goToStep(index)
-                                        }
-                                        className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition ${
-                                            isDone
-                                                ? "border-[#2f9e6f] bg-[#2f9e6f]"
-                                                : isCurrent
-                                                ? "border-[#2f9e6f] bg-[#2f9e6f]"
-                                                : "border-slate-300 bg-white"
-                                        }`}
-                                    >
-                                        {isDone && (
-                                            <span className="text-[10px] leading-none text-white">
-                                                ✓
-                                            </span>
-                                        )}
-                                    </button>
-                                </div>
-                            </React.Fragment>
-                        );
-                    })}
+                            return (
+                                <React.Fragment
+                                    key={label}
+                                >
+                                    <div className="flex flex-col items-center justify-center gap-3">
+                                        <span
+                                            className={`text-sm ${
+                                                isDone ||
+                                                isCurrent
+                                                    ? "text-[#2f9e6f]"
+                                                    : "text-slate-400"
+                                            }`}
+                                        >
+                                            {label}
+                                        </span>
+
+                                        <button
+                                            onClick={() =>
+                                                index <
+                                                    step &&
+                                                goToStep(
+                                                    index
+                                                )
+                                            }
+                                            className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition ${
+                                                isDone
+                                                    ? "border-[#2f9e6f] bg-[#2f9e6f]"
+                                                    : isCurrent
+                                                      ? "border-[#2f9e6f] bg-[#2f9e6f]"
+                                                      : "border-slate-300 bg-white"
+                                            }`}
+                                        >
+                                            {isDone && (
+                                                <span className="text-[10px] leading-none text-white">
+                                                    ✓
+                                                </span>
+                                            )}
+                                        </button>
+                                    </div>
+                                </React.Fragment>
+                            );
+                        }
+                    )}
                 </div>
             </section>
 
-            <section className="py-5 lg:w-[55%] mx-auto">
-                {/* Step content */}
+            <section className="mx-auto py-5 lg:w-[55%]">
                 <section className="mx-auto max-w-3xl px-8 py-10 lg:py-20">
 
                     {/* STEP 0 */}
                     {step === 0 && (
                         <div>
-                            <h1 className="lg:text-5xl text-3xl font-light text-[#101d3d]">
+                            <h1 className="text-3xl font-light text-[#101d3d] lg:text-5xl">
                                 Let's get started
                             </h1>
 
-                            <p className="mt-2 text-sm lg:text-base text-[#101d3d]">
+                            <p className="mt-2 text-sm text-[#101d3d] lg:text-base">
                                 Already a customer? Please{" "}
                                 <Link
                                     to="/login"
@@ -327,28 +483,35 @@ export default function Signup() {
                                 >
                                     log in.
                                 </Link>{" "}
-                                We'll pre-fill your info to save time.
+                                We'll pre-fill your info to
+                                save time.
                             </p>
 
                             <label className="mt-6 block text-base text-[#101d3d]">
                                 Account type{" "}
-                                <span className="text-red-500">*</span>
+                                <span className="text-red-500">
+                                    *
+                                </span>
                             </label>
 
                             <div className="relative mt-3">
                                 <select
                                     value={accountType}
                                     onChange={(e) =>
-                                        setAccountType(e.target.value)
+                                        setAccountType(
+                                            e.target.value
+                                        )
                                     }
                                     className="w-full appearance-none rounded-sm border border-slate-300 px-6 py-3 text-base text-[#101d3d] outline-none"
                                 >
                                     <option>
                                         Online Savings Account
                                     </option>
+
                                     <option>
                                         Certificate of Deposit
                                     </option>
+
                                     <option>
                                         High-Yield CD
                                     </option>
@@ -358,16 +521,20 @@ export default function Signup() {
                             </div>
 
                             <p className="mt-4 text-sm text-[#101d3d]">
-                                No minimum balance required. No fees.
+                                No minimum balance required. No
+                                fees.
                             </p>
 
                             <p className="mt-6 text-sm leading-relaxed text-slate-700">
-                                Annual Percentage Yield (APY) is 3.40% with an
-                                interest rate of 3.34% as of July 23, 2026.
-                                Interest rate and APY are variable and may
-                                change at our discretion at any time without
-                                notice. For more information regarding
-                                interest rate calculation, please refer to our{" "}
+                                Annual Percentage Yield (APY) is
+                                3.40% with an interest rate of
+                                3.34% as of July 23, 2026.
+                                Interest rate and APY are variable
+                                and may change at our discretion
+                                at any time without notice. For
+                                more information regarding
+                                interest rate calculation, please
+                                refer to our{" "}
                                 <Link
                                     to="/terms"
                                     className="text-[#09ab75] underline underline-offset-4"
@@ -377,11 +544,12 @@ export default function Signup() {
                             </p>
 
                             <div className="mt-10 border-t border-slate-200" />
-
                             <div className="mt-10 border-t border-slate-200" />
 
                             <button
-                                onClick={() => goToStep(1)}
+                                onClick={() =>
+                                    goToStep(1)
+                                }
                                 className="mt-12 rounded-sm bg-[#09ab75] px-12 py-4 text-lg text-white transition hover:opacity-90"
                             >
                                 Continue
@@ -392,26 +560,33 @@ export default function Signup() {
                     {/* STEP 1 */}
                     {step === 1 && (
                         <div>
-                            <h1 className="lg:text-4xl text-2xl text-[#101d3d]">
+                            <h1 className="text-2xl text-[#101d3d] lg:text-4xl">
                                 Personal Information
                             </h1>
 
-                            <p className="mt-4 lg:text-lg text-slate-700">
-                                This should be your legal full name as it
-                                appears on your government ID
+                            <p className="mt-4 text-slate-700 lg:text-lg">
+                                This should be your legal full
+                                name as it appears on your
+                                government ID
                             </p>
 
-                            <div className="mt-10 grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+                            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+                                {/* FIRST NAME */}
                                 <div>
                                     <label className="mb-2 block text-base text-[#101d3d]">
                                         First name{" "}
-                                        <span className="text-red-500">*</span>
+                                        <span className="text-red-500">
+                                            *
+                                        </span>
                                     </label>
 
                                     <input
                                         type="text"
                                         placeholder="First name"
-                                        value={personalInfo.firstName}
+                                        value={
+                                            personalInfo.firstName
+                                        }
                                         onChange={(e) =>
                                             updatePersonalInfo(
                                                 "firstName",
@@ -424,36 +599,49 @@ export default function Signup() {
                                     />
                                 </div>
 
+                                {/* MI - REQUIRED */}
                                 <div>
                                     <label className="mb-2 block text-base text-[#101d3d]">
-                                        MI
+                                        MI{" "}
+                                        <span className="text-red-500">
+                                            *
+                                        </span>
                                     </label>
 
                                     <input
                                         type="text"
                                         placeholder="MI"
                                         maxLength={1}
-                                        value={personalInfo.mi}
+                                        value={
+                                            personalInfo.mi
+                                        }
                                         onChange={(e) =>
                                             updatePersonalInfo(
                                                 "mi",
                                                 e.target.value
                                             )
                                         }
-                                        className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none"
+                                        className={`w-full rounded-sm border ${reqBorder(
+                                            personalInfo.mi
+                                        )} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                                     />
                                 </div>
 
+                                {/* LAST NAME */}
                                 <div>
                                     <label className="mb-2 block text-base text-[#101d3d]">
                                         Last name{" "}
-                                        <span className="text-red-500">*</span>
+                                        <span className="text-red-500">
+                                            *
+                                        </span>
                                     </label>
 
                                     <input
                                         type="text"
                                         placeholder="Last name"
-                                        value={personalInfo.lastName}
+                                        value={
+                                            personalInfo.lastName
+                                        }
                                         onChange={(e) =>
                                             updatePersonalInfo(
                                                 "lastName",
@@ -467,15 +655,20 @@ export default function Signup() {
                                 </div>
                             </div>
 
+                            {/* EMAIL */}
                             <label className="mt-10 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
                                 Email address{" "}
-                                <span className="text-red-500">*</span>
+                                <span className="text-red-500">
+                                    *
+                                </span>
                             </label>
 
                             <input
                                 type="email"
                                 placeholder="email@address.com"
-                                value={personalInfo.email}
+                                value={
+                                    personalInfo.email
+                                }
                                 onChange={(e) =>
                                     updatePersonalInfo(
                                         "email",
@@ -487,19 +680,26 @@ export default function Signup() {
                                 )} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                             />
 
+                            {/* PHONE */}
                             <label className="mt-10 mb-2 block text-base text-[#101d3d]">
                                 Phone number{" "}
-                                <span className="text-red-500">*</span>
+                                <span className="text-red-500">
+                                    *
+                                </span>
                             </label>
 
                             <input
                                 type="tel"
                                 placeholder="(###) ###-####"
-                                value={personalInfo.phone}
+                                value={
+                                    personalInfo.phone
+                                }
                                 onChange={(e) =>
                                     updatePersonalInfo(
                                         "phone",
-                                        formatPhone(e.target.value)
+                                        formatPhone(
+                                            e.target.value
+                                        )
                                     )
                                 }
                                 className={`w-full rounded-sm border ${reqBorder(
@@ -507,9 +707,12 @@ export default function Signup() {
                                 )} px-4 py-4 text-lg text-[#101d3d] outline-none`}
                             />
 
+                            {/* PASSWORD */}
                             <label className="mt-10 mb-2 block text-base text-[#101d3d]">
                                 Password{" "}
-                                <span className="text-red-500">*</span>
+                                <span className="text-red-500">
+                                    *
+                                </span>
                             </label>
 
                             <div className="relative">
@@ -520,7 +723,9 @@ export default function Signup() {
                                             : "password"
                                     }
                                     placeholder="Create a password"
-                                    value={personalInfo.password}
+                                    value={
+                                        personalInfo.password
+                                    }
                                     onChange={(e) =>
                                         updatePersonalInfo(
                                             "password",
@@ -535,7 +740,10 @@ export default function Signup() {
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        setShowPassword((prev) => !prev)
+                                        setShowPassword(
+                                            (prev) =>
+                                                !prev
+                                        )
                                     }
                                     className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500"
                                     aria-label={
@@ -553,13 +761,17 @@ export default function Signup() {
                             </div>
 
                             <p className="mt-2 text-sm text-slate-600">
-                                Must be at least 8 characters and include a
-                                letter and a number.
+                                Must be at least 8 characters
+                                and include a letter and a
+                                number.
                             </p>
 
+                            {/* CONFIRM PASSWORD */}
                             <label className="mt-8 mb-2 block text-base text-[#101d3d]">
                                 Confirm password{" "}
-                                <span className="text-red-500">*</span>
+                                <span className="text-red-500">
+                                    *
+                                </span>
                             </label>
 
                             <div className="relative">
@@ -570,7 +782,9 @@ export default function Signup() {
                                             : "password"
                                     }
                                     placeholder="Re-enter your password"
-                                    value={personalInfo.confirmPassword}
+                                    value={
+                                        personalInfo.confirmPassword
+                                    }
                                     onChange={(e) =>
                                         updatePersonalInfo(
                                             "confirmPassword",
@@ -593,7 +807,8 @@ export default function Signup() {
                                     type="button"
                                     onClick={() =>
                                         setShowConfirmPassword(
-                                            (prev) => !prev
+                                            (prev) =>
+                                                !prev
                                         )
                                     }
                                     className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500"
@@ -611,7 +826,8 @@ export default function Signup() {
                                 </button>
                             </div>
 
-                            {personalInfo.confirmPassword !== "" &&
+                            {personalInfo.confirmPassword !==
+                                "" &&
                                 personalInfo.password !==
                                     personalInfo.confirmPassword && (
                                     <p className="mt-2 text-sm text-red-600">
@@ -619,16 +835,110 @@ export default function Signup() {
                                     </p>
                                 )}
 
+                            {/* TRANSACTION PIN */}
+                            <label className="mt-8 mb-2 block text-base text-[#101d3d]">
+                                Transaction PIN{" "}
+                                <span className="text-red-500">
+                                    *
+                                </span>
+                            </label>
+
+                            <input
+                                type="password"
+                                inputMode="numeric"
+                                maxLength={4}
+                                placeholder="Enter 4-digit PIN"
+                                value={
+                                    personalInfo.pin
+                                }
+                                onChange={(e) =>
+                                    updatePersonalInfo(
+                                        "pin",
+                                        e.target.value
+                                            .replace(
+                                                /\D/g,
+                                                ""
+                                            )
+                                            .slice(
+                                                0,
+                                                4
+                                            )
+                                    )
+                                }
+                                className={`w-full rounded-sm border ${
+                                    personalInfo.pin !== "" &&
+                                    !pinValid
+                                        ? "border-red-500"
+                                        : reqBorder(
+                                              personalInfo.pin
+                                          )
+                                } px-4 py-4 text-lg text-[#101d3d] outline-none`}
+                            />
+
+                            {/* CONFIRM PIN */}
+                            <label className="mt-6 mb-2 block text-base text-[#101d3d]">
+                                Confirm Transaction PIN{" "}
+                                <span className="text-red-500">
+                                    *
+                                </span>
+                            </label>
+
+                            <input
+                                type="password"
+                                inputMode="numeric"
+                                maxLength={4}
+                                placeholder="Re-enter your PIN"
+                                value={
+                                    personalInfo.confirmPin
+                                }
+                                onChange={(e) =>
+                                    updatePersonalInfo(
+                                        "confirmPin",
+                                        e.target.value
+                                            .replace(
+                                                /\D/g,
+                                                ""
+                                            )
+                                            .slice(
+                                                0,
+                                                4
+                                            )
+                                    )
+                                }
+                                className={`w-full rounded-sm border ${
+                                    personalInfo.confirmPin !==
+                                        "" &&
+                                    personalInfo.confirmPin !==
+                                        personalInfo.pin
+                                        ? "border-red-500"
+                                        : reqBorder(
+                                              personalInfo.confirmPin
+                                          )
+                                } px-4 py-4 text-lg text-[#101d3d] outline-none`}
+                            />
+
+                            {personalInfo.confirmPin !==
+                                "" &&
+                                personalInfo.pin !==
+                                    personalInfo.confirmPin && (
+                                    <p className="mt-2 text-sm text-red-600">
+                                        PINs don't match.
+                                    </p>
+                                )}
+
+                            {/* AGREEMENT */}
                             <label
                                 className={`mt-10 flex items-start gap-4 rounded-sm ${
                                     !personalInfo.agreed
-                                        ? "outline outline-1 outline-red-500 p-2 -m-2"
+                                        ? "m-[-8px] outline outline-1 outline-red-500 p-2"
                                         : ""
                                 }`}
                             >
                                 <input
                                     type="checkbox"
-                                    checked={personalInfo.agreed}
+                                    checked={
+                                        personalInfo.agreed
+                                    }
                                     onChange={(e) =>
                                         updatePersonalInfo(
                                             "agreed",
@@ -638,17 +948,19 @@ export default function Signup() {
                                     className="mt-1 h-5 w-5 accent-blue"
                                 />
 
-                                <span className="lg:text-lg leading-relaxed text-[#101d3d]">
-                                    By checking this box, you agree to and
-                                    acknowledge the receipt of: (i){" "}
+                                <span className="leading-relaxed text-[#101d3d] lg:text-lg">
+                                    By checking this box, you
+                                    agree to and acknowledge
+                                    the receipt of: (i){" "}
                                     <Link
                                         to="/esign"
                                         className="text-[#09ab75] underline underline-offset-4"
                                     >
                                         eSign Agreement
                                     </Link>{" "}
-                                    to receive documents from us electronically;
-                                    and (ii) Our{" "}
+                                    to receive documents from
+                                    us electronically; and (ii)
+                                    Our{" "}
                                     <Link
                                         to="/privacy"
                                         className="text-[#09ab75] underline underline-offset-4"
@@ -669,15 +981,23 @@ export default function Signup() {
                                     >
                                         Site Terms
                                     </Link>
-                                    <span className="text-red-500"> *</span>
+
+                                    <span className="text-red-500">
+                                        {" "}
+                                        *
+                                    </span>
                                 </span>
                             </label>
 
+                            {/* STEP 1 CONTINUE */}
                             <button
                                 onClick={() =>
-                                    personalInfoValid && goToStep(2)
+                                    personalInfoValid &&
+                                    goToStep(2)
                                 }
-                                disabled={!personalInfoValid}
+                                disabled={
+                                    !personalInfoValid
+                                }
                                 className={`mt-10 rounded-sm px-14 py-4 text-lg text-white transition ${
                                     personalInfoValid
                                         ? "bg-[#09ab75] hover:opacity-90"
@@ -689,8 +1009,8 @@ export default function Signup() {
 
                             <p className="mt-6 flex items-center gap-2 text-sm text-slate-600">
                                 <BiLock className="h-4 w-4" />
-                                Your information is protected with 128-bit SSL
-                                encryption.
+                                Your information is protected
+                                with 128-bit SSL encryption.
                             </p>
                         </div>
                     )}
@@ -698,7 +1018,7 @@ export default function Signup() {
                     {/* STEP 2 */}
                     {step === 2 && (
                         <div>
-                            <h1 className="lg:text-5xl text-3xl font-light text-[#101d3d]">
+                            <h1 className="text-3xl font-light text-[#101d3d] lg:text-5xl">
                                 Tell us about yourself
                             </h1>
 
@@ -707,7 +1027,8 @@ export default function Signup() {
                                     href="#"
                                     className="text-[#09ab75] underline underline-offset-4"
                                 >
-                                    Learn how we keep your data secure.
+                                    Learn how we keep your data
+                                    secure.
                                 </a>
                             </p>
 
@@ -719,11 +1040,14 @@ export default function Signup() {
                                 </h2>
 
                                 <p className="mt-3 text-base leading-relaxed text-[#101d3d]">
-                                    Enter your home address. It cannot be a PO
-                                    box or business address.
+                                    Enter your home address. It
+                                    cannot be a PO box or
+                                    business address.
                                 </p>
 
-                                <div className="mt-6 grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+                                <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+                                    {/* PRIMARY ADDRESS */}
                                     <div>
                                         <label className="mb-2 block text-base text-[#101d3d]">
                                             Primary address{" "}
@@ -749,6 +1073,7 @@ export default function Signup() {
                                         />
                                     </div>
 
+                                    {/* APT/SUITE */}
                                     <div>
                                         <label className="mb-2 block text-base text-[#101d3d]">
                                             Apt/Suite (optional)
@@ -757,7 +1082,9 @@ export default function Signup() {
                                         <input
                                             type="text"
                                             placeholder="Optional"
-                                            value={verifyIdentity.aptSuite}
+                                            value={
+                                                verifyIdentity.aptSuite
+                                            }
                                             onChange={(e) =>
                                                 updateVerifyIdentity(
                                                     "aptSuite",
@@ -769,14 +1096,19 @@ export default function Signup() {
                                     </div>
                                 </div>
 
+                                {/* CITY */}
                                 <label className="mt-6 mb-2 block text-base text-[#101d3d]">
                                     City{" "}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-red-500">
+                                        *
+                                    </span>
                                 </label>
 
                                 <input
                                     type="text"
-                                    value={verifyIdentity.city}
+                                    value={
+                                        verifyIdentity.city
+                                    }
                                     onChange={(e) =>
                                         updateVerifyIdentity(
                                             "city",
@@ -789,6 +1121,8 @@ export default function Signup() {
                                 />
 
                                 <div className="mt-6 grid grid-cols-2 gap-6">
+
+                                    {/* STATE */}
                                     <div>
                                         <label className="mb-2 block text-base text-[#101d3d]">
                                             State{" "}
@@ -800,7 +1134,9 @@ export default function Signup() {
                                         <div className="relative">
                                             <input
                                                 type="text"
-                                                value={verifyIdentity.state}
+                                                value={
+                                                    verifyIdentity.state
+                                                }
                                                 onChange={(e) =>
                                                     updateVerifyIdentity(
                                                         "state",
@@ -814,6 +1150,7 @@ export default function Signup() {
                                         </div>
                                     </div>
 
+                                    {/* ZIP */}
                                     <div>
                                         <label className="mb-2 block text-base text-[#101d3d]">
                                             ZIP code{" "}
@@ -825,20 +1162,22 @@ export default function Signup() {
                                         <input
                                             type="text"
                                             inputMode="numeric"
-                                            maxLength={5}
-                                            value={verifyIdentity.zip}
+                                            value={
+                                                verifyIdentity.zip
+                                            }
                                             onChange={(e) =>
                                                 updateVerifyIdentity(
                                                     "zip",
-                                                    e.target.value
-                                                        .replace(/\D/g, "")
-                                                        .slice(0, 5)
+                                                    e.target.value.replace(
+                                                        /\D/g,
+                                                        ""
+                                                    )
                                                 )
                                             }
                                             className={`w-full rounded-sm border ${
                                                 verifyIdentity.zip.trim() !==
                                                     "" &&
-                                                !/^\d{5}$/.test(
+                                                !/^\d+$/.test(
                                                     verifyIdentity.zip
                                                 )
                                                     ? "border-red-500"
@@ -860,13 +1199,18 @@ export default function Signup() {
                                 </h2>
 
                                 <p className="mt-3 text-base leading-relaxed text-[#101d3d]">
-                                    We ask this information as part of our legal
-                                    requirement to know our customers.
+                                    We ask this information as part
+                                    of our legal requirement to
+                                    know our customers.
                                 </p>
 
-                                <label className="mt-6 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
+                                {/* COUNTRY */}
+                                <label className="mt-6 flex items-center gap-2 text-base text-[#101d3d]">
                                     Country of citizenship{" "}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-red-500">
+                                        *
+                                    </span>
+
                                     <IoInformationCircleOutline className="h-4 w-4 text-[#09ab75]" />
                                 </label>
 
@@ -885,15 +1229,23 @@ export default function Signup() {
                                             verifyIdentity.countryOfCitizenship
                                         )} px-4 py-4 text-lg text-[#09ab75] outline-none`}
                                     >
-                                        <option>United States</option>
-                                        <option>Canada</option>
-                                        <option>Other</option>
+                                        <option>
+                                            United States
+                                        </option>
+
+                                        <option>
+                                            Canada
+                                        </option>
+
+                                        <option>
+                                            Other
+                                        </option>
                                     </select>
 
                                     <IoChevronDownSharp className="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#09ab75]" />
                                 </div>
 
-                                {/* 
+                                {/*
                                 SSN fields temporarily disabled.
 
                                 {isUSCitizen && (
@@ -967,41 +1319,55 @@ export default function Signup() {
                                 )}
                                 */}
 
+                                {/* ALTERNATE PHONE */}
                                 <label className="mt-6 mb-2 block text-base text-[#101d3d]">
-                                    Alternate phone number (optional)
+                                    Alternate phone number
+                                    (optional)
                                 </label>
 
                                 <input
                                     type="tel"
                                     placeholder="(###) ###-#### (Optional)"
-                                    value={verifyIdentity.alternatePhone}
+                                    value={
+                                        verifyIdentity.alternatePhone
+                                    }
                                     onChange={(e) =>
                                         updateVerifyIdentity(
                                             "alternatePhone",
-                                            formatPhone(e.target.value)
+                                            formatPhone(
+                                                e.target.value
+                                            )
                                         )
                                     }
                                     className="w-full rounded-sm border border-slate-300 px-4 py-4 text-lg text-[#101d3d] outline-none placeholder:text-slate-400"
                                 />
 
+                                {/* DOB */}
                                 <label className="mt-6 mb-2 block text-base text-[#101d3d]">
                                     Date of birth{" "}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-red-500">
+                                        *
+                                    </span>
                                 </label>
 
                                 <input
                                     type="text"
                                     inputMode="numeric"
                                     placeholder="MM/DD/YYYY"
-                                    value={verifyIdentity.dob}
+                                    value={
+                                        verifyIdentity.dob
+                                    }
                                     onChange={(e) =>
                                         updateVerifyIdentity(
                                             "dob",
-                                            formatDOB(e.target.value)
+                                            formatDOB(
+                                                e.target.value
+                                            )
                                         )
                                     }
                                     className={`w-full rounded-sm border ${
-                                        verifyIdentity.dob.trim() !== "" &&
+                                        verifyIdentity.dob.trim() !==
+                                            "" &&
                                         !/^\d{2}\/\d{2}\/\d{4}$/.test(
                                             verifyIdentity.dob
                                         )
@@ -1023,7 +1389,10 @@ export default function Signup() {
 
                                 <label className="mt-6 mb-2 flex items-center gap-2 text-base text-[#101d3d]">
                                     Employment status{" "}
-                                    <span className="text-red-500">*</span>
+                                    <span className="text-red-500">
+                                        *
+                                    </span>
+
                                     <IoInformationCircleOutline className="h-4 w-4 text-[#09ab75]" />
                                 </label>
 
@@ -1065,12 +1434,15 @@ export default function Signup() {
                                 </div>
                             </div>
 
+                            {/* STEP 2 CONTINUE */}
                             <button
                                 onClick={() =>
                                     verifyIdentityValid &&
                                     goToStep(3)
                                 }
-                                disabled={!verifyIdentityValid}
+                                disabled={
+                                    !verifyIdentityValid
+                                }
                                 className={`mt-12 rounded-sm px-14 py-4 text-lg text-white transition ${
                                     verifyIdentityValid
                                         ? "bg-[#09ab75] hover:opacity-90"
@@ -1082,21 +1454,25 @@ export default function Signup() {
 
                             <p className="mt-6 flex items-center gap-2 text-sm text-slate-600">
                                 <BiLock className="h-4 w-4" />
-                                Your information is protected with 128-bit SSL
-                                encryption.
+                                Your information is protected
+                                with 128-bit SSL encryption.
                             </p>
 
                             <p className="mt-8 text-sm leading-relaxed text-slate-500">
-                                Important information about procedures for
-                                opening a new account: To help the government
-                                fight the funding of terrorism and money
-                                laundering activities, federal law requires all
-                                financial institutions to obtain, verify, and
-                                record information that identifies each person
-                                who opens an account. What this means for you:
-                                When you open an account, we will ask for your
-                                name, address, date of birth and other
-                                information that will allow us to identify you.
+                                Important information about
+                                procedures for opening a new
+                                account: To help the government
+                                fight the funding of terrorism and
+                                money laundering activities, federal
+                                law requires all financial
+                                institutions to obtain, verify,
+                                and record information that
+                                identifies each person who opens an
+                                account. What this means for you:
+                                When you open an account, we will
+                                ask for your name, address, date of
+                                birth and other information that
+                                will allow us to identify you.
                             </p>
                         </div>
                     )}
@@ -1109,8 +1485,8 @@ export default function Signup() {
                             </h1>
 
                             <p className="mt-4 text-lg text-slate-700">
-                                Review your information and submit to open your
-                                account.
+                                Review your information and submit
+                                to open your account.
                             </p>
 
                             {error && (
@@ -1124,7 +1500,9 @@ export default function Signup() {
                                 disabled={loading}
                                 className="mt-8 rounded-sm bg-[#09ab75] px-14 py-4 text-lg text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                {loading ? "Submitting..." : "Submit"}
+                                {loading
+                                    ? "Submitting..."
+                                    : "Submit"}
                             </button>
                         </div>
                     )}
@@ -1141,28 +1519,35 @@ export default function Signup() {
                             Need help?{" "}
                             <a
                                 href="#"
-                                className="text-base text-[#09ab75] font-light underline underline-offset-4"
+                                className="text-base font-light text-[#09ab75] underline underline-offset-4"
                             >
                                 Contact Us
                             </a>
                         </p>
 
                         {/* Accordion */}
-                        <div className="w-full max-w-2xl mx-auto text-sm">
+                        <div className="mx-auto w-full max-w-2xl text-sm">
                             {FAQs.map(
-                                (item, index: number) => {
+                                (
+                                    item,
+                                    index: number
+                                ) => {
                                     const exists =
-                                        index + 1 === active;
+                                        index + 1 ===
+                                        active;
 
-                                    const ActiveIcon = exists
-                                        ? IoChevronDownSharp
-                                        : IoChevronForward;
+                                    const ActiveIcon =
+                                        exists
+                                            ? IoChevronDownSharp
+                                            : IoChevronForward;
 
                                     return (
                                         <div
                                             key={index}
                                             onClick={() =>
-                                                handleActive(index + 1)
+                                                handleActive(
+                                                    index + 1
+                                                )
                                             }
                                             className="mb-6 cursor-pointer"
                                         >
@@ -1170,11 +1555,11 @@ export default function Signup() {
                                             <div
                                                 className={`flex items-center gap-3 px-2 py-4 ${
                                                     exists
-                                                        ? "border border-[#09ab75] w-fit"
+                                                        ? "w-fit border border-[#09ab75]"
                                                         : ""
                                                 }`}
                                             >
-                                                <ActiveIcon className="text-[#09ab75] text-xl shrink-0" />
+                                                <ActiveIcon className="shrink-0 text-xl text-[#09ab75]" />
 
                                                 <h1 className="text-lg text-[#09ab75]">
                                                     {item.q}
@@ -1182,13 +1567,13 @@ export default function Signup() {
                                             </div>
 
                                             {exists && (
-                                                <div className="mt-3 px-2 text-slate-700 text-base leading-relaxed">
+                                                <div className="mt-3 px-2 text-base leading-relaxed text-slate-700">
                                                     {item.a}
                                                 </div>
                                             )}
 
                                             {!exists && (
-                                                <div className="" />
+                                                <div />
                                             )}
                                         </div>
                                     );

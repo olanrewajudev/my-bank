@@ -35,7 +35,6 @@ interface Transaction {
   status: string
 }
 
-
 type Region = 'usa' | 'europe' | 'other'
 
 const EUROPE_COUNTRIES = [
@@ -135,7 +134,6 @@ function groupByDate(transactions: Transaction[]) {
 
   return Object.entries(groups).sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
 }
-
 
 export default function Dashboard() {
   const { user } = useSelector((state: RootState) => state.data)
@@ -444,27 +442,34 @@ export default function Dashboard() {
 
   const selectedWalletDetails = wallet?.find((w: any) => String(w.id) === selectedWallet)
 
+  /* Only the logged-in user's wallet records. Requires `user.id` to be present in the
+     profile response. If it's missing, nothing matches and balances show $0 (fails safe). */
+  const myWallets = useMemo(
+    () =>
+      (userwallet ?? []).filter(
+        (uw: any) => user?.id != null && String(uw.user) === String(user.id)
+      ),
+    [userwallet, user?.id]
+  )
+
   /* the user's own wallet record for the selected admin wallet, matched by tag = adminwallet id,
      used to show their current balance held in that specific wallet */
-  const selectedUserWalletBalance = userwallet?.find((uw: any) => String(uw.tag) === selectedWallet)
+  const selectedUserWalletBalance = myWallets.find((uw: any) => String(uw.tag) === selectedWallet)
 
-  /* Map of adminwallet id -> the user's balance in that wallet (userwallet.tag references adminwallet.id).
-     Used to drive the three crypto cards at the top of the dashboard with real balances instead of
-     the static placeholder data from the cryptoAssets constant. */
+  /* Map of adminwallet id -> this user's balance in that wallet (userwallet.tag references adminwallet.id).
+     Drives the crypto cards at the top of the dashboard. */
   const walletBalanceById = useMemo(() => {
     const map: Record<string, number> = {}
-    userwallet?.forEach((uw: any) => {
+    myWallets.forEach((uw: any) => {
       map[String(uw.tag)] = uw.currbal
     })
     return map
-  }, [userwallet])
+  }, [myWallets])
 
   /* Look up a matching icon/name from the static cryptoAssets constant by short code (BTC/ETH/USDT),
      falling back to the wallet's own title if nothing matches. */
   const getCryptoDisplay = (adminWallet: any) => {
-    const match = cryptoAssets?.find(
-      (a: any) => a.name?.toUpperCase() === adminWallet.short?.toUpperCase()
-    )
+    const match = cryptoAssets?.find((a: any) => a.name?.toUpperCase() === adminWallet.short?.toUpperCase())
     return {
       icon: match?.icon ?? null,
       name: adminWallet.short || adminWallet.title,
@@ -1260,20 +1265,6 @@ export default function Dashboard() {
             ))}
           </div>
         </section>
-
-        {/* <section className="mt-9">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-slate-900">Recent Activity</h2>
-            <button type="button" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">View all</button>
-          </div>
-          <div className="mt-4 rounded-2xl bg-white p-8 text-center shadow-sm">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-              <HiOutlineArrowRight className="-rotate-45 text-xl text-slate-400" />
-            </div>
-            <p className="mt-4 font-semibold text-slate-700">No recent activity</p>
-            <p className="mt-1 text-sm text-slate-400">Your recent transactions will appear here.</p>
-          </div>
-        </section> */}
 
         <section className="mt-10 space-y-4 border-t border-slate-200 pt-6 text-[11px] leading-relaxed text-slate-400">
           <p>

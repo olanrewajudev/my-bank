@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from 'react'
+
 import { Modal, Select } from '@mantine/core'
+
 import { useDisclosure } from '@mantine/hooks'
+
 import { useQuery } from '@tanstack/react-query'
+
 import {
   HiOutlineArrowsRightLeft,
   HiOutlineChevronRight,
@@ -12,16 +16,27 @@ import {
   HiOutlineShieldCheck,
   HiOutlineXMark,
 } from 'react-icons/hi2'
+
 import { Link, useNavigate } from 'react-router'
+
 import { useSelector } from 'react-redux'
 
 import { transact_urls } from '~/component/endpoints/transact'
-import Formbutton from '~/component/general/form-button'
-import Forminput from '~/component/general/form-input'
-import { ErrorAlert, formatAmount } from '~/component/utils'
-import type { Transaction } from '../../../global'
-import type { RootState } from '~/lib/store'
 
+import Formbutton from '~/component/general/form-button'
+
+import Forminput from '~/component/general/form-input'
+
+import {
+  COUNTRY_OPTIONS,
+  EUROPE_COUNTRIES,
+  formatAmount,
+  type Region,
+} from '~/component/utils'
+
+import type { Transaction } from '../../../global'
+
+import type { RootState } from '~/lib/store'
 
 /* =========================================================
    DATE HELPERS
@@ -36,7 +51,6 @@ function formatDateHeader(dateStr: string) {
     year: 'numeric',
   })
 }
-
 
 function groupByDate(transactions: Transaction[]) {
   const groups: Record<string, Transaction[]> = {}
@@ -58,90 +72,9 @@ function groupByDate(transactions: Transaction[]) {
   )
 }
 
-
 /* =========================================================
    COUNTRY / REGION
 ========================================================= */
-
-type Region = 'usa' | 'europe' | 'other'
-
-
-const EUROPE_COUNTRIES = [
-  'Austria',
-  'Belgium',
-  'Bulgaria',
-  'Croatia',
-  'Cyprus',
-  'Czech Republic',
-  'Denmark',
-  'Estonia',
-  'Finland',
-  'France',
-  'Germany',
-  'Greece',
-  'Hungary',
-  'Iceland',
-  'Ireland',
-  'Italy',
-  'Latvia',
-  'Liechtenstein',
-  'Lithuania',
-  'Luxembourg',
-  'Malta',
-  'Netherlands',
-  'Norway',
-  'Poland',
-  'Portugal',
-  'Romania',
-  'Slovakia',
-  'Slovenia',
-  'Spain',
-  'Sweden',
-  'Switzerland',
-  'United Kingdom',
-]
-
-
-const OTHER_COUNTRIES = [
-  'Nigeria',
-  'Ghana',
-  'Kenya',
-  'South Africa',
-  'Canada',
-  'Australia',
-  'India',
-  'China',
-  'Japan',
-  'Brazil',
-  'Mexico',
-  'United Arab Emirates',
-  'Saudi Arabia',
-  'Singapore',
-  'Philippines',
-  'Indonesia',
-  'Egypt',
-  'Turkey',
-  'Argentina',
-  'New Zealand',
-  'Other',
-]
-
-
-const COUNTRY_OPTIONS = [
-  {
-    group: 'United States',
-    items: ['United States'],
-  },
-  {
-    group: 'Europe',
-    items: EUROPE_COUNTRIES,
-  },
-  {
-    group: 'Other',
-    items: OTHER_COUNTRIES,
-  },
-]
-
 
 function getRegion(country: string): Region {
   if (country === 'United States') {
@@ -154,7 +87,6 @@ function getRegion(country: string): Region {
 
   return 'other'
 }
-
 
 /* =========================================================
    FORM
@@ -171,16 +103,21 @@ const initialWithdrawForm = {
   amount: '',
 }
 
+/* =========================================================
+   TYPES
+========================================================= */
 
 type WithdrawField = keyof typeof initialWithdrawForm
 
+/* =========================================================
+   INPUT VALIDATION
+========================================================= */
 
 const TEXT_ONLY_REGEX = /[^a-zA-Z\s'-]/g
 
 const TEXT_ONLY_FIELDS: WithdrawField[] = [
   'accName',
 ]
-
 
 /* =========================================================
    COMPONENT
@@ -192,7 +129,6 @@ export default function Transfer() {
   )
 
   const navigate = useNavigate()
-
 
   /* =======================================================
      TRANSACTIONS
@@ -213,12 +149,10 @@ export default function Transfer() {
     },
   })
 
-
   const grouped = groupByDate(transactions)
 
-
   /* =======================================================
-     MODALS
+     WITHDRAWAL MODAL
   ======================================================= */
 
   const [
@@ -229,6 +163,9 @@ export default function Transfer() {
     },
   ] = useDisclosure(false)
 
+  /* =======================================================
+     KYC MODAL
+  ======================================================= */
 
   const [
     kycNoticeOpened,
@@ -238,6 +175,28 @@ export default function Transfer() {
     },
   ] = useDisclosure(false)
 
+  /* =======================================================
+     PIN MODAL
+  ======================================================= */
+
+  const [
+    pinOpened,
+    {
+      open: openPinModal,
+      close: closePinModal,
+    },
+  ] = useDisclosure(false)
+
+  const [pin, setPin] = useState('')
+  const [confirmPin, setConfirmPin] = useState('')
+
+  const [pinMode, setPinMode] =
+    useState<'create' | 'verify'>('verify')
+
+  const [pinError, setPinError] = useState('')
+
+  const [pinSubmitting, setPinSubmitting] =
+    useState(false)
 
   /* =======================================================
      FORM STATE
@@ -253,16 +212,30 @@ export default function Transfer() {
   const [formError, setFormError] =
     useState<Record<string, string>>({})
 
+  /* =======================================================
+     USER STATUS
+  ======================================================= */
 
   const isVerified =
     user?.verified === 'verified'
 
+  /*
+   * IMPORTANT
+   *
+   * If user.pin === null:
+   *     user needs to create a PIN
+   *
+   * If user.pin !== null:
+   *     user already has a PIN
+   */
+
+  const needsTransactionPin =
+    user?.pin === null
 
   const region = useMemo(
     () => getRegion(form.country),
     [form.country]
   )
-
 
   /* =======================================================
      OPEN TRANSFER
@@ -274,9 +247,11 @@ export default function Transfer() {
       return
     }
 
+    setForm(initialWithdrawForm)
+    setFormError({})
+
     open()
   }
-
 
   /* =======================================================
      INPUT HANDLER
@@ -318,7 +293,6 @@ export default function Transfer() {
       }))
     }
 
-
   /* =======================================================
      COUNTRY CHANGE
   ======================================================= */
@@ -326,9 +300,8 @@ export default function Transfer() {
   const handleCountryChange = (
     value: string | null
   ) => {
-    const newRegion = getRegion(
-      value || ''
-    )
+    const newRegion =
+      getRegion(value || '')
 
     setForm((prev) => ({
       ...prev,
@@ -356,13 +329,11 @@ export default function Transfer() {
           : prev.swiftCode,
     }))
 
-
     setFormError((prev) => ({
       ...prev,
       country: '',
     }))
   }
-
 
   /* =======================================================
      VALIDATION
@@ -374,24 +345,22 @@ export default function Transfer() {
       string
     > = {}
 
-
     if (!form.country) {
       errors.country =
         'Country is required'
     }
-
 
     if (!form.accName) {
       errors.accName =
         'Account holder name is required'
     }
 
-
     if (!form.bank) {
       errors.bank =
         'Bank name is required'
     }
 
+    /* USA */
 
     if (region === 'usa') {
       if (!form.recieveracctnumber) {
@@ -405,6 +374,7 @@ export default function Transfer() {
       }
     }
 
+    /* EUROPE */
 
     if (region === 'europe') {
       if (!form.iban) {
@@ -418,6 +388,7 @@ export default function Transfer() {
       }
     }
 
+    /* OTHER */
 
     if (region === 'other') {
       if (!form.recieveracctnumber) {
@@ -431,10 +402,10 @@ export default function Transfer() {
       }
     }
 
+    /* AMOUNT */
 
     const amountNum =
       Number(form.amount)
-
 
     if (
       !form.amount ||
@@ -448,7 +419,6 @@ export default function Transfer() {
         'Minimum withdrawal amount is $3,000'
     }
 
-
     setFormError(errors)
 
     return (
@@ -456,32 +426,177 @@ export default function Transfer() {
     )
   }
 
-
   /* =======================================================
-     SUBMIT WITHDRAWAL
+     SUBMIT WITHDRAWAL FORM
   ======================================================= */
 
   const handleSubmitWithdraw =
     async () => {
-
       if (!isVerified) {
         close()
         openKycNotice()
         return
       }
 
-
       if (!validate()) {
         return
       }
 
+      /*
+       * Reset PIN fields.
+       */
 
+      setPin('')
+      setConfirmPin('')
+      setPinError('')
+
+      /*
+       * IMPORTANT
+       *
+       * user.pin === null
+       *     -> CREATE PIN
+       *
+       * user.pin !== null
+       *     -> VERIFY PIN
+       */
+
+      if (user?.pin === null) {
+        setPinMode('create')
+      } else {
+        setPinMode('verify')
+      }
+
+      close()
+      openPinModal()
+    }
+
+  /* =======================================================
+     SUBMIT PIN
+  ======================================================= */
+
+  const handlePinSubmit =
+    async () => {
+      setPinError('')
+
+      /* ---------------------------------------------
+         PIN FORMAT
+      --------------------------------------------- */
+
+      if (!/^\d{4}$/.test(pin)) {
+        setPinError(
+          'PIN must be exactly 4 digits'
+        )
+
+        return
+      }
+
+      /* ---------------------------------------------
+         CREATE PIN VALIDATION
+      --------------------------------------------- */
+
+      if (
+        pinMode === 'create'
+      ) {
+        if (!/^\d{4}$/.test(confirmPin)) {
+          setPinError(
+            'Confirm PIN must be exactly 4 digits'
+          )
+
+          return
+        }
+
+        if (pin !== confirmPin) {
+          setPinError(
+            'PINs do not match'
+          )
+
+          return
+        }
+      }
+
+      try {
+        setPinSubmitting(true)
+
+        /* =========================================
+           CREATE NEW PIN
+        ========================================= */
+
+        if (pinMode === 'create') {
+          const response =
+            await transact_urls.createTransactionPin({
+              pin,
+              confirmPin,
+            })
+
+          if (
+            response?.data?.status &&
+            response.data.status !== 200
+          ) {
+            throw new Error(
+              response.data.msg ||
+                'Failed to create transaction PIN'
+            )
+          }
+
+          /*
+           * PIN created successfully.
+           *
+           * Continue with withdrawal using
+           * the newly created PIN.
+           */
+
+          await submitWithdrawal(pin)
+
+          return
+        }
+
+        /* =========================================
+           EXISTING PIN
+        ========================================= */
+
+        /*
+         * Existing PIN.
+         *
+         * Send the entered PIN to the
+         * withdrawal endpoint.
+         */
+
+        await submitWithdrawal(pin)
+      } catch (error) {
+        setPinError(
+          error instanceof Error
+            ? error.message
+            : 'Something went wrong'
+        )
+      } finally {
+        setPinSubmitting(false)
+      }
+    }
+
+  /* =======================================================
+     ACTUALLY SUBMIT WITHDRAWAL
+  ======================================================= */
+
+  const submitWithdrawal =
+    async (
+      transactionPin: string
+    ) => {
       const payload = {
         country: form.country,
+
         region,
+
         accName: form.accName,
+
         bank: form.bank,
+
         amount: Number(form.amount),
+
+        /*
+         * Transaction PIN
+         */
+
+        pin: transactionPin,
 
         ...(region === 'usa' && {
           recieveracctnumber:
@@ -507,29 +622,49 @@ export default function Transfer() {
         }),
       }
 
-
       try {
         setSubmitting(true)
 
-        await transact_urls.bankWithdrawal(
-          payload
-        )
+        const response =
+          await transact_urls.bankWithdrawal(
+            payload
+          )
+
+        if (
+          response?.data?.status &&
+          response.data.status !== 200
+        ) {
+          throw new Error(
+            response.data.msg ||
+              'Withdrawal failed'
+          )
+        }
+
+        /* -------------------------------------------
+           SUCCESS
+        ------------------------------------------- */
 
         setForm(initialWithdrawForm)
 
-        close()
+        setPin('')
+        setConfirmPin('')
+        setPinError('')
+
+        closePinModal()
 
         await refetch()
-
       } catch (error) {
-        ErrorAlert(
-          (error as Error).message
-        )
+        /*
+         * Throw the error back to
+         * handlePinSubmit so the PIN
+         * modal remains open.
+         */
+
+        throw error
       } finally {
         setSubmitting(false)
       }
     }
-
 
   /* =======================================================
      TRANSACTION STATUS
@@ -541,7 +676,6 @@ export default function Transfer() {
     const value =
       status?.toLowerCase()
 
-
     if (
       value === 'approved' ||
       value === 'completed' ||
@@ -551,14 +685,12 @@ export default function Transfer() {
       return 'bg-emerald-100 text-emerald-700'
     }
 
-
     if (
       value === 'pending' ||
       value === 'processing'
     ) {
       return 'bg-amber-100 text-amber-700'
     }
-
 
     if (
       value === 'declined' ||
@@ -568,28 +700,29 @@ export default function Transfer() {
       return 'bg-red-100 text-red-700'
     }
 
-
     return 'bg-slate-100 text-slate-600'
   }
 
+  /* =======================================================
+     UI
+  ======================================================= */
 
   return (
     <div className="min-h-screen bg-[#f5f6f7] pb-24">
 
-      {/* =================================================
-          HEADER
-      ================================================= */}
+      {/* HEADER */}
 
       <header className="px-5 pb-6 pt-6 sm:px-8 lg:px-10">
-
         <div className="flex items-center justify-between">
 
           <div>
             <span className="text-3xl font-black tracking-tight text-slate-900">
-              B<span className="text-yellow-500">:</span>
+              B
+              <span className="text-yellow-500">
+                :
+              </span>
             </span>
           </div>
-
 
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
             {user?.firstname
@@ -599,9 +732,7 @@ export default function Transfer() {
 
         </div>
 
-
         <div className="mt-8">
-
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Move your money
           </h1>
@@ -609,29 +740,20 @@ export default function Transfer() {
           <p className="mt-1 text-sm text-slate-500">
             Transfer money securely to your bank account.
           </p>
-
         </div>
-
       </header>
 
-
-      {/* =================================================
-          MAIN
-      ================================================= */}
+      {/* MAIN */}
 
       <main className="px-5 sm:px-8 lg:px-10">
 
-
-        {/* =================================================
-            TRANSFER HERO
-        ================================================= */}
+        {/* TRANSFER HERO */}
 
         <section className="relative overflow-hidden rounded-3xl bg-[#075c40] shadow-lg">
 
           <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-400/10" />
 
           <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-emerald-400/10" />
-
 
           <div className="relative px-6 py-7 sm:px-8 sm:py-9">
 
@@ -643,11 +765,9 @@ export default function Transfer() {
                   Available Balance
                 </p>
 
-
                 <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
                   ${formatAmount(user?.currbal)}
                 </p>
-
 
                 <p className="mt-2 text-sm text-emerald-100/70">
                   Online Savings Account
@@ -655,17 +775,11 @@ export default function Transfer() {
 
               </div>
 
-
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-
                 <HiOutlineArrowsRightLeft className="text-2xl text-white" />
-
               </div>
 
             </div>
-
-
-            {/* Transfer button */}
 
             <button
               type="button"
@@ -676,11 +790,8 @@ export default function Transfer() {
               <div className="flex items-center gap-3">
 
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100">
-
                   <HiOutlineArrowsRightLeft className="text-xl text-emerald-700" />
-
                 </div>
-
 
                 <div>
 
@@ -696,19 +807,14 @@ export default function Transfer() {
 
               </div>
 
-
               <HiOutlineChevronRight className="text-xl text-slate-400" />
 
             </button>
 
           </div>
-
         </section>
 
-
-        {/* =================================================
-            ACCOUNT INFO
-        ================================================= */}
+        {/* ACCOUNT INFO */}
 
         <div className="mt-4 rounded-2xl bg-white px-5 py-4 shadow-sm">
 
@@ -726,7 +832,6 @@ export default function Transfer() {
 
             </div>
 
-
             <div className="text-right">
 
               <p className="text-xs text-slate-400">
@@ -743,19 +848,13 @@ export default function Transfer() {
 
         </div>
 
-
-        {/* =================================================
-            SECURITY INFORMATION
-        ================================================= */}
+        {/* SECURITY INFORMATION */}
 
         <div className="mt-4 flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-4">
 
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100">
-
             <HiOutlineShieldCheck className="text-xl text-emerald-700" />
-
           </div>
-
 
           <div>
 
@@ -771,10 +870,7 @@ export default function Transfer() {
 
         </div>
 
-
-        {/* =================================================
-            TRANSACTION SECTION
-        ================================================= */}
+        {/* TRANSACTION SECTION */}
 
         <section className="mt-9">
 
@@ -792,7 +888,6 @@ export default function Transfer() {
 
             </div>
 
-
             {transactions.length > 0 && (
               <span className="text-xs font-medium text-slate-400">
                 {transactions.length}{' '}
@@ -804,11 +899,9 @@ export default function Transfer() {
 
           </div>
 
-
           {/* Loading */}
 
           {isLoading && (
-
             <div className="mt-5 rounded-2xl bg-white p-8 text-center shadow-sm">
 
               <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-emerald-600" />
@@ -818,33 +911,25 @@ export default function Transfer() {
               </p>
 
             </div>
-
           )}
-
 
           {/* Empty */}
 
           {!isLoading &&
             transactions.length === 0 && (
-
               <div className="mt-5 rounded-2xl bg-white p-8 text-center shadow-sm">
 
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-
                   <HiOutlineArrowPath className="text-xl text-slate-400" />
-
                 </div>
-
 
                 <p className="mt-4 font-semibold text-slate-700">
                   No transactions yet
                 </p>
 
-
                 <p className="mt-1 text-sm text-slate-400">
                   Your transfer activity will appear here.
                 </p>
-
 
                 <button
                   type="button"
@@ -855,9 +940,7 @@ export default function Transfer() {
                 </button>
 
               </div>
-
             )}
-
 
           {/* Transactions */}
 
@@ -871,8 +954,6 @@ export default function Transfer() {
 
                     <div key={date}>
 
-                      {/* Date */}
-
                       <div className="mb-2 flex items-center gap-3">
 
                         <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -883,9 +964,6 @@ export default function Transfer() {
 
                       </div>
 
-
-                      {/* Transaction cards */}
-
                       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                         {txs.map((tx) => {
@@ -894,7 +972,6 @@ export default function Transfer() {
                             tx.title
                               ?.toLowerCase() ===
                             'withdrawal'
-
 
                           return (
 
@@ -905,8 +982,6 @@ export default function Transfer() {
 
                               <div className="flex min-w-0 items-start gap-4">
 
-                                {/* Icon */}
-
                                 <div
                                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
                                     isWithdrawal
@@ -916,25 +991,12 @@ export default function Transfer() {
                                 >
 
                                   {isWithdrawal ? (
-
-                                    <HiOutlineArrowsRightLeft
-                                      className={`text-xl ${
-                                        isWithdrawal
-                                          ? 'text-red-600'
-                                          : 'text-emerald-600'
-                                      }`}
-                                    />
-
+                                    <HiOutlineArrowsRightLeft className="text-xl text-red-600" />
                                   ) : (
-
                                     <HiOutlineBanknotes className="text-xl text-emerald-600" />
-
                                   )}
 
                                 </div>
-
-
-                                {/* Information */}
 
                                 <div className="min-w-0">
 
@@ -949,8 +1011,8 @@ export default function Transfer() {
 
                                         {tx.acctnumber && (
                                           <>
-                                            {' '}
-                                            ·{' '}
+                                            {' · '}
+
                                             {'*'.repeat(
                                               Math.max(
                                                 tx.acctnumber.length -
@@ -959,16 +1021,13 @@ export default function Transfer() {
                                               )
                                             )}
 
-                                            {tx.acctnumber.slice(
-                                              -4
-                                            )}
+                                            {tx.acctnumber.slice(-4)}
                                           </>
                                         )}
                                       </>
                                     )}
 
                                   </p>
-
 
                                   <div className="mt-1 flex items-center gap-2">
 
@@ -981,7 +1040,6 @@ export default function Transfer() {
                                     </span>
 
                                   </div>
-
 
                                   <p
                                     className={`mt-2 text-base font-bold ${
@@ -996,6 +1054,7 @@ export default function Transfer() {
                                       : '+'}
 
                                     $
+
                                     {Number(
                                       tx.amount
                                     ).toLocaleString(
@@ -1012,9 +1071,6 @@ export default function Transfer() {
 
                               </div>
 
-
-                              {/* Track */}
-
                               <Link
                                 to={`/user/transaction/${tx.id}`}
                                 className="flex shrink-0 items-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 sm:px-4 sm:text-sm"
@@ -1022,31 +1078,24 @@ export default function Transfer() {
                                 Track
 
                                 <HiOutlineChevronRight className="text-sm" />
-
                               </Link>
 
                             </div>
-
                           )
                         })}
 
                       </div>
 
                     </div>
-
                   )
                 )}
 
               </div>
-
             )}
 
         </section>
 
-
-        {/* =================================================
-            TRANSFER INFORMATION
-        ================================================= */}
+        {/* TRANSFER INFORMATION */}
 
         <section className="mt-9">
 
@@ -1058,15 +1107,12 @@ export default function Transfer() {
             Things to know before making a transfer.
           </p>
 
-
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
 
             <div className="rounded-2xl bg-white p-5 shadow-sm">
 
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-300">
-
                 <HiOutlineBuildingLibrary className="text-xl text-blue-600" />
-
               </div>
 
               <p className="mt-4 text-sm font-bold text-slate-800">
@@ -1079,13 +1125,10 @@ export default function Transfer() {
 
             </div>
 
-
             <div className="rounded-2xl bg-white p-5 shadow-sm">
 
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50">
-
                 <HiOutlineGlobeAlt className="text-xl text-purple-600" />
-
               </div>
 
               <p className="mt-4 text-sm font-bold text-slate-800">
@@ -1098,13 +1141,10 @@ export default function Transfer() {
 
             </div>
 
-
             <div className="rounded-2xl bg-white p-5 shadow-sm">
 
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50">
-
                 <HiOutlineBanknotes className="text-xl text-emerald-600" />
-
               </div>
 
               <p className="mt-4 text-sm font-bold text-slate-800">
@@ -1121,10 +1161,7 @@ export default function Transfer() {
 
         </section>
 
-
-        {/* =================================================
-            DISCLOSURES
-        ================================================= */}
+        {/* DISCLOSURES */}
 
         <section className="mt-10 space-y-4 border-t border-slate-200 pt-6 text-[11px] leading-relaxed text-slate-400">
 
@@ -1135,14 +1172,12 @@ export default function Transfer() {
             Salt Lake City Branch.
           </p>
 
-
           <p>
             Important information about procedures for opening a
             new account: federal law requires financial
             institutions to obtain, verify, and record information
             that identifies each person who opens an account.
           </p>
-
 
           <p>
             When you open an account, we may ask for your name,
@@ -1154,10 +1189,9 @@ export default function Transfer() {
 
       </main>
 
-
       {/* =====================================================
           WITHDRAWAL MODAL
-      ====================================================== */}
+      ===================================================== */}
 
       <Modal
         size="32rem"
@@ -1193,7 +1227,6 @@ export default function Transfer() {
 
               </div>
 
-
               <button
                 type="button"
                 onClick={close}
@@ -1205,7 +1238,6 @@ export default function Transfer() {
             </div>
 
           </div>
-
 
           {/* Modal Content */}
 
@@ -1244,7 +1276,6 @@ export default function Transfer() {
 
             </div>
 
-
             {/* Account Holder */}
 
             <Forminput
@@ -1260,7 +1291,6 @@ export default function Transfer() {
               )}
             />
 
-
             {/* Bank */}
 
             <Forminput
@@ -1275,12 +1305,10 @@ export default function Transfer() {
               )}
             />
 
-
             {/* USA */}
 
             {region === 'usa' && (
               <>
-
                 <Forminput
                   error={
                     formError.recieveracctnumber
@@ -1295,7 +1323,6 @@ export default function Transfer() {
                     'recieveracctnumber'
                   )}
                 />
-
 
                 <Forminput
                   error={
@@ -1311,16 +1338,13 @@ export default function Transfer() {
                     'routineNumber'
                   )}
                 />
-
               </>
             )}
-
 
             {/* EUROPE */}
 
             {region === 'europe' && (
               <>
-
                 <Forminput
                   error={
                     formError.iban
@@ -1333,7 +1357,6 @@ export default function Transfer() {
                   )}
                 />
 
-
                 <Forminput
                   error={
                     formError.swiftCode
@@ -1345,16 +1368,13 @@ export default function Transfer() {
                     'swiftCode'
                   )}
                 />
-
               </>
             )}
-
 
             {/* OTHER */}
 
             {region === 'other' && (
               <>
-
                 <Forminput
                   error={
                     formError.recieveracctnumber
@@ -1370,7 +1390,6 @@ export default function Transfer() {
                   )}
                 />
 
-
                 <Forminput
                   error={
                     formError.swiftCode
@@ -1382,10 +1401,8 @@ export default function Transfer() {
                     'swiftCode'
                   )}
                 />
-
               </>
             )}
-
 
             {/* Amount */}
 
@@ -1402,8 +1419,7 @@ export default function Transfer() {
               )}
             />
 
-
-            {/* Balance info */}
+            {/* Balance */}
 
             <div className="mb-5 rounded-xl bg-slate-50 px-4 py-3">
 
@@ -1414,21 +1430,18 @@ export default function Transfer() {
                 </span>
 
                 <span className="text-sm font-semibold text-slate-800">
-                  ${formatAmount(
-                    user?.currbal
-                  )}
+                  ${formatAmount(user?.currbal)}
                 </span>
 
               </div>
 
             </div>
 
-
             <Formbutton
               title={
                 submitting
-                  ? 'Submitting...'
-                  : 'Submit Withdrawal'
+                  ? 'Checking...'
+                  : 'Continue'
               }
               loading={
                 submitting
@@ -1441,10 +1454,182 @@ export default function Transfer() {
 
       </Modal>
 
+      {/* =====================================================
+          TRANSACTION PIN MODAL
+      ===================================================== */}
+
+      <Modal
+        size="26rem"
+        centered
+        opened={pinOpened}
+        onClose={() => {
+          if (!pinSubmitting) {
+            closePinModal()
+          }
+        }}
+        withCloseButton={false}
+        radius="xl"
+      >
+
+        <div className="px-2 py-3">
+
+          {/* PIN Icon */}
+
+          <div className="text-center">
+
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50">
+
+              <HiOutlineShieldCheck className="text-3xl text-emerald-600" />
+
+            </div>
+
+            {/* Title */}
+
+            <h2 className="mt-5 text-xl font-bold text-slate-900">
+
+              {pinMode === 'create'
+                ? 'Create Transaction PIN'
+                : 'Enter Transaction PIN'}
+
+            </h2>
+
+            {/* Description */}
+
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+
+              {pinMode === 'create'
+                ? 'Create a 4-digit PIN to authorize withdrawals and protect your transactions.'
+                : 'Enter your 4-digit transaction PIN to authorize this withdrawal.'}
+
+            </p>
+
+          </div>
+
+          <div className="mt-6 space-y-4">
+
+            {/* CREATE PIN */}
+
+            {pinMode === 'create' && (
+              <>
+
+                <Forminput
+                  error=""
+                  content="Transaction PIN"
+                  type="password"
+                  placeholder="••••"
+                  value={pin}
+                  onChange={(e: any) => {
+                    const value =
+                      e.target.value
+                        .replace(/\D/g, '')
+                        .slice(0, 4)
+
+                    setPin(value)
+                    setPinError('')
+                  }}
+                />
+
+                <Forminput
+                  error=""
+                  content="Confirm Transaction PIN"
+                  type="password"
+                  placeholder="••••"
+                  value={confirmPin}
+                  onChange={(e: any) => {
+                    const value =
+                      e.target.value
+                        .replace(/\D/g, '')
+                        .slice(0, 4)
+
+                    setConfirmPin(value)
+                    setPinError('')
+                  }}
+                />
+
+              </>
+            )}
+
+            {/* EXISTING PIN */}
+
+            {pinMode === 'verify' && (
+              <Forminput
+                error=""
+                content="Transaction PIN"
+                type="password"
+                placeholder="••••"
+                value={pin}
+                onChange={(e: any) => {
+                  const value =
+                    e.target.value
+                      .replace(/\D/g, '')
+                      .slice(0, 4)
+
+                  setPin(value)
+                  setPinError('')
+                }}
+              />
+            )}
+
+            {/* ERROR */}
+
+            {pinError && (
+              <div className="rounded-xl bg-red-50 px-4 py-3">
+
+                <p className="text-sm font-medium text-red-600">
+                  {pinError}
+                </p>
+
+              </div>
+            )}
+
+            {/* CONTINUE */}
+
+            <button
+              type="button"
+              disabled={
+                pinSubmitting ||
+                submitting
+              }
+              onClick={
+                handlePinSubmit
+              }
+              className="w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+
+              {pinSubmitting ||
+              submitting
+                ? 'Processing...'
+                : pinMode === 'create'
+                  ? 'Create PIN & Continue'
+                  : 'Authorize Withdrawal'}
+
+            </button>
+
+            {/* CANCEL */}
+
+            <button
+              type="button"
+              disabled={
+                pinSubmitting ||
+                submitting
+              }
+              onClick={() => {
+                closePinModal()
+              }}
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      </Modal>
 
       {/* =====================================================
           KYC MODAL
-      ====================================================== */}
+      ===================================================== */}
 
       <Modal
         size="26rem"
@@ -1465,18 +1650,15 @@ export default function Transfer() {
 
           </div>
 
-
           <h2 className="mt-5 text-xl font-bold text-slate-900">
             KYC Verification Required
           </h2>
-
 
           <p className="mt-2 text-sm leading-6 text-slate-500">
             You need to submit your KYC documents before
             you can make a transfer. You can complete your
             verification from your account settings.
           </p>
-
 
           <div className="mt-6 grid grid-cols-2 gap-3">
 
@@ -1490,11 +1672,11 @@ export default function Transfer() {
               Close
             </button>
 
-
             <button
               type="button"
               onClick={() => {
                 closeKycNotice()
+
                 navigate(
                   '/user/profile'
                 )
